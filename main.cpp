@@ -1,21 +1,25 @@
 #include <iostream>
 #include <QString>
+#include <exception>
+
+#include "src/Logger.hpp"
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int main(int, char *[])
 {
     cout << "MSPverifier" << endl;
 
-    //<TODO> inicjalizacja i czytanie argumentów
-
     try
     {
-        //<TODO>
+        Logger::ClearFiles();
+        Logger::LogError("err.what()");
+        Logger::LogWarning("err.what()");
     }
-    catch(QString s)
+    catch(std::runtime_error err)
     {
-        // <TODO> put error
+        std::cout << "RUNTIME ERROR: " << err.what() << std::endl;
+        Logger::LogError(QString("RUNTIME ERROR: ") + QString(err.what()));
     }
 
     return 0;
