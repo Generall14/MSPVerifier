@@ -7,6 +7,7 @@
 const QString Logger::dir = "./outputs/";
 const QString Logger::errorfile = "errors.txt";
 const QString Logger::warningfile = "warnings.txt";
+const QString Logger::statusfile = "log.txt";
 
 void Logger::ClearFiles()
 {
@@ -17,12 +18,25 @@ void Logger::ClearFiles()
     QFile f2(dir+warningfile);
     f2.open(QIODevice::Truncate | QIODevice::ReadWrite);
     f2.close();
+
+    QFile f3(dir+statusfile);
+    f3.open(QIODevice::Truncate | QIODevice::ReadWrite);
+    f3.close();
+}
+
+void Logger::WriteFile(QString file, QString text)
+{
+    QFile f1(dir+file);
+    f1.open(QIODevice::Truncate | QIODevice::ReadWrite);
+    f1.close();
+    Log(text, dir+file);
 }
 
 void Logger::LogError(QString txt)
 {
     QString text = "ERROR: \n" + txt + "\n\n";
     Log(text, dir+errorfile);
+    Log(text, dir+statusfile);
     std::cout << text.toStdString();
 }
 
@@ -30,6 +44,14 @@ void Logger::LogWarning(QString txt)
 {
     QString text = "WARNING: \n" + txt + "\n\n";
     Log(text, dir+warningfile);
+    Log(text, dir+statusfile);
+    std::cout << text.toStdString();
+}
+
+void Logger::Log(QString txt)
+{
+    QString text = txt + "\n\n";
+    Log(text, dir+statusfile);
     std::cout << text.toStdString();
 }
 
