@@ -3,30 +3,20 @@
 
 #include <QString>
 #include <QStringList>
-#include <QDir>
+#include "src/osrc/pugixml.hpp"
 
 /**
- * Klasa tworzy listę plików z katalogu root (rekurencyjnie po podkatalogach) z końcówkami podanymi w
- * suffixes. Pliki i katalogi zawierające dowolny z tekstów podanych w excludes zostaną zignorowane.
- * Porównywanie końcówek i wykluczeń odbywa się z ignorowaniem wielkości znaków.
+ * Tworzy listę plików na podstawie podanego pliku *.ewp / *.ewt.
  */
 class FileList
 {
 public:
-    FileList(QString root = "./", QStringList suffixes = QStringList(), QStringList excludes = QStringList());
-
-    QStringList GetFileList();
+    static QStringList GetFileList(QString inputfile);
 
 private:
-    QStringList list;
-    bool searched = false;
+    FileList(){}
 
-    QString _root;
-    QStringList _suff;
-    QStringList _excl;
-
-    void SearchFiles();
-    void IterateInFiles(QString dir);
+    static void iterateInNodes(pugi::xml_node& node, QStringList& list);
 };
 
 #endif

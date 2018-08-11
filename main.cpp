@@ -11,14 +11,15 @@ int main(int, char *[])
 {
     cout << "MSPverifier" << endl;
 
-    QStringList suff = {".s43", ".h"};
-    QStringList ex = {"msp430fr5962", "Kradzione"};
+//    QStringList suff = {".s43", ".h"};
+//    QStringList ex = {"msp430fr5962", "Kradzione"};
 
     try
     {
         Logger::ClearFiles();
-        FileList fl("input/", suff, ex);
-        fl.GetFileList();
+        QStringList files = FileList::GetFileList("./input/emespe.ewp");
+//        FileList fl("input/", suff, ex);
+//        fl.GetFileList();
 //        Logger::LogError("err.what()");
 //        Logger::LogWarning("err.what()");
     }

@@ -1,82 +1,54 @@
 #include "FileList.hpp"
 #include <QDir>
 #include <QDebug>
+#include <QFile>
+#include <QFileInfo>
 #include "Logger.hpp"
 
-/**
- * @param root - adres katalogu ze źródłami
- * @param suffixes - końcówki plików do odczytu
- * @param excludes - jeżeli w nazwie pliku lub katalogu znajdzie się tekst z tej listy - plik/katalog zostanie zignorowany
- */
-FileList::FileList(QString root, QStringList suffixes, QStringList excludes):
-    _root(root),
-    _suff(suffixes),
-    _excl(excludes)
-{}
-
-QStringList FileList::GetFileList()
+QStringList FileList::GetFileList(QString inputfile)
 {
-    if(!searched)
-        SearchFiles();
-    return list;
+    QStringList temp;
+
+    // Otwieranie pliku xml:
+    pugi::xml_document file;
+    pugi::xml_parse_result result =  file.load_file(inputfile.toStdString().c_str());
+
+    if(!result)
+        throw std::runtime_error("FileList::GetFileList: nie mozna otworzyc pliku XML \""+inputfile.toStdString()+
+                                 "\": "+result.description()+", offset: "+
+                                 QString::number(result.offset).toStdString()+" B");
+
+    for(auto child: file.children())
+        iterateInNodes(child, temp);
+
+    QFileInfo conf(inputfile);
+    for(QStringList::iterator it = temp.begin(); it!=temp.end(); it++)
+    {
+        it->replace("$PROJ_DIR$", conf.dir().path());
+        it->replace("\\", "/");
+    }
+
+    QString total;
+    for(QString s: temp)
+        total += s + "\n";
+    Logger::WriteFile("_listFiles.txt", total);
+
+    return temp;
 }
 
-void FileList::SearchFiles()
+void FileList::iterateInNodes(pugi::xml_node& node, QStringList& list)
 {
-    searched = true;
 
-    IterateInFiles(_root);
-
-    QString txt;
-    for(auto str: list)
-        txt.append(str+"\n");
-    Logger::WriteFile("Files.txt", txt);
-
-    if(list.isEmpty())
-        throw std::runtime_error( QString("Nie odnaleziono żadnych pasujących plików w katalogu "+_root).toStdString());
-}
-
-void FileList::IterateInFiles(QString dir)
-{
-    for(QString e: _excl)
+    if(QString(node.name())=="file")
     {
-        if(dir.contains(e, Qt::CaseInsensitive))
-            return;
-    }
-
-    QDir current(dir);
-    if(!current.exists())
-        throw std::runtime_error( QString("Katalog "+dir+" nie istnieje").toStdString() );
-
-    for(QString f: current.entryList(QDir::Files))
-    {
-        bool ex = false;
-        bool mat = false;
-        if(_suff.isEmpty())
-            mat = true;
-        for(QString e: _excl)
+        pugi::xml_node name = node.child("name");
+        if(!name.empty())
         {
-            if(f.contains(e, Qt::CaseInsensitive))
-            {
-                ex = true;
-                continue;
-            }
+            if(QString(name.text().as_string()).endsWith(".s43"))
+                list.append(name.text().as_string());
         }
-        for(QString e: _suff)
-        {
-            if(f.endsWith(e, Qt::CaseInsensitive))
-            {
-                mat = true;
-                continue;
-            }
-        }
-        if((mat) && (!ex))
-            list.append(dir+f);
     }
 
-    for(QString str: current.entryList(QDir::Dirs|QDir::NoDotDot|QDir::NoDot))
-    {
-
-        IterateInFiles(dir+str+"/");
-    }
+    for(auto child: node.children())
+        iterateInNodes(child, list);
 }
