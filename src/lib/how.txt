@@ -1,0 +1,2 @@
+gcc -c add.c -o add.o
+ar rcs libadd.a add.o

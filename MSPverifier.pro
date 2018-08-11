@@ -15,6 +15,9 @@ SOURCES += main.cpp \
     src/MSPFile.cpp \
     src/Line.cpp
 
+LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
+LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -30,4 +33,6 @@ HEADERS += \
     src/Logger.hpp \
     src/FileList.hpp \
     src/MSPFile.hpp \
-    src/Line.hpp
+    src/Line.hpp \
+    src/osrc/pugiconfig.hpp \
+    src/osrc/pugixml.hpp
