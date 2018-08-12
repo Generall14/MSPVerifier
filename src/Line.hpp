@@ -8,16 +8,19 @@ class Line
 {
 public:
     Line(QString file, QString text, int line);
+    Line(Line& old, QString newLine="");
 
     QString File() const;
-    QString TextOriginal() const;
-    int LineInFile() const;
+    QString OryginalText() const;
+    int LineNumber() const;
 
     QString toString() const;
 
+    QString currentText;
+
 private:
     int _line;
-    QString _text;
+    QString _oText;
     QString _file;
 };
 
