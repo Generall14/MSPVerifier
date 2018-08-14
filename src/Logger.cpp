@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <exception>
 #include <iostream>
+#include <QDir>
 
 const QString Logger::dir = "./outputs/";
 const QString Logger::errorfile = "errors.txt";
@@ -11,6 +12,10 @@ const QString Logger::statusfile = "log.txt";
 
 void Logger::ClearFiles()
 {
+    QDir qdir(dir);
+    if(!qdir.exists())
+        qdir.mkpath("./");
+
     QFile f1(dir+errorfile);
     f1.open(QIODevice::Truncate | QIODevice::ReadWrite);
     f1.close();
@@ -57,6 +62,10 @@ void Logger::Log(QString txt)
 
 void Logger::Log(QString txt, QString adr)
 {
+    QDir qdir(adr);
+    if(!qdir.exists())
+        qdir.mkpath("./");
+
     QFile file(adr);
     if(!file.open(QIODevice::Append | QIODevice::Text))
         throw std::runtime_error( QString("Nie można pisac do pliku "+adr).toStdString() );

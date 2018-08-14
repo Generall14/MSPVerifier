@@ -15,7 +15,7 @@ SOURCES += main.cpp \
     src/MSPFile.cpp \
     src/Line.cpp
 
-#LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
+LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
 
 # The following define makes your compiler emit warnings if you use

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <QString>
-#include <exception>
+#include <stdexcept>
 
 #include "src/Logger.hpp"
 #include "src/FileList.hpp"
