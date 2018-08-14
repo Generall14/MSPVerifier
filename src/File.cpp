@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QDir>
 #include "dyskryminator.hpp"
+#include "macro.hpp"
 
 File::File(QString adress):
     _adress(adress)
@@ -17,6 +18,8 @@ File::File(QString adress):
 
     doPreprocessor();
     removeComments();
+    expandMacros();
+
     skipWhiteSigns();
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
     Logger::WriteFile("parsedFiles/"+_name+".txt", this->toString());
@@ -98,4 +101,12 @@ void File::removeComments()
             continue;
         d.DyscriminateLine(it->currentText);
     }
+}
+
+void File::expandMacros()
+{
+    skipWhiteSigns();
+    QList<Macro> macs = Macro::loadMacros(*this);
+    for(auto mac: macs)
+        mac.applyMacro(*this);
 }

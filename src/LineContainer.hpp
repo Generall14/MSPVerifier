@@ -10,7 +10,7 @@ public:
     LineContainer(QList<Line> lines);
     LineContainer(){}
 
-    const QList<Line>& get();
+    QList<Line>& get();
 
     QString toString() const;
     QString toSString() const;

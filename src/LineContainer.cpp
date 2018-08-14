@@ -6,7 +6,7 @@ LineContainer::LineContainer(QList<Line> lines):
 
 }
 
-const QList<Line>& LineContainer::get()
+QList<Line>& LineContainer::get()
 {
     return _lines;
 }

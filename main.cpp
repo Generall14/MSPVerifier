@@ -19,7 +19,7 @@ int main(int, char *[])
     catch(std::runtime_error err)
     {
         std::cout << "RUNTIME ERROR: " << err.what() << std::endl;
-        Logger::LogError(QString("RUNTIME ERROR: ") + QString(err.what()));
+//        Logger::LogError(QString("RUNTIME ERROR: ") + QString(err.what()));
     }
 
     return 0;

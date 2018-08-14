@@ -17,6 +17,7 @@ private:
     void skipWhiteSigns();
     void doPreprocessor();
     void removeComments();
+    void expandMacros();
 };
 
 #endif

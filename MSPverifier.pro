@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     src/LineContainer.cpp \
     src/File.cpp \
     src/dyskryminator.cpp \
-    src/dyskryminatorSM.cpp
+    src/dyskryminatorSM.cpp \
+    src/macro.cpp
 
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -43,4 +44,5 @@ HEADERS += \
     src/LineContainer.hpp \
     src/File.hpp \
     src/dyskryminator.hpp \
-    src/dyskryminatorSM.hpp
+    src/dyskryminatorSM.hpp \
+    src/macro.hpp
