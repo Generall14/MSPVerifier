@@ -12,6 +12,10 @@ public:
 private:
     QString _adress;
     QString _name;
+
+    void loadFile();
+    void skipWhiteSigns();
+    void doPreprocessor();
 };
 
 #endif

@@ -4,13 +4,22 @@
 #include <stdexcept>
 #include "Logger.hpp"
 #include <QFileInfo>
+#include <QString>
 
 File::File(QString adress):
     _adress(adress)
 {
-    QFile file(adress);
+    loadFile();
+    doPreprocessor();
+
+    Logger::WriteFile("files/"+_name+".txt", this->toSString());
+}
+
+void File::loadFile()
+{
+    QFile file(_adress);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw std::runtime_error("File::File: nie mozna otworzyc pliku \""+adress.toStdString()+"\"");
+        throw std::runtime_error("File::File: nie mozna otworzyc pliku \""+_adress.toStdString()+"\"");
 
     _name = QFileInfo(file).baseName();
 
@@ -20,10 +29,36 @@ File::File(QString adress):
     QString l;
     while(ts.readLineInto(&l))
     {
-        _lines.append(Line(adress, l, cnt++));
+        _lines.append(Line(_adress, l, cnt++));
     }
 
     file.close();
+}
 
-    Logger::WriteFile("files/"+_name+".txt", this->toSString());
+void File::skipWhiteSigns()
+{
+    for(int l=_lines.size()-1;l>=0;l--)
+    {
+        _lines[l].currentText=_lines[l].currentText.replace("\t", " ");
+        while(_lines[l].currentText.indexOf("  ")>=0)
+            _lines[l].currentText=_lines[l].currentText.replace("  ", " ");
+        if(_lines[l].currentText.remove(" ").isEmpty())
+        {
+            _lines.removeAt(l);
+            continue;
+        }
+        if(!_lines[l].currentText.startsWith(" "))
+            _lines[l].currentText.insert(0, " ");
+        if(!_lines[l].currentText.endsWith(" "))
+            _lines[l].currentText.append(" ");
+    }
+}
+
+void File::doPreprocessor()
+{
+    skipWhiteSigns();
+//    for(int l=_lines.size()-1;l>=0;l--)
+//    {
+//        if(_lines.at(l).currentText.startsWith("#include \""))
+//    }
 }
