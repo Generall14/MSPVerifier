@@ -7,6 +7,7 @@
 #include <QString>
 #include <QDebug>
 #include <QDir>
+#include "dyskryminator.hpp"
 
 File::File(QString adress):
     _adress(adress)
@@ -15,6 +16,8 @@ File::File(QString adress):
     Logger::WriteFile("files/"+_name+".txt", this->toSString());
 
     doPreprocessor();
+    removeComments();
+    skipWhiteSigns();
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
     Logger::WriteFile("parsedFiles/"+_name+".txt", this->toString());
 }
@@ -60,26 +63,39 @@ void File::doPreprocessor()
     skipWhiteSigns();
     for(int l=_lines.size()-1;l>=0;l--)
     {
-        if(_lines.at(l).currentText.startsWith(" #include \""))
+        if(_lines.at(l).currentText.startsWith(" #include \"", Qt::CaseInsensitive))
         {
             int fi = _lines.at(l).currentText.indexOf("\"");
             int li = _lines.at(l).currentText.lastIndexOf("\"");
             QString name = _lines.at(l).currentText.mid(fi+1,li-fi-1);
-            if(name=="msp430.h")
-                continue;
-            QString iadr = QFileInfo(_adress).dir().path()+"/"+name;
+            if(name!="msp430.h")
+            {
+                QString iadr = QFileInfo(_adress).dir().path()+"/"+name;
 
-            QFile file(iadr);
-            if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-                throw std::runtime_error("File::doPreprocessor: nie mozna otworzyc pliku \""+iadr.toStdString()+"\"");
+                QFile file(iadr);
+                if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                    throw std::runtime_error("File::doPreprocessor: nie mozna otworzyc pliku \""+iadr.toStdString()+"\"");
 
-            QTextStream ts(&file);
-            QString lt;
-            while(ts.readLineInto(&lt))
-                _lines.insert(l+1, Line(_lines.at(l), lt));
+                QTextStream ts(&file);
+                QString lt;
+                int cnt = l+1;
+                while(ts.readLineInto(&lt))
+                    _lines.insert(cnt++, Line(_lines.at(l), lt));
+                file.close();
+            }
             _lines.removeAt(l);
-
-            file.close();
         }
+    }
+}
+
+void File::removeComments()
+{
+    skipWhiteSigns();
+    Dyskryminator d;
+    for(auto it=_lines.begin();it!=_lines.end();it++)
+    {
+        if(it->currentText.startsWith(" ;##"))
+            continue;
+        d.DyscriminateLine(it->currentText);
     }
 }

@@ -36,6 +36,8 @@ void FileList::SearchFiles(QString inputfile)
     for(QString s: _files)
         total += s + "\n";
     Logger::WriteFile("_listFiles.txt", total);
+
+    Logger::Log("Znaleziono "+QString::number(_files.size())+" plików...");
 }
 
 void FileList::iterateInNodes(pugi::xml_node& node, QStringList& list)
@@ -59,4 +61,5 @@ void FileList::LoadFiles()
 {
     for(auto file: _files)
         _list.append(File(file));
+    Logger::Log("... i odczytano wszystkie");
 }

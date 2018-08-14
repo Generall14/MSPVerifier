@@ -16,6 +16,7 @@ private:
     void loadFile();
     void skipWhiteSigns();
     void doPreprocessor();
+    void removeComments();
 };
 
 #endif

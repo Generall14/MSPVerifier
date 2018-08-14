@@ -14,10 +14,7 @@ Line::Line(const Line& old, QString newLine):
     _oText(old.OryginalText()),
     _file(old.File())
 {
-    if(newLine.isEmpty())
-        currentText = old.currentText;
-    else
-        currentText = newLine;
+    currentText = newLine;
 }
 
 Line::Line(const Line& other):

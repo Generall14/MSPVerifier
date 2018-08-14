@@ -15,7 +15,9 @@ SOURCES += main.cpp \
     src/MSPFile.cpp \
     src/Line.cpp \
     src/LineContainer.cpp \
-    src/File.cpp
+    src/File.cpp \
+    src/dyskryminator.cpp \
+    src/dyskryminatorSM.cpp
 
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -39,4 +41,6 @@ HEADERS += \
     src/osrc/pugiconfig.hpp \
     src/osrc/pugixml.hpp \
     src/LineContainer.hpp \
-    src/File.hpp
+    src/File.hpp \
+    src/dyskryminator.hpp \
+    src/dyskryminatorSM.hpp
