@@ -11,6 +11,7 @@ public:
 
 private:
     QString _adress;
+    QString _name;
 };
 
 #endif

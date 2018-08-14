@@ -14,11 +14,11 @@ class FileList
 {
 public:
     FileList(QString inputfile);
-    static QStringList GetFileList();
 
 private:
     void iterateInNodes(pugi::xml_node& node, QStringList& list);
     void SearchFiles(QString inputfile);
+    void LoadFiles();
 
     QList<File> _list;
     QStringList _files;

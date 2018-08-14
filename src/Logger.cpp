@@ -4,6 +4,7 @@
 #include <exception>
 #include <iostream>
 #include <QDir>
+#include <QFileInfo>
 
 const QString Logger::dir = "./outputs/";
 const QString Logger::errorfile = "errors.txt";
@@ -12,7 +13,7 @@ const QString Logger::statusfile = "log.txt";
 
 void Logger::ClearFiles()
 {
-    QDir qdir(dir);
+    QDir qdir(QFileInfo(dir).dir());
     if(!qdir.exists())
         qdir.mkpath("./");
 
@@ -62,7 +63,7 @@ void Logger::Log(QString txt)
 
 void Logger::Log(QString txt, QString adr)
 {
-    QDir qdir(adr);
+    QDir qdir(QFileInfo(adr).dir());
     if(!qdir.exists())
         qdir.mkpath("./");
 

@@ -8,6 +8,7 @@
 FileList::FileList(QString inputfile)
 {
     SearchFiles(inputfile);
+    LoadFiles();
 }
 
 void FileList::SearchFiles(QString inputfile)
@@ -52,4 +53,10 @@ void FileList::iterateInNodes(pugi::xml_node& node, QStringList& list)
 
     for(auto child: node.children())
         iterateInNodes(child, list);
+}
+
+void FileList::LoadFiles()
+{
+    for(auto file: _files)
+        _list.append(File(file));
 }

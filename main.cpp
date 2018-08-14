@@ -11,17 +11,10 @@ int main(int, char *[])
 {
     cout << "MSPverifier" << endl;
 
-//    QStringList suff = {".s43", ".h"};
-//    QStringList ex = {"msp430fr5962", "Kradzione"};
-
     try
     {
         Logger::ClearFiles();
         FileList("./input/emespe.ewp");
-//        FileList fl("input/", suff, ex);
-//        fl.GetFileList();
-//        Logger::LogError("err.what()");
-//        Logger::LogWarning("err.what()");
     }
     catch(std::runtime_error err)
     {

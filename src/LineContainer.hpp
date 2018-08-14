@@ -15,7 +15,7 @@ public:
     QString toString() const;
     QString toSString() const;
 
-private:
+protected:
     QList<Line> _lines;
 };
 
