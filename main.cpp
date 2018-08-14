@@ -17,7 +17,7 @@ int main(int, char *[])
     try
     {
         Logger::ClearFiles();
-        QStringList files = FileList::GetFileList("./input/emespe.ewp");
+        FileList("./input/emespe.ewp");
 //        FileList fl("input/", suff, ex);
 //        fl.GetFileList();
 //        Logger::LogError("err.what()");

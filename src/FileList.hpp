@@ -4,6 +4,8 @@
 #include <QString>
 #include <QStringList>
 #include "src/osrc/pugixml.hpp"
+#include "File.hpp"
+#include <QList>
 
 /**
  * Tworzy listę plików na podstawie podanego pliku *.ewp / *.ewt.
@@ -11,12 +13,15 @@
 class FileList
 {
 public:
-    static QStringList GetFileList(QString inputfile);
+    FileList(QString inputfile);
+    static QStringList GetFileList();
 
 private:
-    FileList(){}
+    void iterateInNodes(pugi::xml_node& node, QStringList& list);
+    void SearchFiles(QString inputfile);
 
-    static void iterateInNodes(pugi::xml_node& node, QStringList& list);
+    QList<File> _list;
+    QStringList _files;
 };
 
 #endif

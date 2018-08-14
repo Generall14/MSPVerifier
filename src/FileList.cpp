@@ -5,10 +5,13 @@
 #include <QFileInfo>
 #include "Logger.hpp"
 
-QStringList FileList::GetFileList(QString inputfile)
+FileList::FileList(QString inputfile)
 {
-    QStringList temp;
+    SearchFiles(inputfile);
+}
 
+void FileList::SearchFiles(QString inputfile)
+{
     // Otwieranie pliku xml:
     pugi::xml_document file;
     pugi::xml_parse_result result =  file.load_file(inputfile.toStdString().c_str());
@@ -19,21 +22,19 @@ QStringList FileList::GetFileList(QString inputfile)
                                  QString::number(result.offset).toStdString()+" B");
 
     for(auto child: file.children())
-        iterateInNodes(child, temp);
+        iterateInNodes(child, _files);
 
     QFileInfo conf(inputfile);
-    for(QStringList::iterator it = temp.begin(); it!=temp.end(); it++)
+    for(QStringList::iterator it = _files.begin(); it!=_files.end(); it++)
     {
         it->replace("$PROJ_DIR$", conf.dir().path());
         it->replace("\\", "/");
     }
 
     QString total;
-    for(QString s: temp)
+    for(QString s: _files)
         total += s + "\n";
     Logger::WriteFile("_listFiles.txt", total);
-
-    return temp;
 }
 
 void FileList::iterateInNodes(pugi::xml_node& node, QStringList& list)

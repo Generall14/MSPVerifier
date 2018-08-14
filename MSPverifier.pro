@@ -13,7 +13,9 @@ SOURCES += main.cpp \
     src/Logger.cpp \
     src/FileList.cpp \
     src/MSPFile.cpp \
-    src/Line.cpp
+    src/Line.cpp \
+    src/LineContainer.cpp \
+    src/File.cpp
 
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -35,4 +37,6 @@ HEADERS += \
     src/MSPFile.hpp \
     src/Line.hpp \
     src/osrc/pugiconfig.hpp \
-    src/osrc/pugixml.hpp
+    src/osrc/pugixml.hpp \
+    src/LineContainer.hpp \
+    src/File.hpp

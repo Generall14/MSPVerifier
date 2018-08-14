@@ -9,7 +9,7 @@ Line::Line(QString file, QString text, int line):
 
 }
 
-Line::Line(Line& old, QString newLine):
+Line::Line(const Line& old, QString newLine):
     _line(old.LineNumber()),
     _oText(old.OryginalText()),
     _file(old.File())
@@ -18,6 +18,15 @@ Line::Line(Line& old, QString newLine):
         currentText = old.currentText;
     else
         currentText = newLine;
+}
+
+Line::Line(const Line& other):
+    currentText(other.currentText),
+    _line(other.LineNumber()),
+    _oText(other.OryginalText()),
+    _file(other.File())
+{
+
 }
 
 QString Line::File() const
@@ -43,5 +52,11 @@ QString Line::toString() const
     if(_oText!=currentText)
         temp += "\" -> \""+currentText;
     temp += "\"]";
+    return temp;
+}
+
+QString Line::toSString() const
+{
+    QString temp = QString::number(_line)+": "+currentText;
     return temp;
 }
