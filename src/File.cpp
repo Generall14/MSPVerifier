@@ -227,6 +227,10 @@ void File::removeUslessStuff()
     {
         if((_lines.at(i).currentText.indexOf(" public ", Qt::CaseInsensitive)>=0)
                 ||(_lines.at(i).currentText.indexOf(" extern ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" equ ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" #if ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" #else ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" #endif ", Qt::CaseInsensitive)>=0)
                 ||(_lines.at(i).currentText.indexOf(" end ", Qt::CaseInsensitive)>=0))
             _lines.removeAt(i);
     }
