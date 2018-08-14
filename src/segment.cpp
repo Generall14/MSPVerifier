@@ -1,6 +1,6 @@
 #include "segment.hpp"
 #include <stdexcept>
-#include <qDebug>
+#include <QDebug>
 
 Segment::Segment(QList<Line> lines, QString type):
     _type(type)
