@@ -21,6 +21,7 @@ File::File(QString adress):
     expandDefines();
     expandMacros();
     expandRept();
+    removeUslessStuff();
 
     skipWhiteSigns();
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
@@ -217,4 +218,49 @@ void File::expandDefines()
         }
 
     }while(found);
+}
+
+void File::removeUslessStuff()
+{
+    skipWhiteSigns();
+    for(int i=_lines.size()-1;i>=0;i--)
+    {
+        if((_lines.at(i).currentText.indexOf(" public ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" extern ", Qt::CaseInsensitive)>=0)
+                ||(_lines.at(i).currentText.indexOf(" end ", Qt::CaseInsensitive)>=0))
+            _lines.removeAt(i);
+    }
+}
+
+void File::divide(SegmentList& slist)
+{
+    int fi = 0, li  = 0;
+    QString type = "unknown", current = "";
+    for(int i=0;i<_lines.size();i++)
+    {
+        if((_lines.at(i).currentText.startsWith(" rseg ", Qt::CaseInsensitive)))
+        {
+            current = _lines.at(i).currentText;
+            current.remove(" rseg ", Qt::CaseInsensitive);
+            current = current.split("(", QString::SkipEmptyParts).first().split(" ", QString::SkipEmptyParts).first().remove(" ");
+            current = current.toLower();
+        }
+
+        if(!current.isEmpty())
+        {
+            li = i;
+            if(li==fi)
+            {
+                type = current;
+                current = "";
+                continue;
+            }
+            slist.append(Segment(_lines.mid(fi, li-fi), type));
+            type = current;
+            current = "";
+            fi = li;
+        }
+    }
+    if(fi<_lines.size()-1)
+        slist.append(Segment(_lines.mid(fi), type));
 }

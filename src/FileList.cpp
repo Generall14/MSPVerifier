@@ -63,3 +63,14 @@ void FileList::LoadFiles()
         _list.append(File(file));
     Logger::Log("... i odczytano wszystkie");
 }
+
+SegmentList FileList::getSegments()
+{
+    Logger::Log("Dzielenie kodu na segmenty...");
+    SegmentList temp;
+
+    for(auto f: _list)
+        f.divide(temp);
+
+    return temp;
+}

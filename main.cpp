@@ -4,6 +4,7 @@
 
 #include "src/Logger.hpp"
 #include "src/FileList.hpp"
+#include "src/segmentList.hpp"
 
 using namespace std;
 
@@ -14,7 +15,9 @@ int main(int, char *[])
     try
     {
         Logger::ClearFiles();
-        FileList("./input/emespe.ewp");
+        FileList fl("./input/emespe.ewp");
+        SegmentList sl = fl.getSegments();
+        sl.store();
     }
     catch(std::runtime_error err)
     {

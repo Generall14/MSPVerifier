@@ -6,6 +6,7 @@
 #include "src/osrc/pugixml.hpp"
 #include "File.hpp"
 #include <QList>
+#include "segmentList.hpp"
 
 /**
  * Tworzy listę plików na podstawie podanego pliku *.ewp / *.ewt.
@@ -14,6 +15,8 @@ class FileList
 {
 public:
     FileList(QString inputfile);
+
+    SegmentList getSegments();
 
 private:
     void iterateInNodes(pugi::xml_node& node, QStringList& list);

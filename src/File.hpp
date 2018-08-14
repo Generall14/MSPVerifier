@@ -3,11 +3,14 @@
 
 #include "LineContainer.hpp"
 #include <QString>
+#include "segmentList.hpp"
 
 class File : public LineContainer
 {
 public:
     File(QString adress);
+
+    void divide(SegmentList& slist);
 
 private:
     QString _adress;
@@ -20,6 +23,7 @@ private:
     void expandDefines();
     void expandMacros();
     void expandRept();
+    void removeUslessStuff();
 };
 
 #endif
