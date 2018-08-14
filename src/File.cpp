@@ -18,7 +18,9 @@ File::File(QString adress):
 
     doPreprocessor();
     removeComments();
+    expandDefines();
     expandMacros();
+    expandRept();
 
     skipWhiteSigns();
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
@@ -109,4 +111,110 @@ void File::expandMacros()
     QList<Macro> macs = Macro::loadMacros(*this);
     for(auto mac: macs)
         mac.applyMacro(*this);
+}
+
+void File::expandRept()
+{
+    skipWhiteSigns();
+    bool found = false;
+
+    do
+    {
+        found = false;
+
+        int fi = -1;
+        int si = -1;
+        for(int i=0;i<_lines.size();i++)
+        {
+            if(fi<0)
+            {
+                if(_lines.at(i).currentText.indexOf(" rept ", Qt::CaseInsensitive)>=0) // <TODO> nieladne, zamienic na std::find
+                {
+                    fi = i;
+                    continue;
+                }
+            }
+            else
+            {
+                if(_lines.at(i).currentText.indexOf(" endr ", Qt::CaseInsensitive)>=0)
+                {
+                    si = i;
+                    break;
+                }
+            }
+        }
+
+        if((fi>=0)&&(si<0))
+            throw std::runtime_error("File::expandRept: nie zakonczone rept");
+
+        if(fi>=0)
+        {
+            QString cnts = _lines.at(fi).currentText.split(" rept", QString::SkipEmptyParts, Qt::CaseInsensitive).at(0);
+            bool ok;
+            int cnt = cnts.toInt(&ok);
+            if((!ok)||(cnt<=0))
+                throw std::runtime_error("File::expandRept: bledna liczba powtorzen: \""+_lines.at(fi).currentText.toStdString()+"\"");
+
+            QList<Line> tlines;
+            for(int k=fi+1;k<si;k++)
+                tlines.append(_lines.at(k));
+
+            for(;si>=fi;si--)
+                _lines.removeAt(si);
+
+            while(cnt--)
+            {
+                for(int k=tlines.size()-1;k>=0;k--)
+                    _lines.insert(fi, tlines.at(k));
+            }
+
+            found = true;
+        }
+
+    }while(found);
+}
+
+void File::expandDefines()
+{
+    skipWhiteSigns();
+    bool found = false;
+
+    do
+    {
+        found = false;
+
+        QString idef="", rdef="";
+        int idefi=0;
+
+        for(int i=0;i<_lines.size();i++)
+        {
+            if(_lines.at(i).currentText.startsWith(" #define", Qt::CaseInsensitive))
+            {
+                QString temp = _lines.at(i).currentText;
+                QStringList li = temp.remove(" #define ", Qt::CaseInsensitive).split(" ", QString::SkipEmptyParts);
+
+                if(li.size()==0)
+                    throw std::runtime_error("File::expandDefines: wtf? "+_lines.at(i).currentText.toStdString());
+
+                idef = li.at(0);
+                for(int k=1;k<li.size();k++)
+                    rdef.append(li.at(k)+" ");
+
+                found = true;
+                idefi = i;
+                break;
+            }
+        }
+
+        if(!idef.isEmpty())
+        {
+            _lines.removeAt(idefi);
+            if(!rdef.isEmpty())
+            {
+                for(auto it = _lines.begin();it!=_lines.end();it++)
+                    it->currentText.replace(idef, rdef);
+            }
+        }
+
+    }while(found);
 }

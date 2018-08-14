@@ -20,7 +20,6 @@ QList<Macro> Macro::loadMacros(File& file)
             {
                 if(file.get().at(i).currentText.indexOf(" macro ", Qt::CaseInsensitive)>=0) // <TODO> nieladne, zamienic na std::find
                 {
-
                     fi = i;
                     continue;
                 }
