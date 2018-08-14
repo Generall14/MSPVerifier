@@ -255,12 +255,16 @@ void File::divide(SegmentList& slist)
                 current = "";
                 continue;
             }
-            slist.append(Segment(_lines.mid(fi, li-fi), type));
+            if(_lines.at(fi).currentText.indexOf(" aseg ", Qt::CaseInsensitive)<0)
+                slist.append(Segment(_lines.mid(fi, li-fi), type));
             type = current;
             current = "";
             fi = li;
         }
     }
     if(fi<_lines.size()-1)
-        slist.append(Segment(_lines.mid(fi), type));
+    {
+        if(_lines.at(fi).currentText.indexOf(" aseg ", Qt::CaseInsensitive)<0)
+            slist.append(Segment(_lines.mid(fi), type));
+    }
 }
