@@ -35,7 +35,7 @@ void FileList::SearchFiles(QString inputfile)
     QString total;
     for(QString s: _files)
         total += s + "\n";
-    Logger::WriteFile("_listFiles.txt", total);
+    Logger::WriteFile("files/_listFiles.txt", total);
 
     Logger::Log("Znaleziono "+QString::number(_files.size())+" plików...");
 }

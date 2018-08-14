@@ -4,6 +4,9 @@
 void SegmentList::append(Segment seg)
 {
     _seg[seg.type()].append(seg);
+
+    if(seg.type()=="unknown")
+        Logger::LogWarning("Nie rozpoznano sekcji w pliku \""+seg.get().at(0).File()+"\". Patrz sections/unknown.txt.");
 }
 
 QMap<QString, QList<Segment> > &SegmentList::get()
