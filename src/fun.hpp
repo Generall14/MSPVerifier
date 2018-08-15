@@ -14,6 +14,8 @@ public:
 
 private:
     void parse();
+
+    QString _name="__XXXXXX_tu_sie_cos_zesralo";
 };
 
 #endif

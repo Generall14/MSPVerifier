@@ -5,6 +5,7 @@
 #include "src/Logger.hpp"
 #include "src/FileList.hpp"
 #include "src/segmentList.hpp"
+#include "src/funContainer.hpp"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ int main(int, char *[])
         FileList fl("./input/emespe.ewp");
         SegmentList sl = fl.getSegments();
         sl.store();
+        FunContainer fc = sl.digForFunctions();
     }
     catch(std::runtime_error err)
     {

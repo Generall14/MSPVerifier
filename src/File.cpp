@@ -229,7 +229,7 @@ void File::removeUslessStuff()
     {
         for(auto r: toRemove)
         {
-            if(_lines.at(i).currentText.contains(r, Qt::CaseInsensitive))
+            if(_lines.at(i).currentText.contains(" "+r+" ", Qt::CaseInsensitive))
             {
                 _lines.removeAt(i);
                 break;
@@ -262,7 +262,7 @@ void File::divide(SegmentList& slist)
                 continue;
             }
             if(_lines.at(fi).currentText.indexOf(" aseg ", Qt::CaseInsensitive)<0)
-                slist.append(Segment(_lines.mid(fi, li-fi), type));
+                slist.append(Segment(_lines.mid(fi+1, li-fi-1), type));
             type = current;
             current = "";
             fi = li;
@@ -271,6 +271,6 @@ void File::divide(SegmentList& slist)
     if(fi<_lines.size()-1)
     {
         if(_lines.at(fi).currentText.indexOf(" aseg ", Qt::CaseInsensitive)<0)
-            slist.append(Segment(_lines.mid(fi), type));
+            slist.append(Segment(_lines.mid(fi+1), type));
     }
 }

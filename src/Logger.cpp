@@ -43,7 +43,7 @@ void Logger::AppendFile(QString file, QString text)
     QFile f1(dir+file);
     f1.open(QIODevice::Append | QIODevice::ReadWrite);
     f1.close();
-    Log(text, dir+file);
+    Log(text+"\n\n\n\n\n", dir+file);
 }
 
 void Logger::LogError(QString txt)
