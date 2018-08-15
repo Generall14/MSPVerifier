@@ -20,7 +20,9 @@ SOURCES += main.cpp \
     src/dyskryminatorSM.cpp \
     src/macro.cpp \
     src/segment.cpp \
-    src/segmentList.cpp
+    src/segmentList.cpp \
+    src/fun.cpp \
+    src/funContainer.cpp
 
 #LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -49,4 +51,6 @@ HEADERS += \
     src/dyskryminatorSM.hpp \
     src/macro.hpp \
     src/segment.hpp \
-    src/segmentList.hpp
+    src/segmentList.hpp \
+    src/fun.hpp \
+    src/funContainer.hpp

@@ -222,17 +222,19 @@ void File::expandDefines()
 
 void File::removeUslessStuff()
 {
+    QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end"};
+
     skipWhiteSigns();
     for(int i=_lines.size()-1;i>=0;i--)
     {
-        if((_lines.at(i).currentText.indexOf(" public ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" extern ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" equ ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" #if ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" #else ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" #endif ", Qt::CaseInsensitive)>=0)
-                ||(_lines.at(i).currentText.indexOf(" end ", Qt::CaseInsensitive)>=0))
-            _lines.removeAt(i);
+        for(auto r: toRemove)
+        {
+            if(_lines.at(i).currentText.contains(r, Qt::CaseInsensitive))
+            {
+                _lines.removeAt(i);
+                break;
+            }
+        }
     }
 }
 

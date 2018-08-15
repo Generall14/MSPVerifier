@@ -38,6 +38,14 @@ void Logger::WriteFile(QString file, QString text)
     Log(text, dir+file);
 }
 
+void Logger::AppendFile(QString file, QString text)
+{
+    QFile f1(dir+file);
+    f1.open(QIODevice::Append | QIODevice::ReadWrite);
+    f1.close();
+    Log(text, dir+file);
+}
+
 void Logger::LogError(QString txt)
 {
     QString text = "ERROR: \n" + txt + "\n\n";
