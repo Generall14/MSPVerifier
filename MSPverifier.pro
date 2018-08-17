@@ -22,9 +22,12 @@ SOURCES += main.cpp \
     src/segment.cpp \
     src/segmentList.cpp \
     src/fun.cpp \
-    src/funContainer.cpp
+    src/funContainer.cpp \
+    src/core.cpp \
+    src/reg.cpp \
+    src/stack.cpp
 
-#LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
+LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
 
 # The following define makes your compiler emit warnings if you use
@@ -53,4 +56,7 @@ HEADERS += \
     src/segment.hpp \
     src/segmentList.hpp \
     src/fun.hpp \
-    src/funContainer.hpp
+    src/funContainer.hpp \
+    src/core.hpp \
+    src/reg.hpp \
+    src/stack.hpp
