@@ -4,3 +4,4 @@ stats/*
 input_tests*/*
 dokradzenia/*
 *.user
+*.user.*
