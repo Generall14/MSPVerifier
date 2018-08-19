@@ -14,7 +14,7 @@ Fun::Fun(QList<Line> lines)
 
     parse();
 
-    Logger::WriteFile("code/"+_name+".txt", toString()); // <TODO> przerobić, status symulacji.
+    Logger::WriteFile("code/"+_name+".csv", toString()); // <TODO> przerobić, status symulacji.
 }
 
 void Fun::parse()

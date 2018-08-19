@@ -17,3 +17,8 @@ bool Core::merge(const Core& other)
     // <TODO> sprawdz stosy - niezgodne - throw
     // <TODO> wciagnij i sprawdz
 }
+
+QString Core::toString() const
+{
+    return "core"; //<TODO>
+}

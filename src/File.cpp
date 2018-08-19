@@ -25,7 +25,7 @@ File::File(QString adress):
 
     skipWhiteSigns();
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
-    Logger::WriteFile("parsedFiles/"+_name+".txt", this->toString());
+    Logger::WriteFile("parsedFiles/"+_name+".csv", this->toString());
 }
 
 void File::loadFile()

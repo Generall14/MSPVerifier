@@ -27,7 +27,7 @@ void SegmentList::store()
             temp.append("\n\n\n\n\n\n");
         }
 
-        Logger::WriteFile("sections/"+key+".txt", temp);
+        Logger::WriteFile("sections/"+key+".csv", temp);
     }
 }
 

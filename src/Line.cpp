@@ -1,5 +1,6 @@
 #include "Line.hpp"
 #include <QDebug>
+#include "core.hpp"
 
 Line::Line(QString file, QString text, int line):
     currentText(text),
@@ -44,12 +45,16 @@ int Line::LineNumber() const
 
 QString Line::toString() const
 {
-    QString temp = "[File: \""+_file+"\"";
-    temp += ", line " + QString::number(_line);
-    temp += ", text: \""+_oText;
+    QString temp = "File:'\""+_file+"\"";
+    temp += "'line:'" + QString::number(_line);
+    temp += "'text:'\""+_oText;
     if(_oText!=currentText)
-        temp += "\" -> \""+currentText;
-    temp += "\"]";
+        temp += "\"'->'\""+currentText;
+    temp += "\"'core:'";
+    if(core==nullptr)
+        temp += "nullptr'";
+    else
+        temp += core->toString();
     return temp;
 }
 

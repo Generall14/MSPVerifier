@@ -13,6 +13,8 @@ public:
 
     bool merge(const Core& other);
 
+    QString toString() const;
+
 private:
     QString _name;
     Stack _stack;
