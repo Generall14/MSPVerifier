@@ -2,6 +2,9 @@
 #include "Logger.hpp"
 #include <stdexcept>
 #include "funContainer.hpp"
+#include <QMultiMap>
+#include "core.hpp"
+#include <QDebug>
 
 Fun::Fun(QList<Line> lines)
 {
@@ -47,7 +50,30 @@ QString Fun::name() const
 
 void Fun::simulate(const FunContainer *fc)
 {
-    _state = error;
+    QMultiMap<int, Core> todo; //Lista symulacji (numer pierwszej instrukcji do wykonania, rdzeń wejścia)
+    todo.insert(0, Core(_name));
+
+    while(!todo.isEmpty())
+    {
+        auto it = todo.begin();
+        todo.erase(it);
+
+        int line = it.key();
+        Core core = it.value();
+
+        for(;line<_lines.size();line++)
+        {
+            //<TODO> tutaj rodzie się kwestia poprzedniego rdzenia: poprzedni->ładuj instrukcje, merguj do
+            // aktualnego/stworz aktualny. Poprzedni może być z polecenia w mapie lub z poprzedniej instrukcji.
+            // jumpy warunkowe: dodaj do kolejki skok, symuluj dalej.
+            // jumpy bezwarunkowe: dodaj do kolejki skok, zakończ pętle.
+            core.loadInstruction(_lines.at(line));
+//            if()
+//            _lines[line].core = new Core(core);
+        }
+    }
+
+    _state = error; //<TODO> w piach, do testów
 
 //    for(auto line: _lines)
 //    {
