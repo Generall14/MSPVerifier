@@ -5,6 +5,7 @@
 #include <QMap>
 #include "reg.hpp"
 #include "stack.hpp"
+#include "Line.hpp"
 
 class Core
 {
@@ -12,6 +13,7 @@ public:
     Core(QString name);
 
     bool merge(const Core& other);
+    bool loadInstruction(const Line& line);
 
     QString toString() const;
 

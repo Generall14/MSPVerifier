@@ -21,6 +21,7 @@ public:
     void pushB(QString desc);
     QString popB();
 
+    QString toString() const;
     int depth() const;
 
 private:

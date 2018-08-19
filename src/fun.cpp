@@ -49,15 +49,15 @@ void Fun::simulate(const FunContainer *fc)
 {
     _state = error;
 
-    for(auto line: _lines)
-    {
-        QString args;
-        for(auto arg: line.getArguments())
-            args.append(arg+", ");
-        args = args.mid(0, args.size()-2);
-        Logger::Log(line.currentText+" -> \""+line.getLabel()+"\" -> \""+line.getInstruction()+
-                    "."+line.getInstructionSize()+"\" -> \""+args+"\"");
-    }
+//    for(auto line: _lines)
+//    {
+//        QString args;
+//        for(auto arg: line.getArguments())
+//            args.append(arg+", ");
+//        args = args.mid(0, args.size()-2);
+//        Logger::Log(line.currentText+" -> \""+line.getLabel()+"\" -> \""+line.getInstruction()+
+//                    "."+line.getInstructionSize()+"\" -> \""+args+"\"");
+//    } <TODO> w piach
 
     // <TODO>
 }

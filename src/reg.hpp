@@ -7,6 +7,7 @@
 class Reg
 {
 public:
+    Reg(){}
     Reg(QString val, QString size="w");
 
     QString toString() const;

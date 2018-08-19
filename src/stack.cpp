@@ -74,3 +74,8 @@ int Stack::depth() const
 //        dep += _called->depth(); <TODO> max glebokosc
     return dep;
 }
+
+QString Stack::toString() const
+{
+    return "Stack level: "+QString::number(_stack.size()); //<TODO> uwzględnić nieznane call?
+}
