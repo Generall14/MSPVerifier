@@ -20,6 +20,7 @@ int main(int, char *[])
         SegmentList sl = fl.getSegments();
         sl.store();
         FunContainer fc = sl.digForFunctions();
+        fc.simulate();
     }
     catch(std::runtime_error err)
     {

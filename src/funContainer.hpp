@@ -10,6 +10,8 @@ public:
     FunContainer(){}
 
     void append(Fun fun);
+    void simulate();
+    const Fun& getByName(QString name) throw(std::runtime_error);
 
     QList<Fun>& get();
 

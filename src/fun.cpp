@@ -1,6 +1,7 @@
 #include "fun.hpp"
 #include "Logger.hpp"
 #include <stdexcept>
+#include "funContainer.hpp"
 
 Fun::Fun(QList<Line> lines)
 {
@@ -13,7 +14,7 @@ Fun::Fun(QList<Line> lines)
 
     parse();
 
-    Logger::WriteFile("code/"+_name+".txt", toString());
+    Logger::WriteFile("code/"+_name+".txt", toString()); // <TODO> przerobić, status symulacji.
 }
 
 void Fun::parse()
@@ -32,4 +33,20 @@ QString Fun::toString() const
 {
     return LineContainer::toString();
     //<TODO>
+}
+
+Fun::simState Fun::state() const
+{
+    return _state;
+}
+
+QString Fun::name() const
+{
+    return _name;
+}
+
+void Fun::simulate(const FunContainer *fc)
+{
+    _state = error;
+    // <TODO>
 }
