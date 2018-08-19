@@ -2,6 +2,9 @@
 #define LINE_HPP
 
 #include <QString>
+#include <QStringList>
+
+class Core;
 
 //<TODO>
 class Line
@@ -18,7 +21,13 @@ public:
     QString toString() const;
     QString toSString() const;
 
+    QString getInstruction() const;
+    QString getInstructionSize() const;
+    QString getLabel() const;
+    QStringList getArguments() const;
+
     QString currentText;
+    Core* core = nullptr; //Obiekt symulowanego rdzenia po wykonaniu instrukcji
 
 private:
     int _line;

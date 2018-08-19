@@ -1,4 +1,5 @@
 #include "Line.hpp"
+#include <QDebug>
 
 Line::Line(QString file, QString text, int line):
     currentText(text),
@@ -56,4 +57,70 @@ QString Line::toSString() const
 {
     QString temp = QString::number(_line)+": "+currentText;
     return temp;
+}
+
+QString Line::getInstruction() const
+{
+    if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
+        return "";
+    QString temp = currentText;
+    if(temp.contains(":"))
+        temp = temp.split(":").at(1);
+    QStringList sl = temp.split(" ", QString::SkipEmptyParts);
+    if(sl.isEmpty())
+        return "";
+    else
+        return sl.at(0).split(".").at(0);
+}
+
+QString Line::getInstructionSize() const
+{
+    if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
+        return "";
+    QString temp = currentText;
+    if(temp.contains(":"))
+        temp = temp.split(":").at(1);
+    QStringList sl = temp.split(" ", QString::SkipEmptyParts);
+    if(sl.isEmpty())
+        return "";
+    else
+    {
+        sl = sl.at(0).split(".", QString::SkipEmptyParts);
+        if(sl.size()<2)
+            return "w";
+        else
+            return sl.at(1);
+    }
+}
+
+QString Line::getLabel() const
+{
+    if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
+        return "";
+    QString temp;
+    if(currentText.contains(":"))
+    {
+        temp = currentText.split(":").at(0);
+        temp.remove(" ");
+    }
+    return temp;
+}
+
+QStringList Line::getArguments() const
+{
+    if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
+        return QStringList();
+    QString temp = currentText;
+    if(temp.contains(":"))
+        temp = temp.split(":").at(1);
+    QStringList sl = temp.split(" ", QString::SkipEmptyParts);
+    if(sl.size()<2)
+        return QStringList();
+    else
+    {
+        sl = sl.mid(1);
+        for(QString& a: sl)
+            a.remove(",");
+        return sl;
+    }
 }
