@@ -11,6 +11,8 @@ class Core
 {
 public:
     Core(QString name);
+    Core(const Core& other);
+    Core& operator=(const Core& other);
 
     bool merge(const Core& other);
     bool loadInstruction(const Line& line);
@@ -18,7 +20,7 @@ public:
     QString toString() const;
 
 private:
-    QString _name;
+    QString _name="";
     Stack _stack;
     QMap<QString, Reg> _regs;
 };

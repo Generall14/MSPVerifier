@@ -8,6 +8,26 @@ Core::Core(QString name):
         _regs.insert(r, Reg(r, "a"));
 }
 
+Core::Core(const Core& other):
+    _name(other._name),
+    _stack(other._stack),
+    _regs(other._regs)
+{
+
+}
+
+Core& Core::operator=(const Core& other)
+{
+    if(this==&other)
+        return *this;
+
+    _name=other._name;
+    _stack=other._stack;
+    _regs=other._regs;
+
+    return *this;
+}
+
 /**
  * Merguje do siebie wskazany obiekt, jeżeli nastąpiło zwiększenie entropii (w którymś z rejestrów) zwrócona zostanie wartość true. Jeżeli
  * stosy okażą się niezgodne - zgłoszoy zostanie wyjątek.5
@@ -16,6 +36,8 @@ bool Core::merge(const Core& other)
 {
     // <TODO> sprawdz stosy - niezgodne - throw
     // <TODO> wciagnij i sprawdz
+
+    return true;
 }
 
 QString Core::toString() const

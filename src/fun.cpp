@@ -56,21 +56,40 @@ void Fun::simulate(const FunContainer *fc)
     while(!todo.isEmpty())
     {
         auto it = todo.begin();
-        todo.erase(it);
-
+        Core* prev = new Core(it.value());
         int line = it.key();
-        Core core = it.value();
+        todo.erase(it);
 
         for(;line<_lines.size();line++)
         {
+            //<TODO> - przypadki szczególne - call, jump...
+
+            prev->loadInstruction(_lines.at(line));
+            if(_lines.at(line).core==nullptr)
+            {
+                _lines[line].core=prev;
+                prev = new Core(*prev);
+            }
+            else
+            {
+                bool ret = _lines[line].core->merge(*prev);
+                delete prev;
+                prev = nullptr;
+                if(ret)
+                    prev = new Core(*_lines.at(line).core);
+                else
+                    break;
+            }
+
             //<TODO> tutaj rodzie się kwestia poprzedniego rdzenia: poprzedni->ładuj instrukcje, merguj do
             // aktualnego/stworz aktualny. Poprzedni może być z polecenia w mapie lub z poprzedniej instrukcji.
             // jumpy warunkowe: dodaj do kolejki skok, symuluj dalej.
             // jumpy bezwarunkowe: dodaj do kolejki skok, zakończ pętle.
-            core.loadInstruction(_lines.at(line));
+            //core.loadInstruction(_lines.at(line));
 //            if()
 //            _lines[line].core = new Core(core);
         }
+        delete prev;
     }
 
     _state = error; //<TODO> w piach, do testów
@@ -86,4 +105,5 @@ void Fun::simulate(const FunContainer *fc)
 //    } <TODO> w piach
 
     // <TODO>
+    Logger::WriteFile("code/"+_name+".csv", toString());
 }
