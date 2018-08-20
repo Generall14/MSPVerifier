@@ -25,7 +25,34 @@ Line::Line(const Line& other):
     _oText(other.OryginalText()),
     _file(other.File())
 {
+    if(other.core==nullptr)
+        core = nullptr;
+    else
+        core = new Core(*other.core);
+}
 
+Line& Line::operator=(const Line& other)
+{
+    if(this==&other)
+        return *this;
+
+    delete core;
+    if(other.core==nullptr)
+        core = nullptr;
+    else
+        core = new Core(*other.core);
+
+    currentText=other.currentText;
+    _line=other.LineNumber();
+    _oText=other.OryginalText();
+    _file=other.File();
+
+    return *this;
+}
+
+Line::~Line()
+{
+    delete core;
 }
 
 QString Line::File() const

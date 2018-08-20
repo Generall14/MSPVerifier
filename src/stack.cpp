@@ -8,7 +8,40 @@ Stack::Stack(QString base):
 
 Stack::Stack(const Fun& getMaxStack)
 {
+    //<TODO>
+}
 
+Stack::Stack(const Stack& other):
+    _stack(other._stack),
+    _base(other._base),
+    _ucalled(other._ucalled),
+    _unknowns(other._unknowns),
+    lastCallS(other.lastCallS)
+{
+    if(other._called==nullptr)
+        _called = nullptr;
+    else
+        _called = new Fun(*other._called);
+}
+
+Stack& Stack::operator=(const Stack& other)
+{
+    if(this==&other)
+        return *this;
+
+    delete _called;
+    if(other._called==nullptr)
+        _called = nullptr;
+    else
+        _called = new Fun(*other._called);
+
+    _stack=other._stack;
+    _base=other._base;
+    _ucalled=other._ucalled;
+    _unknowns=other._unknowns;
+    lastCallS=other.lastCallS;
+
+    return *this;
 }
 
 Stack::~Stack()

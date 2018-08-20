@@ -12,6 +12,8 @@ public:
     Stack(){}
     Stack(QString base);
     Stack(const Fun& getMaxStack);
+    Stack(const Stack& other);
+    Stack& operator=(const Stack& other);
     ~Stack();
 
     bool isEmpty() const;

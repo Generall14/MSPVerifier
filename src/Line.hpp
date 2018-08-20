@@ -13,6 +13,8 @@ public:
     Line(QString file, QString text, int line);
     Line(const Line& old, QString newLine);
     Line(const Line& other);
+    Line& operator=(const Line& other);
+    ~Line();
 
     QString File() const;
     QString OryginalText() const;

@@ -2,6 +2,7 @@
 #define FUNCONTAINER_HPP
 
 #include "fun.hpp"
+#include <stdexcept>
 #include <QList>
 
 class FunContainer
