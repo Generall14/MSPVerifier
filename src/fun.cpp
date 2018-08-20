@@ -60,6 +60,9 @@ void Fun::simulate(const FunContainer *fc)
 
         for(;line<_lines.size();line++)
         {
+            if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
+                continue;
+
             //<TODO> - przypadki szczególne - call, jump...
 
             prev->loadInstruction(_lines.at(line));

@@ -3,7 +3,7 @@
 
 #include <QString>
 
-//<TODO>
+//<TODO> to jest do usunięcia?
 class MSPFile
 {
 public:

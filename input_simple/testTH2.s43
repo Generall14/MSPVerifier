@@ -1,0 +1,62 @@
+#include "msp430.h"
+#include "umac.h"
+
+          rseg          CODE(1)
+          public        testTH2
+         ;##fun
+testTH2:
+          mov.w         #0x06, r8
+          
+          extern        WAKE_UP_IMMEDIATELY_MASK
+          mov.w         #WAKE_UP_IMMEDIATELY_MASK, R12
+          extern        BuerOS_disable_wake_up_event
+          call          #BuerOS_disable_wake_up_event
+          
+          mov.w         #0x4321, R11
+          
+loopi:
+          ;_LED2_SWAP
+          
+          mov.w         R11, R9
+          mov.w         R11, R10
+          mov.w         R11, R14
+          and.w         #0x0800, R9
+          and.w         #0x0020, R10
+          and.w         #0x0004, R14
+          tst.w         R9
+          jz            skip1
+              mov.w     #0x0001, R9
+skip1:
+          tst.w         R10
+          jz            skip2
+              mov.w     #0x0001, R10
+skip2:
+          tst.w         R14
+          jz            skip3
+              mov.w     #0x0001, R14
+skip3:
+          xor.w         R9, R10
+          xor.w         R10, R14
+
+          rla.w         R11
+          tst.w         R14
+          jz            skip4
+          bis.w         #0x0001, R11
+skip4:
+          mov.w         R11, R12
+          and.w         #0x00FF, R12
+          ;mov.w         #0x64, R12 ; 0x64
+          extern        BuerOS_set_process_wake_up_time
+          call          #BuerOS_set_process_wake_up_time
+         
+          
+          
+          extern        BuerOS_yield
+          call          #BuerOS_yield
+          
+          jmp           loopi
+          
+          ret
+          
+          end
+          

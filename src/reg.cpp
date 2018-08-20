@@ -9,13 +9,13 @@ Reg::Reg(QString val, QString size)
     _b = val;
     if(size=="b")
     {
-        _w = "?";
-        _a = "?";
+        _w = "0";
+        _a = "0";
     }
     else if(size=="w")
     {
         _w = val;
-        _a = "";
+        _a = "0";
     }
     else if(size=="a")
     {

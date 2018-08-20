@@ -1,4 +1,11 @@
 #include "core.hpp"
+#include "Logger.hpp"
+
+const QStringList Core::mov = {"mov", "movx"};
+const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
+                                  "and", "andx"};
+const QStringList Core::singleMArgs = {"swpb"};
+const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop"};
 
 Core::Core(QString name):
     _name(name),
@@ -54,5 +61,57 @@ QString Core::toString() const
  */
 bool Core::loadInstruction(const Line& line)
 {
+    if(line.getInstruction().isEmpty())
+        return false;
 
+    if(transparentArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
+        return false;
+
+    if(mov.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getArguments().size()<2)
+        {
+            Logger::LogError("Za mało argumentów w "+line.toString());
+            return false;
+        }
+        if(_regs.contains(line.getArguments().at(1).toLower()))
+        {
+            QString fa = "?";
+            if(_regs.contains(line.getArguments().at(0)))
+                fa = line.getArguments().at(0).toLower();
+            return _regs[line.getArguments().at(1).toLower()].merge(Reg(fa, line.getInstructionSize()));
+        }
+        return false;
+    }
+
+    if(biMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getArguments().size()<2)
+        {
+            Logger::LogError("Za mało argumentów w "+line.toString());
+            return false;
+        }
+        if(_regs.contains(line.getArguments().at(1).toLower()))
+        {
+            return _regs[line.getArguments().at(1).toLower()].merge(Reg("?", line.getInstructionSize()));
+        }
+        return false;
+    }
+
+    if(singleMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getArguments().size()<1)
+        {
+            Logger::LogError("Za mało argumentów w "+line.toString());
+            return false;
+        }
+        if(_regs.contains(line.getArguments().at(0).toLower()))
+        {
+            return _regs[line.getArguments().at(0).toLower()].merge(Reg("?", line.getInstructionSize()));
+        }
+        return false;
+    }
+
+    Logger::LogError("Nieznana instrukcja w "+line.toString());
+    return false;
 }

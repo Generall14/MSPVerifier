@@ -1,0 +1,127 @@
+#include "msp430.h"
+
+; R12 = R12+R13
+
+          rseg          CODE(1)
+          public        testFun
+;##FUN 
+testFun:
+			mov.w	r10, R11
+			mov.w 	r10, labx
+			mov.w	labx, R9
+          add.w         r13, r12
+                  ; odblokowanie dostepu do :CS
+        mov.w   #0xa500, &CSCTL0
+        
+        ;=========================== ACLK ======================================
+        ; SELM = 010 (LFMODCLK na ACLK)
+        bic.w   #SELA2, &CSCTL2
+        bis.w   #SELA1, &CSCTL2
+        bic.w   #SELA0, &CSCTL2
+        ; DIVA = 010 (LFMODCLK / 4)
+        bic.w   #DIVA2, &CSCTL3
+        bis.w   #DIVA1, &CSCTL3
+        bic.w   #DIVA0, &CSCTL3
+        ;=======================================================================
+        ;=========================== MCLK ======================================
+        ; external crystal
+        bic.w   #HFXTBYPASS, &CSCTL4
+        ; HFFREQ = 01, oscylator zewnetrzny z zakresu 8 - 16 MHz
+        bic.w   #HFFREQ1, &CSCTL4
+        bis.w   #HFFREQ0, &CSCTL4
+        ; bujanie oscylatora:
+        bic.w   #LOCKLPM5, PM5CTL0
+        bis.w   #0x0040|0x0080, &PJDIR
+        bic.w   #0x0040|0x0080, &PJSEL1
+        bic.w   #0x0040|0x0080, &PJSEL0
+        bis.w   #0x0040, &PJOUT
+        bic.w   #0x0080, &PJOUT
+        bis.w   #0x0080, &PJOUT
+        bic.w   #0x0040, &PJOUT
+        bis.w   #0x0040, &PJOUT
+        bic.w   #0x0080, &PJOUT
+        bis.w   #0x0080, &PJOUT
+        bic.w   #0x0040, &PJOUT
+        
+        ; wejscia PJ.6 PJ.7 do zródla taktowania:
+        bic.w   #0x0040|0x0080, &PJDIR
+        bic.w   #0x0040|0x0080, &PJREN
+        bic.w   #0x0040|0x0080, &PJSEL1
+        bis.w   #0x0040|0x0080, &PJSEL0
+        ; wlaczanie HFXTOFF:
+        bic.w   #HFXTOFF, &CSCTL4
+//waiting_for_xt:
+//        bic.w   #HFXTOFFG, &CSCTL5
+//        bit.w   #HFXTOFFG, &CSCTL5
+//        jnz     waiting_for_xt
+        
+        ; SELM = 101 (HFXTCLK na MCLK)
+        bis.w   #SELM2, &CSCTL2
+        bic.w   #SELM1, &CSCTL2
+        bis.w   #SELM0, &CSCTL2
+        ; DIVM = 000 (HFXTCLK x 1)
+        bic.w   #DIVM2, &CSCTL3
+        bic.w   #DIVM1, &CSCTL3
+        bic.w   #DIVM0, &CSCTL3
+        
+        ;=======================================================================
+        ;========================== SMCLK ======================================
+        ; SELS = 101 (HFXTCLK na SMCLK)
+        bis.w   #SELS2, &CSCTL2
+        bic.w   #SELS1, &CSCTL2
+        bis.w   #SELS0, &CSCTL2
+        ; DIVS = 000 (HFXTCLK x 1)
+        bic.w   #DIVS2, &CSCTL3
+        bic.w   #DIVS1, &CSCTL3
+        bic.w   #DIVS0, &CSCTL3
+        ;=======================================================================
+
+        ;oczekiwanie na zakonczenie faultów
+waiting_for_cs:      
+        bic.w   #HFXTOFFG, &CSCTL5
+        bic.w   #LFXTOFFG, &CSCTL5
+        bic.w   #OFIFG, &SFRIFG1
+        bit.w   #OFIFG, &SFRIFG1
+        jnz waiting_for_cs
+                  bit.b         #token_hook_active, token_hook_flags
+          jz            return ; czy hak wylaczony
+
+          bit.b         #token_hook_filtered_src, token_hook_flags
+          jz            no_src_filter
+          extern        header_collector
+          mov.b         header_collector, R4
+          xor.b         token_hook_src_filter, R4
+          and.b         #0x3F, R4
+          jnz           return ; sprawdzanie zgodnosci adresow zrodlowych
+no_src_filter:
+
+          bit.b         #token_hook_filtered_dst, token_hook_flags
+          jz            no_dst_filter
+          mov.b         header_collector+1, R4
+          xor.b         token_hook_dst_filter, R4
+          and.b         #0x3F, R4
+          jnz           return ; sprawdzanie zgodnosci adresow docelowych
+no_dst_filter:
+
+          mov.w         token_hook_bufor, R4
+          mov.b         header_collector, 0(R4)
+          mov.b         header_collector+1, 1(R4)
+          mov.b         header_collector+2, 2(R4)
+          mov.b         header_collector+3, 3(R4) ; kopiowanie odebranego naglowka
+
+          bit.b         #token_hook_run_listening_hook, token_hook_flags
+          jnz           do_not_run_listening
+          extern        listening_hook_flags
+          extern        listening_hook_active
+          bis.b         #listening_hook_active, listening_hook_flags ; wlaczanie haka podsluchu sieci
+do_not_run_listening:  
+
+          bit.b         #token_hook_continuous, token_hook_flags
+          jnz           do_not_disable
+          bic.b         #token_hook_active, token_hook_flags ; wylaczanie haka
+do_not_disable:
+
+return:
+          ret
+          
+          end
