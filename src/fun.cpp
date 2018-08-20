@@ -16,8 +16,6 @@ Fun::Fun(QList<Line> lines)
         throw std::runtime_error("Fun::Fun: za malo lini kodu aby to mialo sens.");
 
     parse();
-
-    Logger::WriteFile("code/"+_name+".csv", toString()); // <TODO> przerobić, status symulacji.
 }
 
 void Fun::parse()

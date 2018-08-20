@@ -45,7 +45,7 @@ QString Core::toString() const
     QString temp = _stack.toString()+"'";
     for(QString key: _regs.keys())
         temp += "'"+key+_regs[key].toString();
-    return "core"; //<TODO>
+    return temp;
 }
 
 /**
