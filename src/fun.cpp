@@ -55,7 +55,8 @@ void Fun::simulate(const FunContainer *fc)
 
     while(!todo.isEmpty())
     {
-        // Pobieranie danych wejściowych symulacji i usuwanie z mapy wpisu:
+        // Pobieranie danych wejściowych symulacji i usuwanie z mapy wpisu. Obiekt prev zawsze będzie reprezentował stan rdzenia
+        // poprzedający wykonanie instrukcji.
         auto it = todo.begin();
         Core* prev = new Core(it.value());
         int line = it.key();
@@ -68,6 +69,7 @@ void Fun::simulate(const FunContainer *fc)
             if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
                 continue;
 
+            //================================================================================================
             // Wykrywanie powrotow: <TODO>
             if(Core::rets.contains(_lines.at(line).getInstruction()))
             {
@@ -75,6 +77,7 @@ void Fun::simulate(const FunContainer *fc)
                 break;
             }
 
+            //================================================================================================
             // Wykrywanie skoków bezwarunkowych:
             // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
             if(Core::jumps.contains(_lines.at(line).getInstruction()))
@@ -100,6 +103,11 @@ void Fun::simulate(const FunContainer *fc)
 
             //<TODO> - przypadki szczególne - call, jump...
 
+            //================================================================================================
+            // Ładowanie instrukcji nie wpływających na przepływ sterowania. Do rdzenia jest ładowana instrukcja, jeżeli dana linia
+            // nie posiadała wcześniej symulowanego rdzenia - dostanie obiekt prev. Jeżeli linia miała juz własny rdzeń to zostanie
+            // on połączony z prev, jeżeli to połączenie nie zmieni stanu rdzenia na bardziej nieokreślony (dalsza symulacja tego
+            // przypadku niczego nie zmieni) - dany przebieg symulacji zostanie zakończony.
             prev->loadInstruction(_lines.at(line));
             if(_lines.at(line).core==nullptr)
             {

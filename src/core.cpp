@@ -62,14 +62,18 @@ QString Core::toString() const
  */
 bool Core::loadInstruction(const Line& line)
 {
+    // Jeżeli linie nie zawiera instrukcji - nic się nie zmienia.
     if(line.getInstruction().isEmpty())
         return false;
 
+    // Jeżeli linia zawiera instrukcjię nic nie robiącą z rdzeniem - ret;
     if(transparentArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
-//    if(jumps.contains(line.getInstruction(), Qt::CaseInsensitive))
-//        return false;
 
+    // <TODO> instrukcje specjalne - pop, push, grzebanie w sp
+
+    // Jeżeli linia zawiera instrukcję dwu argumentową oraz drugi argument jest rejestrem - modyfikuj
+    // rejestr.
     if(biMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
     {
         if(line.getArguments().size()<2)
@@ -84,6 +88,7 @@ bool Core::loadInstruction(const Line& line)
         return false;
     }
 
+    // Jeżeli linia zawiera instrukcję jedno argumentową oraz argument jest rejestrem - modyfikuj rejestr.
     if(singleMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
     {
         if(line.getArguments().size()<1)
@@ -98,6 +103,7 @@ bool Core::loadInstruction(const Line& line)
         return false;
     }
 
+    // WTF? Nic z powyższych.
     Logger::LogError("Nieznana instrukcja w "+line.toString());
     return false;
 }
