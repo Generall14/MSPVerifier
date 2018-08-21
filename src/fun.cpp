@@ -48,43 +48,112 @@ QString Fun::name() const
 
 void Fun::simulate(const FunContainer *fc)
 {
-    // Poniższa mapa zawiera listę punktów wejścia symulacji. Każdy przebieg symulacji wykonywany będzie od numeru lini i z rdzeniem
-    // wskazanym w mapie.
-    QMultiMap<int, Core> todo; // Lista symulacji (numer pierwszej instrukcji do wykonania, rdzeń wejścia)
-    todo.insert(0, Core(_name)); // Punkt wejścia
-
-    while(!todo.isEmpty())
+    int line;
+    try
     {
-        // Pobieranie danych wejściowych symulacji i usuwanie z mapy wpisu. Obiekt prev zawsze będzie reprezentował stan rdzenia
-        // poprzedający wykonanie instrukcji.
-        auto it = todo.begin();
-        Core* prev = new Core(it.value());
-        int line = it.key();
-        todo.erase(it);
+        // Poniższa mapa zawiera listę punktów wejścia symulacji. Każdy przebieg symulacji wykonywany będzie od numeru lini i z rdzeniem
+        // wskazanym w mapie.
+        QMultiMap<int, Core> todo; // Lista symulacji (numer pierwszej instrukcji do wykonania, rdzeń wejścia)
+        todo.insert(0, Core(_name)); // Punkt wejścia
 
-        // Dla wszystkich lini od punktu wejścia:
-        for(;line<_lines.size();line++)
+        while(!todo.isEmpty())
         {
-            // Tekst informacyjny jest pomijany:
-            if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
-                continue;
+            // Pobieranie danych wejściowych symulacji i usuwanie z mapy wpisu. Obiekt prev zawsze będzie reprezentował stan rdzenia
+            // poprzedający wykonanie instrukcji.
+            auto it = todo.begin();
+            Core* prev = new Core(it.value());
+            line = it.key();
+            todo.erase(it);
 
-            //================================================================================================
-            // Wykrywanie powrotow: <TODO>
-            if(Core::rets.contains(_lines.at(line).getInstruction()))
+            // Dla wszystkich lini od punktu wejścia:
+            for(;line<_lines.size();line++)
             {
-                // <TODO> kwestia returnow
-                break;
-            }
+                // Tekst informacyjny jest pomijany:
+                if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
+                    continue;
 
-            //================================================================================================
-            // Wykrywanie skoków bezwarunkowych:
-            // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
-            if(Core::jumps.contains(_lines.at(line).getInstruction()))
-            {
+                //================================================================================================
+                // Wykrywanie powrotow: <TODO>
+                if(Core::rets.contains(_lines.at(line).getInstruction()))
+                {
+                    // <TODO> kwestia returnow
+                    break;
+                }
+
+                //================================================================================================
+                // Wykrywanie skoków bezwarunkowych:
+                // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
+                if(Core::jumps.contains(_lines.at(line).getInstruction()))
+                {
+                    if(_lines.at(line).core==nullptr)
+                    {
+                        _lines[line].core = prev;
+                        prev = new Core(*prev);
+                    }
+                    else
+                    {
+                        bool ret = _lines[line].core->merge(*prev);
+                        delete prev;
+                        prev = nullptr;
+                        if(ret)
+                            prev = new Core(*_lines.at(line).core);
+                        else
+                            break;
+                    }
+
+                    if(_lines.at(line).getArguments().isEmpty())
+                        throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
+                    // Wyszukiwanie etyiety:
+                    int found = -1; // <TODO> do refaktoryzacji
+                    for(int i=0;i<_lines.size();i++)
+                    {
+                        if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
+                        {
+                            found = i;
+                            break;
+                        }
+                    }
+                    if(found<0)
+                        throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
+                    todo.insert(found, Core(*prev));
+                    break;
+                }
+
+                //================================================================================================
+                // Wykrywanie skoków warunkowych:
+                // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kontynuowana.
+                // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
+                if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
+                {
+
+                    if(_lines.at(line).getArguments().isEmpty())
+                        throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
+                    // Wyszukiwanie etyiety:
+                    int found = -1; // <TODO> do refaktoryzacji
+                    for(int i=0;i<_lines.size();i++)
+                    {
+                        if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
+                        {
+                            found = i;
+                            break;
+                        }
+                    }
+                    if(found<0)
+                        throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
+                    todo.insert(found, Core(*prev));
+                }
+
+                //<TODO> - przypadki szczególne - call, ...
+
+                //================================================================================================
+                // Ładowanie instrukcji nie wpływających na przepływ sterowania. Do rdzenia jest ładowana instrukcja, jeżeli dana linia
+                // nie posiadała wcześniej symulowanego rdzenia - dostanie obiekt prev. Jeżeli linia miała juz własny rdzeń to zostanie
+                // on połączony z prev, jeżeli to połączenie nie zmieni stanu rdzenia na bardziej nieokreślony (dalsza symulacja tego
+                // przypadku niczego nie zmieni) - dany przebieg symulacji zostanie zakończony.
+                prev->loadInstruction(_lines.at(line));
                 if(_lines.at(line).core==nullptr)
                 {
-                    _lines[line].core = prev;
+                    _lines[line].core=prev;
                     prev = new Core(*prev);
                 }
                 else
@@ -98,85 +167,26 @@ void Fun::simulate(const FunContainer *fc)
                         break;
                 }
 
-                if(_lines.at(line).getArguments().isEmpty())
-                    throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
-                // Wyszukiwanie etyiety:
-                int found = -1; // <TODO> do refaktoryzacji
-                for(int i=0;i<_lines.size();i++)
-                {
-                    if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
-                    {
-                        found = i;
-                        break;
-                    }
-                }
-                if(found<0)
-                    throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
-                todo.insert(found, Core(*prev));
-                break;
+                //<TODO> tutaj rodzie się kwestia poprzedniego rdzenia: poprzedni->ładuj instrukcje, merguj do
+                // aktualnego/stworz aktualny. Poprzedni może być z polecenia w mapie lub z poprzedniej instrukcji.
+                // jumpy warunkowe: dodaj do kolejki skok, symuluj dalej.
+                // jumpy bezwarunkowe: dodaj do kolejki skok, zakończ pętle.
+                //core.loadInstruction(_lines.at(line));
+    //            if()
+    //            _lines[line].core = new Core(core);
             }
-
-            //================================================================================================
-            // Wykrywanie skoków warunkowych:
-            // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kontynuowana.
-            // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
-            if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
-            {
-
-                if(_lines.at(line).getArguments().isEmpty())
-                    throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
-                // Wyszukiwanie etyiety:
-                int found = -1; // <TODO> do refaktoryzacji
-                for(int i=0;i<_lines.size();i++)
-                {
-                    if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
-                    {
-                        found = i;
-                        break;
-                    }
-                }
-                if(found<0)
-                    throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
-                todo.insert(found, Core(*prev));
-            }
-
-            //<TODO> - przypadki szczególne - call, jump...
-
-            //================================================================================================
-            // Ładowanie instrukcji nie wpływających na przepływ sterowania. Do rdzenia jest ładowana instrukcja, jeżeli dana linia
-            // nie posiadała wcześniej symulowanego rdzenia - dostanie obiekt prev. Jeżeli linia miała juz własny rdzeń to zostanie
-            // on połączony z prev, jeżeli to połączenie nie zmieni stanu rdzenia na bardziej nieokreślony (dalsza symulacja tego
-            // przypadku niczego nie zmieni) - dany przebieg symulacji zostanie zakończony.
-            prev->loadInstruction(_lines.at(line));
-            if(_lines.at(line).core==nullptr)
-            {
-                _lines[line].core=prev;
-                prev = new Core(*prev);
-            }
-            else
-            {
-                bool ret = _lines[line].core->merge(*prev);
-                delete prev;
-                prev = nullptr;
-                if(ret)
-                    prev = new Core(*_lines.at(line).core);
-                else
-                    break;
-            }
-
-            //<TODO> tutaj rodzie się kwestia poprzedniego rdzenia: poprzedni->ładuj instrukcje, merguj do
-            // aktualnego/stworz aktualny. Poprzedni może być z polecenia w mapie lub z poprzedniej instrukcji.
-            // jumpy warunkowe: dodaj do kolejki skok, symuluj dalej.
-            // jumpy bezwarunkowe: dodaj do kolejki skok, zakończ pętle.
-            //core.loadInstruction(_lines.at(line));
-//            if()
-//            _lines[line].core = new Core(core);
+            delete prev;
+            prev = nullptr;
         }
-        delete prev;
-        prev = nullptr;
-    }
 
     _state = error; //<TODO> w piach, do testów
+    }
+    catch(std::runtime_error err)
+    {
+        Logger::LogError("Błąd krytyczny w funkcji \""+_name+"\", linia "+_lines.at(line).toSString()+": "+err.what());
+        _state = error;
+        return;
+    }
 
 //    for(auto line: _lines)
 //    {

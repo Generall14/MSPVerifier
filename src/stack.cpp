@@ -88,6 +88,7 @@ void Stack::ret()
     delete _called;
     _called = nullptr;
     _ucalled = "";
+    // <TODO> wtfit?
 }
 
 void Stack::pushB(QString desc)
@@ -111,4 +112,28 @@ int Stack::depth() const
 QString Stack::toString() const
 {
     return "Stack level: "+QString::number(_stack.size()); //<TODO> uwzględnić nieznane call?
+}
+
+/**
+ * Merguje do siebie wskazany obiekt, jeżeli nastąpiło zwiększenie entropii zwrócona zostanie wartość true. Jeżeli
+ * stosy okażą się niezgodne (inne poziomy) - zgłoszoy zostanie wyjątek.
+ */
+bool Stack::merge(const Stack& other)
+{
+    if(other.depth()!=this->depth())
+        throw std::runtime_error("Stack::merge: próba mergowania stosów o różnej głębokości: \n"+
+                                 this->toString().toStdString()+"\nvs\n"+
+                                 other.toString().toStdString());
+
+    bool endstate = false;
+    for(int i=0;i<_stack.size();++i)
+    {
+        if(_stack.at(i)!=other._stack.at(1))
+        {
+            _stack[i] = "??";
+            endstate = true;
+        }
+    }
+
+    return endstate;
 }

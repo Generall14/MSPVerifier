@@ -22,6 +22,7 @@ public:
     void ret();
     void pushB(QString desc);
     QString popB();
+    bool merge(const Stack& other);
 
     QString toString() const;
     int depth() const;

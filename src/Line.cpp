@@ -87,7 +87,7 @@ QString Line::toString() const
 
 QString Line::toSString() const
 {
-    QString temp = QString::number(_line)+": "+currentText;
+    QString temp = QString::number(_line)+": \""+currentText+"\"";
     return temp;
 }
 

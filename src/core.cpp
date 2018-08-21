@@ -39,15 +39,14 @@ Core& Core::operator=(const Core& other)
 
 /**
  * Merguje do siebie wskazany obiekt, jeżeli nastąpiło zwiększenie entropii (w którymś z rejestrów) zwrócona zostanie wartość true. Jeżeli
- * stosy okażą się niezgodne - zgłoszoy zostanie wyjątek.5
+ * stosy okażą się niezgodne - zgłoszoy zostanie wyjątek.
  */
 bool Core::merge(const Core& other)
 {
-    // <TODO> sprawdz stosy - niezgodne - throw
     int rets = 0;
+    rets += _stack.merge(other._stack);
     for(QString key: _regs.keys())
         rets += _regs[key].merge(other._regs[key]);
-    // <TODO> wciagnij i sprawdz
 
     return rets;
 }
