@@ -74,6 +74,8 @@ bool Core::loadInstruction(const Line& line)
         return false;
     if(jumpsIf.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
+    if(rets.contains(line.getInstruction(), Qt::CaseInsensitive))
+        return false;
 
     // <TODO> instrukcje specjalne - pop, push, grzebanie w sp
 

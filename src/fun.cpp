@@ -49,6 +49,9 @@ QString Fun::name() const
 void Fun::simulate(const FunContainer *fc)
 {
     int line;
+    // Lista zawiera punkty wyjścia (po wykrycie instrukcji ret kopia rdzenia zostanie dodana do tej listy)
+    QList<Core> retStates;
+
     try
     {
         // Poniższa mapa zawiera listę punktów wejścia symulacji. Każdy przebieg symulacji wykonywany będzie od numeru lini i z rdzeniem
@@ -66,8 +69,16 @@ void Fun::simulate(const FunContainer *fc)
             todo.erase(it);
 
             // Dla wszystkich lini od punktu wejścia:
-            for(;line<_lines.size();line++)
+            for(;line<=_lines.size();line++)
             {
+                // Sprawdzanie czy symulacja wyszła poza zakres kodu (co oznacza możliwość zakończenia kodu
+                // bez instrukcji ret)
+                if(line==_lines.size())
+                {
+                    Logger::LogError("Możliwość zakończenia kodu funkcji \'"+_name+"\" bez instrukcji powrotu");
+                    continue;
+                }
+
                 // Tekst informacyjny jest pomijany:
                 if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
                     continue;
@@ -76,7 +87,16 @@ void Fun::simulate(const FunContainer *fc)
                 // Wykrywanie powrotow: <TODO>
                 if(Core::rets.contains(_lines.at(line).getInstruction()))
                 {
-                    // <TODO> kwestia returnow
+                    prev->loadInstruction(_lines.at(line));
+                    if(_lines.at(line).core==nullptr)
+                        _lines[line].core=prev;
+                    else
+                    {
+                        _lines[line].core->merge(*prev);
+                        delete prev;
+                    }
+                    prev = nullptr;
+                    retStates.append(Core(*(_lines[line].core)));
                     break;
                 }
 
@@ -166,14 +186,6 @@ void Fun::simulate(const FunContainer *fc)
                     else
                         break;
                 }
-
-                //<TODO> tutaj rodzie się kwestia poprzedniego rdzenia: poprzedni->ładuj instrukcje, merguj do
-                // aktualnego/stworz aktualny. Poprzedni może być z polecenia w mapie lub z poprzedniej instrukcji.
-                // jumpy warunkowe: dodaj do kolejki skok, symuluj dalej.
-                // jumpy bezwarunkowe: dodaj do kolejki skok, zakończ pętle.
-                //core.loadInstruction(_lines.at(line));
-    //            if()
-    //            _lines[line].core = new Core(core);
             }
             delete prev;
             prev = nullptr;
@@ -188,15 +200,36 @@ void Fun::simulate(const FunContainer *fc)
         return;
     }
 
-//    for(auto line: _lines)
-//    {
-//        QString args;
-//        for(auto arg: line.getArguments())
-//            args.append(arg+", ");
-//        args = args.mid(0, args.size()-2);
-//        Logger::Log(line.currentText+" -> \""+line.getLabel()+"\" -> \""+line.getInstruction()+
-//                    "."+line.getInstructionSize()+"\" -> \""+args+"\"");
-//    } <TODO> w piach
+    // Sprawdzanie stanu zwracanych rdzeni, w prawidłowej sytuacji wszystkie stosy powinny być na tym samym poziomie,
+    // jeżeli tak nie jest - funkcja przyjmuje stan status error. Wszystkie zwrócone rdzenie są mergowane do
+    // pojedynczego najogólniejszego który zostanie następnie sprawdzony pod względem zgodności z deklarowaną
+    // konwencją funkcji.
+    if(retStates.isEmpty())
+    {
+        _state = error;
+        Logger::LogError("Brak punktu wyjścia w funkcji \""+_name+"\"");
+        return;
+    }
+    else
+    {
+        Core ret(retStates.at(0));
+        try
+        {
+            for(int i=1;i<retStates.size();i++)
+                ret.merge(retStates.at(i));
+        }
+        catch(std::runtime_error err)
+        {
+            _state = error;
+            QString out = "Niezgodne stany stosów przy wyjściu z funkcji \""+_name+"\":\n";
+            for(auto ret: retStates)
+                out.append(ret.toString());
+            Logger::LogError(out);
+            return;
+        }
+        // <TODO> sprawdź czy stan zwracanego stosu jest zgodny z deklaracjami
+        // <TODO> zwracać faktyczny stan wyjścia czy deklarowany?
+    }
 
     // <TODO>
     Logger::WriteFile("code/"+_name+".csv", toString());
