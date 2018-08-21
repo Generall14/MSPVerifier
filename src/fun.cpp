@@ -48,20 +48,55 @@ QString Fun::name() const
 
 void Fun::simulate(const FunContainer *fc)
 {
-    QMultiMap<int, Core> todo; //Lista symulacji (numer pierwszej instrukcji do wykonania, rdzeń wejścia)
-    todo.insert(0, Core(_name));
+    // Poniższa mapa zawiera listę punktów wejścia symulacji. Każdy przebieg symulacji wykonywany będzie od numeru lini i z rdzeniem
+    // wskazanym w mapie.
+    QMultiMap<int, Core> todo; // Lista symulacji (numer pierwszej instrukcji do wykonania, rdzeń wejścia)
+    todo.insert(0, Core(_name)); // Punkt wejścia
 
     while(!todo.isEmpty())
     {
+        // Pobieranie danych wejściowych symulacji i usuwanie z mapy wpisu:
         auto it = todo.begin();
         Core* prev = new Core(it.value());
         int line = it.key();
         todo.erase(it);
 
+        // Dla wszystkich lini od punktu wejścia:
         for(;line<_lines.size();line++)
         {
+            // Tekst informacyjny jest pomijany:
             if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
                 continue;
+
+            // Wykrywanie powrotow: <TODO>
+            if(Core::rets.contains(_lines.at(line).getInstruction()))
+            {
+                // <TODO> kwestia returnow
+                break;
+            }
+
+            // Wykrywanie skoków bezwarunkowych:
+            // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
+            if(Core::jumps.contains(_lines.at(line).getInstruction()))
+            {
+                // ret = true? <TODO>
+                if(_lines.at(line).getArguments().isEmpty())
+                    throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
+                // Wyszukiwanie etyiety:
+                int found = -1; // <TODO> do refaktoryzacji
+                for(int i=0;i<_lines.size();i++)
+                {
+                    if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
+                    {
+                        found = i;
+                        break;
+                    }
+                }
+                if(found<0)
+                    throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
+                todo.insert(found, Core(*prev));
+                break;
+            }
 
             //<TODO> - przypadki szczególne - call, jump...
 
@@ -91,6 +126,7 @@ void Fun::simulate(const FunContainer *fc)
 //            _lines[line].core = new Core(core);
         }
         delete prev;
+        prev = nullptr;
     }
 
     _state = error; //<TODO> w piach, do testów

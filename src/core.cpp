@@ -5,6 +5,8 @@ const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", 
                                   "and", "andx", "mov", "movx"};
 const QStringList Core::singleMArgs = {"swpb"};
 const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop"};
+const QStringList Core::jumps = {"jmp"};
+const QStringList Core::rets = {"ret"};
 
 Core::Core(QString name):
     _name(name),
@@ -65,6 +67,8 @@ bool Core::loadInstruction(const Line& line)
 
     if(transparentArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
+//    if(jumps.contains(line.getInstruction(), Qt::CaseInsensitive))
+//        return false;
 
     if(biMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
     {

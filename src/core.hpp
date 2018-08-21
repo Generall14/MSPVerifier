@@ -19,6 +19,9 @@ public:
 
     QString toString() const;
 
+    static const QStringList jumps;
+    static const QStringList rets;
+
 private:
     QString _name="";
     Stack _stack;
