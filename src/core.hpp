@@ -24,7 +24,6 @@ private:
     Stack _stack;
     QMap<QString, Reg> _regs;
 
-    static const QStringList mov;
     static const QStringList biMArgs;
     static const QStringList singleMArgs;
     static const QStringList transparentArgs;
