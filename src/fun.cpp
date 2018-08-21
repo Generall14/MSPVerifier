@@ -82,7 +82,22 @@ void Fun::simulate(const FunContainer *fc)
             // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
             if(Core::jumps.contains(_lines.at(line).getInstruction()))
             {
-                // ret = true? <TODO>
+                if(_lines.at(line).core==nullptr)
+                {
+                    _lines[line].core = prev;
+                    prev = new Core(*prev);
+                }
+                else
+                {
+                    bool ret = _lines[line].core->merge(*prev);
+                    delete prev;
+                    prev = nullptr;
+                    if(ret)
+                        prev = new Core(*_lines.at(line).core);
+                    else
+                        break;
+                }
+
                 if(_lines.at(line).getArguments().isEmpty())
                     throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
                 // Wyszukiwanie etyiety:
@@ -99,6 +114,30 @@ void Fun::simulate(const FunContainer *fc)
                     throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
                 todo.insert(found, Core(*prev));
                 break;
+            }
+
+            //================================================================================================
+            // Wykrywanie skoków warunkowych:
+            // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kontynuowana.
+            // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
+            if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
+            {
+
+                if(_lines.at(line).getArguments().isEmpty())
+                    throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
+                // Wyszukiwanie etyiety:
+                int found = -1; // <TODO> do refaktoryzacji
+                for(int i=0;i<_lines.size();i++)
+                {
+                    if(_lines.at(i).getLabel()==_lines.at(line).getArguments().at(0))
+                    {
+                        found = i;
+                        break;
+                    }
+                }
+                if(found<0)
+                    throw std::runtime_error("Fun::simulate: nie odnaleziono etykiety: "+_lines.at(line).toString().toStdString());
+                todo.insert(found, Core(*prev));
             }
 
             //<TODO> - przypadki szczególne - call, jump...

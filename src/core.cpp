@@ -6,6 +6,7 @@ const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", 
 const QStringList Core::singleMArgs = {"swpb"};
 const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop"};
 const QStringList Core::jumps = {"jmp"};
+const QStringList Core::jumpsIf = {"jnz", "jz", "jc", "jnc"};
 const QStringList Core::rets = {"ret"};
 
 Core::Core(QString name):
@@ -43,9 +44,12 @@ Core& Core::operator=(const Core& other)
 bool Core::merge(const Core& other)
 {
     // <TODO> sprawdz stosy - niezgodne - throw
+    int rets = 0;
+    for(QString key: _regs.keys())
+        rets += _regs[key].merge(other._regs[key]);
     // <TODO> wciagnij i sprawdz
 
-    return true;
+    return rets;
 }
 
 QString Core::toString() const
@@ -68,6 +72,8 @@ bool Core::loadInstruction(const Line& line)
 
     // Jeżeli linia zawiera instrukcjię nic nie robiącą z rdzeniem - ret;
     if(transparentArgs.contains(line.getInstruction(), Qt::CaseInsensitive))
+        return false;
+    if(jumpsIf.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
 
     // <TODO> instrukcje specjalne - pop, push, grzebanie w sp

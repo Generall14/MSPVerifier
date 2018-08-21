@@ -20,6 +20,7 @@ public:
     QString toString() const;
 
     static const QStringList jumps;
+    static const QStringList jumpsIf;
     static const QStringList rets;
 
 private:
