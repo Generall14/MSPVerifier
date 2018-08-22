@@ -6,6 +6,7 @@
 #include "Line.hpp"
 
 class FunContainer;
+class Stack;
 
 class Fun : public LineContainer
 {
@@ -24,6 +25,7 @@ public:
     QString toString() const;
     simState state() const;
     QString name() const;
+    Stack getMaxStack() const;
 
     //<TODO> metoda zwracająca stan rdzenia
     //<TODO> metoda zwracające maksymalne wywołania?

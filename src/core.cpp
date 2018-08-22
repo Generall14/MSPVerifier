@@ -55,7 +55,7 @@ bool Core::merge(const Core& other)
 
 QString Core::toString() const
 {
-    QString temp = _stack.toString()+"'";
+    QString temp = _stack.toSString()+"'";
     for(QString key: _regs.keys())
         temp += "'"+key+_regs[key].toString();
     return temp;

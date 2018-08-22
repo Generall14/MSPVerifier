@@ -18,7 +18,6 @@ public:
 
     bool isEmpty() const;
     void call(const Fun& other, int size);
-    void callUnknown(QString fun, int size);
     void ret();
     void pushB(QString desc);
     void pushRandomStuff(QString size="w");
@@ -26,6 +25,7 @@ public:
     void popRandomStuff(QString size="w");
     bool merge(const Stack& other);
 
+    QString toSString() const;
     QString toString() const;
     int depth() const;
 
@@ -33,9 +33,9 @@ private:
     QStack<QString> _stack;
     QString _base = "";
     Fun* _called = nullptr;
-    QString _ucalled = "";
-    QMultiMap<QString, Stack> _unknowns;
-    int lastCallS = 0;
+    int lastCallS = 0;//<TODO> wtfit
+
+    QString getLocalString() const;
 };
 
 #endif

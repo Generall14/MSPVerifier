@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include "funContainer.hpp"
 #include <QMultiMap>
-#include "core.hpp"
 #include <QDebug>
+#include "core.hpp"
 
 Fun::Fun(QList<Line> lines)
 {
@@ -16,6 +16,7 @@ Fun::Fun(QList<Line> lines)
         throw std::runtime_error("Fun::Fun: za malo lini kodu aby to mialo sens.");
 
     parse();
+    // <TODO> ładowanie konwencji i generowanie rdzenia ze zwracanymi rejestrami
 }
 
 void Fun::parse()
@@ -32,8 +33,23 @@ void Fun::parse()
 
 QString Fun::toString() const
 {
-    return LineContainer::toString();
-    //<TODO>
+    QString temp;
+    temp += "Etykieta funkcji: \""+_name+"\"\n";
+    temp += "Plik: \""+_lines.at(0).File()+"\"\n";
+
+    temp += "Status symulacji: ";
+    if(_state==waiting)
+        temp += "waiting";
+    else if(_state==done)
+        temp += "done";
+    else if(_state==error)
+        temp += "error";
+    temp += "\n";
+
+    temp += "Maksymalny stos: " + this->getMaxStack().toString()+"\n";
+    temp += "\n\n"+LineContainer::toString();
+    return temp;
+    //<TODO> konwencja
 }
 
 Fun::simState Fun::state() const
@@ -234,4 +250,17 @@ void Fun::simulate(const FunContainer *fc)
 
     // <TODO>
     Logger::WriteFile("code/"+_name+".csv", toString());
+}
+
+Stack Fun::getMaxStack() const
+{
+    Stack temp(_name);
+    for(auto line: _lines)
+    {
+        if(line.core==nullptr)
+            continue;
+        if(line.core->_stack.depth()>temp.depth())
+            temp = line.core->_stack;
+    }
+    return temp;
 }

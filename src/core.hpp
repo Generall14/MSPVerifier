@@ -9,6 +9,7 @@
 
 class Core
 {
+    friend class Fun;
 public:
     Core(QString name);
     Core(const Core& other);
