@@ -27,7 +27,7 @@ void Fun::parse()
                                  _lines.at(1).currentText.toStdString()+"\" w pliku \""+
                                  _lines.at(0).File().toStdString()+"\".");
 
-    _name = _lines.at(1).currentText.split(": ", QString::SkipEmptyParts).at(0);
+    _name = "#"+_lines.at(1).currentText.split(": ", QString::SkipEmptyParts).at(0); //<TODO> hash potrzebny?
     _name.remove(" ");
     //<TODO>
 }
@@ -44,7 +44,7 @@ QString Fun::toString() const
     else if(_state==done)
         temp += "done";
     else if(_state==error)
-        temp += "error";
+        temp += "error: "+_errorDesc;
     temp += "\n";
 
     temp += "Maksymalny stos: " + this->getMaxStack().toString()+"\n";
@@ -53,7 +53,7 @@ QString Fun::toString() const
         temp += _retRegs[key].toString()+"\n";
     temp += "\n\n"+LineContainer::toString();
     return temp;
-    //<TODO> konwencja
+    //<TODO> konwencja + czy spełniona
 }
 
 Fun::simState Fun::state() const
@@ -100,12 +100,12 @@ void Fun::simulate(const FunContainer *fc)
                 }
 
                 // Tekst informacyjny jest pomijany:
-                if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
+                else if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
                     continue;
 
                 //================================================================================================
-                // Wykrywanie powrotow: <TODO>
-                if(Core::rets.contains(_lines.at(line).getInstruction()))
+                // Wykrywanie powrotow: <TODO> + opis
+                else if(Core::rets.contains(_lines.at(line).getInstruction()))
                 {
                     prev->loadInstruction(_lines.at(line));
                     if(_lines.at(line).core==nullptr)
@@ -123,7 +123,7 @@ void Fun::simulate(const FunContainer *fc)
                 //================================================================================================
                 // Wykrywanie skoków bezwarunkowych:
                 // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kończona.
-                if(Core::jumps.contains(_lines.at(line).getInstruction()))
+                else if(Core::jumps.contains(_lines.at(line).getInstruction()))
                 {
                     if(_lines.at(line).core==nullptr)
                     {
@@ -163,7 +163,7 @@ void Fun::simulate(const FunContainer *fc)
                 // Wykrywanie skoków warunkowych:
                 // Dodawany do mapy wejść jest punkt wskazany przez etykietę jmp, aktualna symulacja jest kontynuowana.
                 // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
-                if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
+                else if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
                 {
 
                     if(_lines.at(line).getArguments().isEmpty())
@@ -183,6 +183,45 @@ void Fun::simulate(const FunContainer *fc)
                     todo.insert(found, Core(*prev));
                 }
 
+                //================================================================================================
+                // Wykrywanie wołań funkcji <TODO> + opis
+                else if(Core::calls.contains(_lines.at(line).getInstruction()))
+                {
+                    if(_lines.at(line).core!=nullptr)
+                        break;
+                    if(_lines.at(line).getArguments().isEmpty())
+                        throw std::runtime_error("Fun::simulate: brak etykiety funkcji w "+_lines.at(line).toString().toStdString());
+
+                    Fun called;
+                    try
+                    {
+                        called = fc->getByName(_lines.at(line).getArguments().at(0));
+                    }
+                    catch(...)
+                    {
+                        throw std::runtime_error("brak funkcji "+_lines.at(line).getArguments().at(0).toStdString());
+                        qDebug() << "sfassdfadsf"; //<TODO> obsługa nieznanych funkcji
+                    }
+
+                    if(called.state()==error)
+                        throw std::runtime_error("Fun::simulate: nie można wykonać instrukcji call z powodu "
+                                                 "wleczonego błędu funkcji wołanej");
+                    else if(called.state()==waiting)
+                    {
+                        for(int d=0;d<_lines.size();d++)
+                        {
+                            delete _lines[d].core;
+                            _lines[d].core = nullptr;
+                            _state = waiting;
+                            return;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+
                 //<TODO> - przypadki szczególne - call, ...
 
                 //================================================================================================
@@ -190,32 +229,34 @@ void Fun::simulate(const FunContainer *fc)
                 // nie posiadała wcześniej symulowanego rdzenia - dostanie obiekt prev. Jeżeli linia miała juz własny rdzeń to zostanie
                 // on połączony z prev, jeżeli to połączenie nie zmieni stanu rdzenia na bardziej nieokreślony (dalsza symulacja tego
                 // przypadku niczego nie zmieni) - dany przebieg symulacji zostanie zakończony.
-                prev->loadInstruction(_lines.at(line));
-                if(_lines.at(line).core==nullptr)
-                {
-                    _lines[line].core=prev;
-                    prev = new Core(*prev);
-                }
                 else
                 {
-                    bool ret = _lines[line].core->merge(*prev);
-                    delete prev;
-                    prev = nullptr;
-                    if(ret)
-                        prev = new Core(*_lines.at(line).core);
+                    prev->loadInstruction(_lines.at(line));
+                    if(_lines.at(line).core==nullptr)
+                    {
+                        _lines[line].core=prev;
+                        prev = new Core(*prev);
+                    }
                     else
-                        break;
+                    {
+                        bool ret = _lines[line].core->merge(*prev);
+                        delete prev;
+                        prev = nullptr;
+                        if(ret)
+                            prev = new Core(*_lines.at(line).core);
+                        else
+                            break;
+                    }
                 }
             }
             delete prev;
             prev = nullptr;
         }
-
-    _state = error; //<TODO> w piach, do testów
     }
     catch(std::runtime_error err)
     {
-        Logger::LogError("Błąd krytyczny w funkcji \""+_name+"\", linia "+_lines.at(line).toSString()+": "+err.what());
+        _errorDesc = "Błąd krytyczny w funkcji \""+_name+"\", linia "+_lines.at(line).toSString()+": "+err.what();
+        Logger::LogError(_errorDesc);
         _state = error;
         Logger::WriteFile("code/"+_name+".csv", toString());
         return;
@@ -227,8 +268,9 @@ void Fun::simulate(const FunContainer *fc)
     // konwencją funkcji.
     if(retStates.isEmpty())
     {
+        _errorDesc = "Brak punktu wyjścia w funkcji \""+_name+"\"";
         _state = error;
-        Logger::LogError("Brak punktu wyjścia w funkcji \""+_name+"\"");
+        Logger::LogError(_errorDesc);
         return;
     }
     else
@@ -244,17 +286,17 @@ void Fun::simulate(const FunContainer *fc)
         catch(std::runtime_error err)
         {
             _state = error;
-            QString out = "Niezgodne stany stosów przy wyjściu z funkcji \""+_name+"\":\n";
+            _errorDesc = "Niezgodne stany stosów przy wyjściu z funkcji \""+_name+"\":\n";
             for(auto ret: retStates)
-                out.append(ret.toString());
-            Logger::LogError(out);
+                _errorDesc.append(ret.toString());
+            Logger::LogError(_errorDesc);
             return;
         }
         // <TODO> sprawdź czy stan zwracanego stosu jest zgodny z deklaracjami
         // <TODO> zwracać faktyczny stan wyjścia czy deklarowany?
     }
 
-    // <TODO>
+    _state = done;
     Logger::WriteFile("code/"+_name+".csv", toString());
 }
 

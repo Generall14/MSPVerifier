@@ -35,9 +35,9 @@ void FunContainer::simulate()
     //<TODO> zapis do pliku? tutaj czy w File po zmianie statusu z waiting?
 }
 
-const Fun& FunContainer::getByName(QString name) throw(std::runtime_error)
+Fun FunContainer::getByName(QString name) const throw(std::runtime_error)
 {
-    for(Fun& fun: _funs)
+    for(Fun fun: _funs)
     {
         if(fun.name()==name)
             return fun;

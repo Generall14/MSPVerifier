@@ -24,6 +24,7 @@ public:
     static const QStringList jumps;
     static const QStringList jumpsIf;
     static const QStringList rets;
+    static const QStringList calls;
 
 private:
     QString _name="";

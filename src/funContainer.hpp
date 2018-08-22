@@ -12,7 +12,7 @@ public:
 
     void append(Fun fun);
     void simulate();
-    const Fun& getByName(QString name) throw(std::runtime_error);
+    Fun getByName(QString name) const throw(std::runtime_error);
 
     QList<Fun>& get();
 

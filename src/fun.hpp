@@ -13,6 +13,7 @@ class Line;
 class Fun : public LineContainer
 {
 public:
+    Fun(){}
     Fun(QList<Line> lines);
 
     void simulate(const FunContainer* fc);
@@ -39,6 +40,7 @@ private:
 
     QString _name="__XXXXXX_tu_sie_cos_zesralo";
     simState _state=waiting;
+    QString _errorDesc;
     QMap<QString, Reg> _retRegs;
 };
 

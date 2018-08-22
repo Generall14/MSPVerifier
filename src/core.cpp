@@ -8,7 +8,8 @@ const QStringList Core::singleMArgs = {"swpb"};
 const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop"};
 const QStringList Core::jumps = {"jmp"};
 const QStringList Core::jumpsIf = {"jnz", "jz", "jc", "jnc"};
-const QStringList Core::rets = {"ret"};
+const QStringList Core::rets = {"ret", "reta"};
+const QStringList Core::calls = {"call", "calla"};
 const QStringList Core::pushes = {"push", "pushx"};
 const QStringList Core::pops = {"pop", "popx"};
 
@@ -80,7 +81,7 @@ bool Core::loadInstruction(const Line& line)
     if(rets.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
 
-    // <TODO> instrukcje specjalne - pop, push, grzebanie w sp
+    // <TODO> instrukcje specjalne - grzebanie w sp
 
     // Jeżeli linia zawiera instrukcję dwu argumentową oraz drugi argument jest rejestrem - modyfikuj
     // rejestr.
