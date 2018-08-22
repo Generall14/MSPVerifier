@@ -83,6 +83,26 @@ bool Core::loadInstruction(const Line& line)
 
     // <TODO> instrukcje specjalne - grzebanie w sp
 
+    // Instrukcje wołania procedur, tutaj dodawane tylko symboliczne śmieci na stos.
+    if(calls.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getInstruction()=="call")
+        {
+            _stack.pushB("call");
+            _stack.pushB("call");
+        }
+        else if(line.getInstruction()=="calla")
+        {
+            _stack.pushB("calla");
+            _stack.pushB("calla");
+            _stack.pushB("calla");
+            _stack.pushB("calla");
+        }
+        else
+            throw std::runtime_error("Core::loadInstruction: wtf, nieznany call?");
+        return false;
+    }
+
     // Jeżeli linia zawiera instrukcję dwu argumentową oraz drugi argument jest rejestrem - modyfikuj
     // rejestr.
     if(biMArgs.contains(line.getInstruction(), Qt::CaseInsensitive))

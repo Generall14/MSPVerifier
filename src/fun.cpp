@@ -218,7 +218,8 @@ void Fun::simulate(const FunContainer *fc)
                     }
                     else
                     {
-
+                        Core* cPrev = new Core(*prev);
+                        prev->loadInstruction(_lines.at(line));
                     }
                 }
 
