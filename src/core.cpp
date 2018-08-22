@@ -24,7 +24,8 @@ Core::Core(QString name):
 Core::Core(const Core& other):
     _name(other._name),
     _stack(other._stack),
-    _regs(other._regs)
+    _regs(other._regs),
+    _returns(other._returns)
 {
 
 }
@@ -37,6 +38,7 @@ Core& Core::operator=(const Core& other)
     _name=other._name;
     _stack=other._stack;
     _regs=other._regs;
+    _returns=other._returns;
 
     return *this;
 }
@@ -51,6 +53,10 @@ bool Core::merge(const Core& other)
     rets += _stack.merge(other._stack);
     for(QString key: _regs.keys())
         rets += _regs[key].merge(other._regs[key]);
+    if(_returns==0)
+        _returns=other._returns;
+    if(_returns!=other._returns)
+        throw std::runtime_error("Core::merge: różne poziomy powrotu");
 
     return rets;
 }
@@ -78,10 +84,24 @@ bool Core::loadInstruction(const Line& line)
         return false;
     if(jumpsIf.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
-    if(rets.contains(line.getInstruction(), Qt::CaseInsensitive))
-        return false;
 
     // <TODO> instrukcje specjalne - grzebanie w sp
+
+    // Instrukcje powrotu z procedury.
+    if(rets.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(_stack.depth())
+            throw std::runtime_error("Core::loadInstruction: próba powrotu z procedury na niezerozym poziomie"
+                                     " lokalnego stosu");
+
+        if(line.getInstruction()=="ret")
+            _returns = -2;
+        else if(line.getInstruction()=="reta")
+            _returns = -4;
+        else
+            throw std::runtime_error("Core::loadInstruction: wtf, nieznany return?");
+        return false;
+    }
 
     // Instrukcje wołania procedur, tutaj dodawane tylko symboliczne śmieci na stos.
     if(calls.contains(line.getInstruction(), Qt::CaseInsensitive))
@@ -168,4 +188,9 @@ bool Core::loadInstruction(const Line& line)
     // WTF? Nic z powyższych.
     Logger::LogError("Nieznana instrukcja w "+line.toString());
     return false;
+}
+
+int Core::returns() const
+{
+    return _returns;
 }

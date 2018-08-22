@@ -18,6 +18,7 @@ public:
 
     bool merge(const Core& other);
     bool loadInstruction(const Line& line);
+    int returns() const;
 
     QString toString() const;
 
@@ -30,6 +31,7 @@ private:
     QString _name="";
     Stack _stack;
     QMap<QString, Reg> _regs;
+    int _returns=0;
 
     static const QStringList biMArgs;
     static const QStringList singleMArgs;

@@ -48,6 +48,7 @@ QString Fun::toString() const
     temp += "\n";
 
     temp += "Maksymalny stos: " + this->getMaxStack().toString()+"\n";
+    temp += "Powrót na poziomie: "+QString::number(_returns)+"\n";
     temp += "Zwracany stan rejestrów:\n";
     for(auto key: _retRegs.keys())
         temp += _retRegs[key].toString()+"\n";
@@ -282,6 +283,7 @@ void Fun::simulate(const FunContainer *fc)
             for(int i=1;i<retStates.size();i++)
                 ret.merge(retStates.at(i));
             _retRegs = ret._regs;
+            _returns = ret.returns();
             // <TODO> sprawdzanie czy zgadza się z konwencja
         }
         catch(std::runtime_error err)
@@ -316,7 +318,7 @@ Stack Fun::getMaxStack() const
 
 int Fun::getReturnedLevel() const
 {
-    //<TODO> zwraca poziom na którym wraca funkcja
+    return _returns;
 }
 
 QMap<QString, Reg> Fun::getReturnedRegs() const

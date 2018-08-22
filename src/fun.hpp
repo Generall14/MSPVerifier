@@ -42,6 +42,7 @@ private:
     simState _state=waiting;
     QString _errorDesc;
     QMap<QString, Reg> _retRegs;
+    int _returns=-666;
 };
 
 #endif
