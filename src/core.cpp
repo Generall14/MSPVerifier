@@ -8,6 +8,8 @@ const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", 
 const QStringList Core::jumps = {"jmp"};
 const QStringList Core::jumpsIf = {"jnz", "jz", "jc", "jnc"};
 const QStringList Core::rets = {"ret"};
+const QStringList Core::pushes = {"push", "pushx"};
+const QStringList Core::pops = {"pop", "popx"};
 
 Core::Core(QString name):
     _name(name),
@@ -107,6 +109,37 @@ bool Core::loadInstruction(const Line& line)
         {
             return _regs[line.getArguments().at(0).toLower()].merge(Reg("?", line.getInstructionSize()));
         }
+        return false;
+    }
+
+    // Instrukcja pushująca na stos
+    if(pushes.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getArguments().size()<1)
+            Logger::LogError("Za mało argumentów w "+line.toString());
+        if(_regs.contains(line.getArguments().at(0).toLower()))
+            _regs[line.getArguments().at(0).toLower()].push(_stack, line.getInstructionSize());
+        else
+            _stack.pushRandomStuff(line.getInstructionSize());
+        return false;
+    }
+
+    // Instrukcja wciągająca ze stosu
+    if(pops.contains(line.getInstruction(), Qt::CaseInsensitive))
+    {
+        if(line.getArguments().size()<1)
+        {
+            Logger::LogError("Za mało argumentów w "+line.toString());
+            return false;
+        }
+        if(_regs.contains(line.getArguments().at(0).toLower()))
+        {
+            Reg treg = _regs[line.getArguments().at(0).toLower()];
+            treg.pop(_stack, line.getInstructionSize());
+            return _regs[line.getArguments().at(0).toLower()].merge(treg);
+        }
+        else
+            _stack.popRandomStuff(line.getInstructionSize());
         return false;
     }
 

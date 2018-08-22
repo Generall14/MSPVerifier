@@ -21,7 +21,9 @@ public:
     void callUnknown(QString fun, int size);
     void ret();
     void pushB(QString desc);
+    void pushRandomStuff(QString size="w");
     QString popB();
+    void popRandomStuff(QString size="w");
     bool merge(const Stack& other);
 
     QString toString() const;

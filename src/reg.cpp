@@ -28,7 +28,10 @@ Reg::Reg(QString val, QString size)
 
 QString Reg::toString() const
 {
-    return "[a:"+_a+",w:"+_w+",b:"+_b+"]";
+    QString ret = "[a:"+_a+",w:"+_w+",b:"+_b+"]";
+    if(_touched)
+        ret.append("*");
+    return ret;
 }
 
 /**
@@ -54,4 +57,52 @@ bool Reg::merge(const Reg& other)
 bool Reg::wasTouched() const
 {
     return _touched;
+}
+
+void Reg::push(Stack& stack, QString size)
+{
+    if(size=="b")
+    {
+        stack.pushB(_b);
+    }
+    else if(size=="w")
+    {
+        stack.pushB(_b);
+        stack.pushB(_w);
+    }
+    else if(size=="a")
+    {
+        stack.pushB(_b);
+        stack.pushB(_w);
+        stack.pushB(_a);
+        stack.pushB("0");
+    }
+    else
+        throw std::runtime_error("Reg::push: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
+}
+
+void Reg::pop(Stack& stack, QString size)
+{
+    _touched = true;
+    if(size=="b")
+    {
+        _b = stack.popB();
+        _w = "0";
+        _a = "0";
+    }
+    else if(size=="w")
+    {
+        _w = stack.popB();
+        _b = stack.popB();
+        _a = "0";
+    }
+    else if(size=="a")
+    {
+        stack.popB();
+        _a = stack.popB();
+        _w = stack.popB();
+        _b = stack.popB();
+    }
+    else
+        throw std::runtime_error("Reg::pop: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }

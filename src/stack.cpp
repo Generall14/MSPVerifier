@@ -98,6 +98,8 @@ void Stack::pushB(QString desc)
 
 QString Stack::popB()
 {
+    if(_stack.isEmpty())
+        throw std::runtime_error("Stack::popB: stos jest pusty!");
     return _stack.pop();
 }
 
@@ -136,4 +138,48 @@ bool Stack::merge(const Stack& other)
     }
 
     return endstate;
+}
+
+void Stack::pushRandomStuff(QString size)
+{
+    if(size=="b")
+    {
+        _stack.push("?");
+    }
+    else if(size=="w")
+    {
+        _stack.push("?");
+        _stack.push("?");
+    }
+    else if(size=="a")
+    {
+        _stack.push("?");
+        _stack.push("?");
+        _stack.push("?");
+        _stack.push("?");
+    }
+    else
+        throw std::runtime_error("Stack::pushRandomStuff: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
+}
+
+void Stack::popRandomStuff(QString size)
+{
+    if(size=="b")
+    {
+        _stack.pop();
+    }
+    else if(size=="w")
+    {
+        _stack.pop();
+        _stack.pop();
+    }
+    else if(size=="a")
+    {
+        _stack.pop();
+        _stack.pop();
+        _stack.pop();
+        _stack.pop();
+    }
+    else
+        throw std::runtime_error("Stack::popRandomStuff: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }

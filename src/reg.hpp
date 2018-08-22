@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStringList>
+#include "stack.hpp"
 
 class Reg
 {
@@ -13,6 +14,8 @@ public:
     QString toString() const;
     bool wasTouched() const;
     bool merge(const Reg& other);
+    void push(Stack& stack, QString size="w");
+    void pop(Stack& stack, QString size="w");
 
     static const QStringList regs;
 

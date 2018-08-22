@@ -197,6 +197,7 @@ void Fun::simulate(const FunContainer *fc)
     {
         Logger::LogError("Błąd krytyczny w funkcji \""+_name+"\", linia "+_lines.at(line).toSString()+": "+err.what());
         _state = error;
+        Logger::WriteFile("code/"+_name+".csv", toString());
         return;
     }
 

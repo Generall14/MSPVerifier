@@ -31,6 +31,8 @@ private:
     static const QStringList biMArgs;
     static const QStringList singleMArgs;
     static const QStringList transparentArgs;
+    static const QStringList pushes;
+    static const QStringList pops;
 };
 
 #endif
