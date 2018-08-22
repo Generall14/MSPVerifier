@@ -25,6 +25,9 @@ public:
     simState state() const;
     QString name() const;
 
+    //<TODO> metoda zwracająca stan rdzenia
+    //<TODO> metoda zwracające maksymalne wywołania?
+
 private:
     void parse();
 
