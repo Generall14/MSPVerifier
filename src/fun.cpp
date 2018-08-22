@@ -213,14 +213,20 @@ void Fun::simulate(const FunContainer *fc)
                         {
                             delete _lines[d].core;
                             _lines[d].core = nullptr;
-                            _state = waiting;
-                            return;
                         }
+                        _state = waiting;
+                        return;
                     }
                     else
                     {
                         Core* cPrev = new Core(*prev);
-                        prev->loadInstruction(_lines.at(line));
+                        cPrev->loadInstruction(_lines.at(line));
+                        if(prev->_stack.depth()!=(cPrev->_stack.depth()+called.getReturnedLevel()))
+                            throw std::runtime_error("Fun::simulate: niedopasowanie instrukcji wołania i powrotu");
+
+                        cPrev->call(called);
+                        _lines[line].core = cPrev;
+                        // <TODO> prev - ładuj rejestry
                     }
                 }
 
@@ -273,6 +279,7 @@ void Fun::simulate(const FunContainer *fc)
         _errorDesc = "Brak punktu wyjścia w funkcji \""+_name+"\"";
         _state = error;
         Logger::LogError(_errorDesc);
+        Logger::WriteFile("code/"+_name+".csv", toString());
         return;
     }
     else
@@ -293,6 +300,7 @@ void Fun::simulate(const FunContainer *fc)
             for(auto ret: retStates)
                 _errorDesc.append(ret.toString());
             Logger::LogError(_errorDesc);
+            Logger::WriteFile("code/"+_name+".csv", toString());
             return;
         }
         // <TODO> sprawdź czy stan zwracanego stosu jest zgodny z deklaracjami

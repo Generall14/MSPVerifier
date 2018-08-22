@@ -18,7 +18,7 @@ public:
     ~Stack();
 
     bool isEmpty() const;
-    void call(const Fun& other, int size);
+    void call(const Fun& other);
     void ret();
     void pushB(QString desc);
     void pushRandomStuff(QString size="w");

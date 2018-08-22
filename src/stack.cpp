@@ -53,14 +53,11 @@ bool Stack::isEmpty() const
     return false;
 }
 
-void Stack::call(const Fun& other, int size)
+void Stack::call(const Fun& other)
 {
     if(_called!=nullptr)
         throw std::runtime_error("Stack::call: cos tu sie posralo");
     _called = new Fun(other);
-
-    while(size--)
-        _stack.push("call");
 }
 
 void Stack::ret()

@@ -7,6 +7,7 @@
 #include "stack.hpp"
 
 class Line;
+class Fun;
 
 class Core
 {
@@ -18,6 +19,7 @@ public:
 
     bool merge(const Core& other);
     bool loadInstruction(const Line& line);
+    void call(const Fun& fun);
     int returns() const;
 
     QString toString() const;

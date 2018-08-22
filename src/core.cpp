@@ -61,6 +61,11 @@ bool Core::merge(const Core& other)
     return rets;
 }
 
+void Core::call(const Fun& fun)
+{
+    _stack.call(fun);
+}
+
 QString Core::toString() const
 {
     QString temp = _stack.toSString()+"'";
