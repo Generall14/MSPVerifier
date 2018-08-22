@@ -1,4 +1,5 @@
 #include "stack.hpp"
+#include "fun.hpp"
 
 Stack::Stack(QString base):
     _base(base)

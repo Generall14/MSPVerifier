@@ -6,7 +6,8 @@
 #include "src/osrc/pugixml.hpp"
 #include "File.hpp"
 #include <QList>
-#include "segmentList.hpp"
+
+class SegmentList;
 
 /**
  * Tworzy listę plików na podstawie podanego pliku *.ewp / *.ewt.

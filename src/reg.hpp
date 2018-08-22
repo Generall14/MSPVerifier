@@ -3,7 +3,8 @@
 
 #include <QString>
 #include <QStringList>
-#include "stack.hpp"
+
+class Stack;
 
 class Reg
 {

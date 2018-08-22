@@ -3,7 +3,8 @@
 
 #include "LineContainer.hpp"
 #include <QString>
-#include "segmentList.hpp"
+
+class SegmentList;
 
 class File : public LineContainer
 {

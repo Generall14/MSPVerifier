@@ -4,7 +4,8 @@
 #include <QString>
 #include <QStack>
 #include <QMultiMap>
-#include "fun.hpp"
+
+class Fun;
 
 class Stack
 {

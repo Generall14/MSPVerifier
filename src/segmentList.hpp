@@ -2,9 +2,10 @@
 #define SEGMENTLIST_HPP
 
 #include "segment.hpp"
-#include "funContainer.hpp"
 #include <QList>
 #include <QMap>
+
+class FunContainer;
 
 class SegmentList
 {

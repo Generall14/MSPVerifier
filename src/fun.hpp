@@ -3,10 +3,12 @@
 
 #include "LineContainer.hpp"
 #include <QList>
-#include "Line.hpp"
+#include <QMap>
+#include "reg.hpp"
 
 class FunContainer;
 class Stack;
+class Line;
 
 class Fun : public LineContainer
 {
@@ -26,6 +28,8 @@ public:
     simState state() const;
     QString name() const;
     Stack getMaxStack() const;
+    int getReturnedLevel() const;
+    QMap<QString, Reg> getReturnedRegs() const;
 
     //<TODO> metoda zwracająca stan rdzenia
     //<TODO> metoda zwracające maksymalne wywołania?
@@ -35,6 +39,7 @@ private:
 
     QString _name="__XXXXXX_tu_sie_cos_zesralo";
     simState _state=waiting;
+    QMap<QString, Reg> _retRegs;
 };
 
 #endif

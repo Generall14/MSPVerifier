@@ -9,6 +9,7 @@
 #include <QDir>
 #include "dyskryminator.hpp"
 #include "macro.hpp"
+#include "segmentList.hpp"
 
 File::File(QString adress):
     _adress(adress)

@@ -5,7 +5,8 @@
 #include <QMap>
 #include "reg.hpp"
 #include "stack.hpp"
-#include "Line.hpp"
+
+class Line;
 
 class Core
 {

@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include "Logger.hpp"
+#include "segmentList.hpp"
 
 FileList::FileList(QString inputfile)
 {

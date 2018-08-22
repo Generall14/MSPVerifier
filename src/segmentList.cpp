@@ -2,6 +2,7 @@
 #include "Logger.hpp"
 #include <qdebug.h>
 #include "fun.hpp"
+#include "funContainer.hpp"
 
 void SegmentList::append(Segment seg)
 {

@@ -5,6 +5,7 @@
 #include <QMultiMap>
 #include <QDebug>
 #include "core.hpp"
+#include "Line.hpp"
 
 Fun::Fun(QList<Line> lines)
 {
@@ -47,6 +48,9 @@ QString Fun::toString() const
     temp += "\n";
 
     temp += "Maksymalny stos: " + this->getMaxStack().toString()+"\n";
+    temp += "Zwracany stan rejestrów:\n";
+    for(auto key: _retRegs.keys())
+        temp += _retRegs[key].toString()+"\n";
     temp += "\n\n"+LineContainer::toString();
     return temp;
     //<TODO> konwencja
@@ -234,6 +238,8 @@ void Fun::simulate(const FunContainer *fc)
         {
             for(int i=1;i<retStates.size();i++)
                 ret.merge(retStates.at(i));
+            _retRegs = ret._regs;
+            // <TODO> sprawdzanie czy zgadza się z konwencja
         }
         catch(std::runtime_error err)
         {
@@ -263,4 +269,14 @@ Stack Fun::getMaxStack() const
             temp = line.core->_stack;
     }
     return temp;
+}
+
+int Fun::getReturnedLevel() const
+{
+    //<TODO> zwraca poziom na którym wraca funkcja
+}
+
+QMap<QString, Reg> Fun::getReturnedRegs() const
+{
+    return _retRegs;
 }

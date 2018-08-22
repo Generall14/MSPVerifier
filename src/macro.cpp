@@ -2,6 +2,8 @@
 #include <QString>
 #include <stdexcept>
 #include <QDebug>
+#include "File.hpp"
+#include "Line.hpp"
 
 QList<Macro> Macro::loadMacros(File& file)
 {

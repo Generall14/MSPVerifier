@@ -2,8 +2,9 @@
 #define SEGMENT_HPP
 
 #include "LineContainer.hpp"
-#include "Line.hpp"
 #include <QList>
+
+class Line;
 
 class Segment : public LineContainer
 {

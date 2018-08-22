@@ -2,9 +2,10 @@
 #define MACRO_HPP
 
 #include <QList>
-#include "File.hpp"
-#include "Line.hpp"
 #include <QMap>
+
+class Line;
+class File;
 
 class Macro
 {
