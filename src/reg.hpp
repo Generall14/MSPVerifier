@@ -8,6 +8,7 @@ class Stack;
 
 class Reg
 {
+    friend class Core;
 public:
     Reg(){}
     Reg(QString val, QString size="w");

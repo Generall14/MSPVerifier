@@ -61,6 +61,24 @@ bool Core::merge(const Core& other)
     return rets;
 }
 
+void Core::loadReturnedRegs(const QMap<QString, Reg>& regs)
+{
+    for(auto key: _regs.keys())
+    {
+        if(!regs.contains(key))
+            continue;
+        if(!regs[key].wasTouched())
+            continue;
+        _regs[key]._touched = true;
+        if(regs[key]._a!=key)
+            _regs[key]._a = regs[key]._a;
+        if(regs[key]._w!=key)
+            _regs[key]._w = regs[key]._w;
+        if(regs[key]._b!=key)
+            _regs[key]._b = regs[key]._b;
+    }
+}
+
 void Core::call(const Fun& fun)
 {
     _stack.call(fun);

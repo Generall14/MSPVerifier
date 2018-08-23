@@ -51,7 +51,7 @@ QString Fun::toString() const
     temp += "Powrót na poziomie: "+QString::number(_returns)+"\n";
     temp += "Zwracany stan rejestrów:\n";
     for(auto key: _retRegs.keys())
-        temp += _retRegs[key].toString()+"\n";
+        temp += key+_retRegs[key].toString()+"\n";
     temp += "\n\n"+LineContainer::toString();
     return temp;
     //<TODO> konwencja + czy spełniona
@@ -226,11 +226,9 @@ void Fun::simulate(const FunContainer *fc)
 
                         cPrev->call(called);
                         _lines[line].core = cPrev;
-                        // <TODO> prev - ładuj rejestry
+                        prev->loadReturnedRegs(called.getReturnedRegs());
                     }
                 }
-
-                //<TODO> - przypadki szczególne - call, ...
 
                 //================================================================================================
                 // Ładowanie instrukcji nie wpływających na przepływ sterowania. Do rdzenia jest ładowana instrukcja, jeżeli dana linia

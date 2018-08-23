@@ -19,6 +19,7 @@ public:
 
     bool merge(const Core& other);
     bool loadInstruction(const Line& line);
+    void loadReturnedRegs(const QMap<QString, Reg>& regs);
     void call(const Fun& fun);
     int returns() const;
 
