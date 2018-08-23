@@ -25,7 +25,9 @@ SOURCES += main.cpp \
     src/funContainer.cpp \
     src/core.cpp \
     src/reg.cpp \
-    src/stack.cpp
+    src/stack.cpp \
+    src/conv.cpp \
+    src/convs.cpp
 
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -59,4 +61,6 @@ HEADERS += \
     src/funContainer.hpp \
     src/core.hpp \
     src/reg.hpp \
-    src/stack.hpp
+    src/stack.hpp \
+    src/conv.hpp \
+    src/convs.hpp

@@ -9,6 +9,7 @@ class Stack;
 class Reg
 {
     friend class Core;
+    friend class Conv;
 public:
     Reg(){}
     Reg(QString val, QString size="w");
