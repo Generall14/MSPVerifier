@@ -5,3 +5,4 @@ input_tests*/*
 dokradzenia/*
 *.user
 *.user.*
+doc_doxygen/*

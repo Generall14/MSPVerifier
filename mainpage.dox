@@ -1,0 +1,326 @@
+/**
+\mainpage The mainpage documentation
+
+Zestaw bibliotek użytkowych dla języka C++.
+
+
+Autor: <b>Wojciech Kogut</b>
+
+\par Data utworzenia projektu
+2016.07.15
+\endpar
+\version 0.027
+\date 2017.02.22
+
+# Spis bibliotek{#Start}
+\par KWAlgs
+Zestaw użytkowych funkcji i algorytmów.\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2016.11.16
+\n
+<b>Wersja</b>:   v0.01
+\n
+<b>Data</b>:   2017.02.22
+\n
+[Szczegóły...](@ref REFSKWAlgs)\endpar
+
+\par KWColors
+Kolorowanie strumieni tekstowych.\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2016.07.20
+\n
+<b>Wersja</b>:   v0.04
+\n
+<b>Data</b>:   2016.07.22
+\n
+[Szczegóły...](@ref REFSKWColors)\endpar
+
+\par KWLoger
+Tworzenie logów w programie..\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2017.01.17
+\n
+<b>Wersja</b>:   v1.00
+\n
+<b>Data</b>:   2017.02.22
+\n
+[Szczegóły...](@ref REFSKWLoger)\endpar
+
+\par KWParser
+Klasa przechowująca dane parametrów w plikach.\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2016.11.05
+\n
+<b>Wersja</b>:   v1.01
+\n
+<b>Data</b>:   2017.01.18
+\n
+[Szczegóły...](@ref REFSKWParser)\endpar
+
+\par KWTester
+Klasy i makra ułatwiające przeprowadzanie testów jednostkowych.\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2016.07.12
+\n
+<b>Wersja</b>:   v1.01
+\n
+<b>Data</b>:   2016.07.21
+\n
+[Szczegóły...](@ref REFSKWTester)\endpar
+
+\par KWTracer
+Makra tworzące ślad programu.\n
+<b>Autor</b>:   Wojciech Kogut
+\n
+<b>Data utworzenia projektu</b>:  2016.06.26
+\n
+<b>Wersja</b>:   v1.04
+\n
+<b>Data</b>:   2016.07.28
+\n
+[Szczegóły...](@ref REFSKWTracer)\endpar
+
+# KWAlgs{#REFSKWAlgs}
+Plik źródłowy biblioteki: KWAlgs.hpp\n
+
+Zestaw użytkowych algorytmów. \n \n
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2016.11.05 \n
+
+\par Wykorzystanie
+...
+\par Uwagi
+...
+\endpar
+
+# KWColors{#REFSKWColors}
+Plik źródłowy biblioteki: KWColors.hpp\n
+
+Kolorowanie teksty w std::ostream.
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2016.06.26 \n
+
+\par Wykorzystanie klasy
+Klas z biblioteki można używać w strumieniach std::ofstream. Bazową kalsą jest KWDye, jego działanie zależy od wywołanego konstruktora, KWDye(std::string s, KWColor c) pokoloruje tylko tekst 
+przekazany w łańcuchu s, konstruktor KWDye(KWColor c) zmienia kolor całego strumienia znajdującego się za obiektem.\n\n
+Kolory ustawiane są za pomocą zmiennej enum KWDye::KWColor.\n\n
+Alternatywą dla KWDye są klasy Red, Green itp. będące pochodnymi KWDye ze sztywno ustalonym kolorem, rówież posiadają po dwa konstruktory (bez parametru KWColor c).\n\n
+Przykładowe wykorzystanie:
+\code{.cpp}
+cout << "Zwykły tekst" << KWDye("Czerwony tekst", KWDye::kwRed) << "Zwykły tekst\n";
+cout << "Zwykły tekst" << KWDye(KWDye::kwBlue) << "Niebieski tekst\n";
+cout << "Wciąż niebieski tekst" << KWDye(KWDye::kwDefault) << "Ponownie zwykły tekst\n";
+\endcode\n\n
+To samo, z wykorzystaniem klas pochodnych:
+\code{.cpp}
+cout << "Zwykły tekst" << Red("Czerwony tekst") << "Zwykły tekst\n";
+cout << "Zwykły tekst" << Blue() << "Niebieski tekst\n";
+cout << "Wciąż niebieski tekst" << ResetColor() << "Ponownie zwykły tekst\n";
+\endcode
+\endpar
+
+\par Konfiguracja
+Wyłączenie kolorów polega na zdefiniowaniu stałej NOCOLORS przed dołączeniem pliku.\n\n
+Standardowo biblioteka wykorzystuje mechanizmy dostępne na system Linux, aby włączyć tryb na Windows należy zdefiniować stałą WINOS, bez tego wyświetlane będą śmieci.
+\note
+UWAGA! W aktualnej wersji nie ma gotowego trybu dla Windowsów.
+\endpar
+
+# KWLoger{#REFSKWLoger}
+Plik źródłowy biblioteki: KWLoger.hpp\n
+
+Tworzenie logów w programie.
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2017.01.17 \n
+
+
+
+\par Konfiguracja
+Aby korzystać z obiektu KWLoger należy odpowiednio go skonfigurować za pomocą metod KWLoger::addWriter(...) oraz odpowiednich obiektów implementujących interfejs KWWriter. W konstruktorze KWWriter należy wskazać obiekt KWFormater który będzie odpowiedzialny za formatowanie tekstu. Należy rówież określić poziomy logowaia dla każdego obiektu KWWriter.
+\code{.cpp}
+KWWriter* writer = new KWWriterCout(new KWSimpleFormater();
+KWWriter* filewriter = new KWWriterFile(new KWFormater(), "fileout.txt");
+
+KWLoger* log = new KWLoger();
+log->addWriter(writer, KWLoger::DEBUG | KWLoger::ERROR);
+log->addWriter(filewriter, KWLoger::ERROR | KWLoger::INFO | KWLoger::TRACE | KWLoger::WARNING);
+\endcode
+Wyłączyć logowanie można za pomocą metody KWLoger::setEnable(...) lub globalnie poprzez utworzenie obiktu KWDisabledLoger zamiast standardowego KWLoger.
+\endpar
+
+\par Wykorzystanie klasy
+Dane do logera wysyła się za pomocą metod logXXX(...):
+\code{.cpp}
+log->logDebug("debug\n");
+log->logError("erroe\n");
+log->logInfo("info\n");
+log->logTrace("trace\n");
+log->logWarning("warning\n");
+\endcode
+\endpar
+# KWParser{#REFSKWParser}
+Plik źródłowy biblioteki: KWParser.hpp\n
+
+Klasa przechowująca dane parametrów w plikach. \n \n
+\note W obecnej wersji wspierane są typy: int, float, double, char, unsigned char, bool.
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2016.11.05 \n
+
+\par Wykorzystanie
+Dodawać parametry do obiektu można pojedynczo lub wczytując plik z zapisanymi wcześniej danymi. Pojedyncze dodawanie parametru int wygląda następująco:
+\code{.cpp}
+KWParser parserObj;
+int parametr = 123;
+parserObj.SetParam("parametr", parametr);
+\endcode
+Funkcja SetParam(...) utworzy nowy parametr w obiekcie lub nadpisze wartość starego (tylko gdy istniał parametr tego samego typu o tej samej nazwie).
+Odczyt z całego pliku odbywa się za pomocą funkcji KWParser::LoadFromFile(std::string adres, KWParser::addMode mode=overwriteParam):
+\code{.cpp}
+parserObj.LoadFromFile("plik.txt", overwriteParam);
+\endcode
+Drugi, opcjonalny parametr KWParser::addMode określa tryb dodawania parametrów (nadpisywanie istniejących, pomijanie istniejących, czyczszenie obiektu przed odczytem).
+Pobierac parametry można za pomocą funkcji KWParser::GetParam(std::string name, int& value) lub KWParser::TryGetParam(std::string name, int defaultValue). Pierwsza z nich wpisuje wartość do podanej referencji int& value (tylko w przypadku prawidłowego odczytu), natomiast zwraca stan odczytu (true - błąd odczytu, false - odczyt prawidłowy). Druga funkcja zwraca odczytaną wartość lub wartość int defaultValue jeżeli parametru nie ma w bazie.
+Zapis do pliku wykonuje się za pomocą funkcji KWParser::SaveToFile(std::string adres), istnijące pliki są nadpisywane.
+
+\par Uwagi
+<b>1. </b> Parametry są rozróżniane na podstawie nazwy i typu, kod:
+\code{.cpp}
+KWParser parserObj;
+parserObj.SetParam("parametr", (int)123);
+parserObj.SetParam("parametr", (float)124);
+\endcode
+utworzy dwa niezależne wpisy w obiekcie. Próba odczytu w poniższy sposób:
+\code{.cpp}
+cout << "int: " << parserObj.TryGetParam("parametr", (int)-1) << ", float: " << parserObj.TryGetParam("parametr", (float)-1.0) << endl;
+\endcode
+da rezultat:
+\code{.cpp}
+# int: 123, float: 124
+\endcode
+<b>2. </b> Podczas dodawania pozycji, wartości należy przekazywać przez zmienne lub jednoznacznie określać typ jaki ma zostać wykorzystany:
+\code{.cpp}
+parserObj.SetParam("parametr", (float)125);
+\endcode
+w przeciwnym przypadku mogą pojawić się nieintuicyjne problemy przy odczycie wartości.
+\endpar
+
+# KWTester{#REFSKWTester}
+Plik źródłowy biblioteki: KWTester.hpp\n
+
+Klasy i makra ułatwiające przeprowadzanie testów jednostkowych. \n \n
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2016.07.12 \n
+
+\par Wykorzystanie
+<b>1. </b>Należy rozszerzyć klasę KWTest, umieszczając testy jednostkowe (makra _KWTEST(COND) itp.) w wirtualnej funkcji KWTest::Tests(). Przykład:
+\code{.cpp}
+class Test1 : public KWTest
+{
+public:
+	Test1():KWTest("Test testowy 1"){}
+protected:
+	void Tests()
+	{
+		_CODE(int i=1;)
+		_KWTEST(1==i)
+		_KWTEST(2==i)
+	}
+};
+\endcode
+Powyższy twór można uruchomić funkcją KWTest::Run(), lub:\n
+<b>2. </b> Utworzyć obiekt KWTester i przekazać mu dowolną liczbę wskaźników na rozszerzenia KWTest:
+\code{.cpp}
+KWTester a("Plik wyjsciowy.txt", KWTester::All, KWTester::All);
+a.AddTest(new Test1());
+a.AddTest(new Test2());
+\endcode
+Aby wykonać wszystkie testy umieszczone w KWTester, wywołuje się funkcję KWTester::Run(), dla parametrów jak w powyższym przykładzie, wynik będzie wyglądał:
+\code{.cpp}
+#>>>>           Rozpoczynanie testów           <<<<
+#
+#
+#Rozpoczynanie serii testów: Test testowy 1
+#             # int i=1;
+#   1 [ Ok  ] 1==i
+#   2 [Error] 2==i
+#Wykonano 2 testów, wynik 1 prób okazał się nieprawidłowy
+#Ostateczny wynik: TRAGEDIA!
+#
+#Rozpoczynanie serii testów: Test testowy 2
+#   1 [ Ok  ] 7==7
+#   2 [ Ok  ] 8==8
+#Wykonano 2 testów, wynik 0 prób okazał się nieprawidłowy
+#Ostateczny wynik: Wszystko w porządku.
+#
+#
+#>>>>           Koniec testów                  <<<<
+#
+#Łącznie wykonano 4 testów, 1 z nich zakończyło się błędem.
+#
+#>>>>           ŹLE!!!                         <<<<
+\endcode
+\endpar
+
+\par Konfiguracja
+- Definiując NOCOLORS przed dołączeniem pliku KWTester.hpp lub KWTest.hpp wyłącza się kolorowe komunikaty w konsoli.
+\endpar
+# KWTracer{#REFSKWTracer}
+Plik źródłowy biblioteki: KWTrace.hpp\n
+
+Zestaw makr tworzących ślad programu.
+
+Autor: <b>Wojciech Kogut</b> \n
+Data utworzenia projektu: 2016.06.26 \n
+
+\par Wykorzystanie
+Przykładowe przygotowanie i wykorzystanie pliku:
+\code{.cpp}
+	#define KWFILEOUT "cc.txt"			//Ustawianie pliku wyjściowego (opcjonalne do działania)
+	#define KWTRACEON					//Włączanie makr
+	#define KWTENABLE bEnable			//Ustawianie zmiennej sterującej (opcjonalne do działania)
+	#include "KWTrace.hpp"				//Dołączanie pliku
+	
+	bool bEnable = true;				//Konieczne, jeżeli zdefiniowano KWTENABLE
+	
+	void fun()
+	{
+		KWT_ERROR("error")				//Wyświetlanie błędu
+		
+		bEnable = false;				//Wyłączanie makr
+		KWT_ERROR("error")				//To nie zostanie wyświetlone
+	}
+\endcode
+Opisy poszczególnych makr znajdują się na \ref KWTrace.hpp "tej" stronie.\n \n
+W pliku KWTrace.hpp znajduje się polecenie:
+\code{.cpp}
+	#ifdef KWTENABLE
+		extern bool KWTENABLE;
+	#endif
+\endcode
+więc nie jest konieczne ręczne dodawanie go w przypadku użycia globalnej zmiennej w wielu plikach.
+\endpar
+
+\par Konfiguracja
+Włączenie śledzenia odbywa się poprzez definicję stałej KWTRACEON przed dołączeniem pliku KWTrace.hpp,. W przypadku wyłączenia śledzenia, wszystkie makra zastępowane są przez średnik ';'. Domyślnie śledzenie jest wyłączone. \n \n
+Ustawianie pliku docelowego odbya się poprzez definicję stałej KWFILEOUT "nazwa_pliku" przed dołączeniem KWTrace.hpp. W przypadku braku definicji KWFILEOUT, wszystkie dane będą przekazywane do std::cout. \n \n
+W definicji stałej KWTENABLE podaje się warunek włączający działanie skryptów z poziomu programu: if(KWTENABLE){...}, domyślna wartość to true. Wartość podana w KWTENABLE musi być widoczna przez kompilator w każdym wykorzystaniu makr.
+\n \n
+W projektach wieloplikowych wygodnie jest zdefiniować stałe globalnie dla projektu, np. dla pliku Makefile:
+\code{.cpp}
+CXXFLAGS += -DKWFILEOUT=\"cc.txt\"
+CXXFLAGS += -DKWTRACEON
+CXXFLAGS += -DKWTENABLE=bEnable
+\endcode
+\endpar
+
+*/
