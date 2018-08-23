@@ -71,3 +71,13 @@ void Convs::iterateInConvs(pugi::xml_node& node)
     }
     _convs.append(temp);
 }
+
+QMap<QString, Reg> Convs::prepareReturnedRegs(QString convname) const
+{
+    for(auto conv: _convs)
+    {
+        if(conv.name()==convname)
+            return conv.prepareReturnedRegs();
+    }
+    throw std::runtime_error("Convs::checkFun: nie odnaleziono konwencji \""+convname.toStdString()+"\"");
+}

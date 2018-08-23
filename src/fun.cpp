@@ -18,7 +18,6 @@ Fun::Fun(QList<Line> lines)
         throw std::runtime_error("Fun::Fun: za malo lini kodu aby to mialo sens.");
 
     parse();
-    // <TODO> ładowanie konwencji i generowanie rdzenia ze zwracanymi rejestrami
 }
 
 void Fun::parse()
@@ -69,7 +68,6 @@ QString Fun::toString() const
         temp += key+_retRegs[key].toString()+"\n";
     temp += "\n\n"+LineContainer::toString();
     return temp;
-    //<TODO> konwencja + czy spełniona
 }
 
 Fun::simState Fun::state() const
@@ -104,6 +102,11 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
             line = it.key();
             todo.erase(it);
 
+            QString defaultConvention = "";
+            uint defaultFunDepth = 666;
+            int defaultFunRet = 0;
+            bool ignoreInstruction = false;
+
             // Dla wszystkich lini od punktu wejścia:
             for(;line<=_lines.size();line++)
             {
@@ -115,12 +118,46 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                     continue;
                 }
 
-                // Tekst informacyjny jest pomijany:
-                else if(_lines.at(line).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
+                if(ignoreInstruction)
+                {
+                    ignoreInstruction = false;
                     continue;
+                }
+
+                // Instrukcje specjalne, linia rozpoczęta ;##, instrukcje dzielone średnikiem:
+                // ;##ins1(arg);ins2(arg)
+                else if(_lines.at(line).currentText.startsWith(" ;##", Qt::CaseInsensitive))
+                {
+                    QStringList inss = _lines.at(line).currentText.mid(4).remove(" ").split(";");
+                    for(QString insl: inss)
+                    {
+                        int start, end;
+                        start = insl.indexOf("(");
+                        end = insl.indexOf(")");
+
+                        QString ins = insl.mid(0, start);
+                        QString arg = "";
+                        if((start>0)&&(end>0))
+                            arg = insl.mid(start+1, end-start-1);
+                        if(!ins.compare("fun", Qt::CaseInsensitive))
+                            continue;
+                        else if(!ins.compare("defconv", Qt::CaseInsensitive))
+                            defaultConvention = arg;
+                        else if(!ins.compare("deffundepth", Qt::CaseInsensitive))
+                            defaultFunDepth = arg.toInt();
+                        else if(!ins.compare("deffunret", Qt::CaseInsensitive))
+                            defaultFunRet = arg.toInt();
+                        else if(!ins.compare("ignorenextline", Qt::CaseInsensitive))
+                            ignoreInstruction = true;
+                    }
+                    continue;
+                }
 
                 //================================================================================================
-                // Wykrywanie powrotow: <TODO> + opis
+                // Wykrywanie powrotow: linia jest wykonywana, kopia rdzenia jest dodawana do listy retStates,
+                // aktualna iteracja symulacji jest kończona. Po zakończeniu symulacji wszystkie elementy listy
+                // są porównywane pod względem spójności poziomu wyjścia, zwracany stan rejestrów jest przyjmowany
+                // na podstawie sumy (wszystkie możliwości zmian) z listy rdzeni po ret.
                 else if(Core::rets.contains(_lines.at(line).getInstruction()))
                 {
                     prev->loadInstruction(_lines.at(line));
@@ -200,7 +237,13 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                 }
 
                 //================================================================================================
-                // Wykrywanie wołań funkcji <TODO> + opis
+                // Wykrywanie wołań funkcji. Funkcja wywoływana jest pobierana z listy funkcji, jeżeli jej tam nie
+                // ma, spreparowana zostanie funkcja opisana przez polecenia ;## <TODO>, jeżeli takie nie wystąpią
+                // przed daną linią symulacja zakończy się błędem. Do obiektu Core w instrukcji call zostanie
+                // dopisana instrukcja call oraz maksymalny stos zwracany z wołanej funkcji (jest to wyjątkowa
+                // sytuacja, wszystkie inne Core posiadają stan stosu po wykonaniu instrukcji). Rdzeń służący
+                // do dalszej symulacji (prev) zostanie uzupełniony o zmiany w rejestrach spowodowane wywołaniem
+                // funkcji.
                 else if(Core::calls.contains(_lines.at(line).getInstruction()))
                 {
                     if(_lines.at(line).core!=nullptr)
@@ -208,6 +251,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                     if(_lines.at(line).getArguments().isEmpty())
                         throw std::runtime_error("Fun::simulate: brak etykiety funkcji w "+_lines.at(line).toString().toStdString());
 
+                    // Pobieranie obiektu funkcji
                     Fun called;
                     try
                     {
@@ -215,13 +259,22 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                     }
                     catch(...)
                     {
-                        throw std::runtime_error("brak funkcji "+_lines.at(line).getArguments().at(0).toStdString());
-                        qDebug() << "sfassdfadsf"; //<TODO> obsługa nieznanych funkcji
+                        try
+                        {
+                            called = Fun::prepareFake("nieznane wolanie w "+_lines[line].toSString(), defaultConvention,
+                                                      defaultFunDepth, defaultFunRet, convs);
+                        }
+                        catch(std::runtime_error err)
+                        {
+                            throw std::runtime_error("brak funkcji "+_lines.at(line).getArguments().at(0).toStdString()+", "+err.what());
+                        }
                     }
 
+                    // Sprawdzanie jej stanu
                     if(called.state()==error)
                         throw std::runtime_error("Fun::simulate: nie można wykonać instrukcji call z powodu "
                                                  "wleczonego błędu funkcji wołanej");
+                    // Jeżeli funkcja jeszcze nie została przesymulowana - przerwij własną symulacje.
                     else if(called.state()==waiting)
                     {
                         for(int d=0;d<_lines.size();d++)
@@ -232,6 +285,9 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                         _state = waiting;
                         return;
                     }
+                    // Jest ok - wykonaj isntrukcję, przypisz do Core linii maksymalny stos zwracany przez
+                    // funkcję wołaną, sprawdź czy rozmiary instrukcji call i powrotu są zgone. Do prev przypisz
+                    // zmiany rejestrów.
                     else
                     {
                         Core* cPrev = new Core(*prev);
@@ -319,21 +375,22 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
             _convState = "ok";
     }
 
+    // Obliczanie maksymalnego poziomu stosu:
+    for(auto line: _lines)
+    {
+        if(line.core==nullptr)
+            continue;
+        if(line.core->_stack.depth()>_maxStack.depth())
+            _maxStack = line.core->_stack;
+    }
+
     _state = done;
     Logger::WriteFile("code/"+_name+".csv", toString());
 }
 
 Stack Fun::getMaxStack() const
 {
-    Stack temp(_name);
-    for(auto line: _lines)
-    {
-        if(line.core==nullptr)
-            continue;
-        if(line.core->_stack.depth()>temp.depth())
-            temp = line.core->_stack;
-    }
-    return temp;
+    return _maxStack;
 }
 
 int Fun::getReturnedLevel() const
@@ -349,4 +406,16 @@ QMap<QString, Reg> Fun::getReturnedRegs() const
 QString Fun::getConventionType() const
 {
     return _convention;
+}
+
+Fun Fun::prepareFake(QString name, QString conv, uint depth, int ret, const Convs* convs)
+{
+    Fun temp;
+    temp._name = name;
+    temp._state = done;
+    temp._retRegs = convs->prepareReturnedRegs(conv);
+    temp._returns = ret;
+    temp._convention = conv;
+    temp._maxStack = Stack::prepare(depth, name);
+    return temp;
 }

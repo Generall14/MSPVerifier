@@ -12,7 +12,6 @@ class Stack
 public:
     Stack(){}
     Stack(QString base);
-    Stack(const Fun& getMaxStack);
     Stack(const Stack& other);
     Stack& operator=(const Stack& other);
     ~Stack();
@@ -29,6 +28,8 @@ public:
     QString toSString() const;
     QString toString() const;
     int depth() const;
+
+    static Stack prepare(int depth, QString name);
 
 private:
     QStack<QString> _stack;

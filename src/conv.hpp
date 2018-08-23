@@ -4,6 +4,7 @@
 #include <QMap>
 
 class Fun;
+class Reg;
 
 class Conv
 {
@@ -12,6 +13,7 @@ public:
     bool checkFun(const Fun& fun) const;
     QString name() const;
     QString toString() const;
+    QMap<QString, Reg> prepareReturnedRegs() const;
 
 private:
     void set(QString reg, QString type, QString size);
@@ -29,6 +31,7 @@ private:
         type _type=dontTouch;
         QString _size="w";
     };
+    Reg prepare(const typeS& typ, QString reg) const;
 
     QString _name = "?????";
     QMap<QString, typeS> _types;

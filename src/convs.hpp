@@ -5,6 +5,7 @@
 #include "conv.hpp"
 
 class Fun;
+class Reg;
 
 class Convs
 {
@@ -13,6 +14,7 @@ public:
     void loadFromXmlFile(QString adress);
 
     bool checkFun(const Fun& fun) const;
+    QMap<QString, Reg> prepareReturnedRegs(QString convname) const;
 
     QString toString() const;
     void store() const;

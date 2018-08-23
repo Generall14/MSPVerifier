@@ -7,11 +7,6 @@ Stack::Stack(QString base):
 
 }
 
-Stack::Stack(const Fun& getMaxStack)
-{
-    //<TODO>
-}
-
 Stack::Stack(const Stack& other):
     _stack(other._stack),
     _base(other._base),
@@ -176,4 +171,13 @@ void Stack::popRandomStuff(QString size)
     }
     else
         throw std::runtime_error("Stack::popRandomStuff: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
+}
+
+Stack Stack::prepare(int depth, QString name)
+{
+    Stack temp;
+    temp._base=name;
+    while(depth--)
+        temp.pushB("X");
+    return temp;
 }

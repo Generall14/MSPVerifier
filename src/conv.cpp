@@ -111,3 +111,51 @@ void Conv::set(QString reg, QString type, QString size)
     temp._size = size;
     _types[reg]=temp;
 }
+
+QMap<QString, Reg> Conv::prepareReturnedRegs() const
+{
+    QMap<QString, Reg> temp;
+    for(auto key: _types.keys())
+        temp.insert(key, prepare(_types[key], key));
+    return temp;
+}
+
+Reg Conv::prepare(const typeS &typ, QString reg) const
+{
+    Reg temp;
+    switch(typ._type)
+    {
+    case touch:
+        temp._a="?";
+        temp._w="?";
+        temp._b="?";
+        temp._touched=true;
+        break;
+    case dontTouch:
+        temp._a=reg;
+        temp._w=reg;
+        temp._b=reg;
+        break;
+    case touchAndRestore:
+        if(typ._size=="a")
+        {
+            temp._a=reg;
+            temp._w=reg;
+            temp._b=reg;
+        }
+        else if(typ._size=="w")
+        {
+            temp._a="?";
+            temp._w=reg;
+            temp._b=reg;
+        }
+        else if(typ._size=="b")
+        {
+            temp._a="?";
+            temp._w="?";
+            temp._b=reg;
+        }
+        temp._touched=true;
+    }
+    return temp;
+}
