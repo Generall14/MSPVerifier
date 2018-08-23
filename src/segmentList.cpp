@@ -46,7 +46,7 @@ FunContainer SegmentList::digForFunctions() const
         int fi = -1;
         for(int i=0;i<code.get().size();i++)
         {
-            if((code.get().at(i).currentText.startsWith(" ;##fun ", Qt::CaseInsensitive)))
+            if((code.get().at(i).currentText.startsWith(" ;##fun", Qt::CaseInsensitive)))
             {
                 if((fi==-1)&&(i>0))
                 {

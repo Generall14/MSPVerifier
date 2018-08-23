@@ -36,5 +36,5 @@ QString Convs::toString() const
 
 void Convs::store() const
 {
-    Logger::WriteFile("files/_convs.txt", toString());
+    Logger::WriteFile("_convs.txt", toString());
 }

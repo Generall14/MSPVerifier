@@ -23,14 +23,27 @@ Fun::Fun(QList<Line> lines)
 
 void Fun::parse()
 {
+    if(!_lines.at(0).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
+        throw std::runtime_error("Fun::parse: brak znacznika funkcji na początku kodu sekcji w pliku \""+
+                                 _lines.at(0).File().toStdString()+"\".");
+
+    int start, end;
+    start = _lines.at(0).currentText.indexOf("(");
+    end = _lines.at(0).currentText.indexOf(")");
+    if((start<0)||(end<0))
+        throw std::runtime_error("Fun::parse: nie można odczytać typu konwencji sekcji \""+
+                                 _lines.at(0).currentText.toStdString()+"\" w pliku \""+
+                                 _lines.at(0).File().toStdString()+"\".");
+
+    _convention = _lines.at(0).currentText.mid(start+1, end-start-1);
+
     if(!_lines.at(1).currentText.contains(": ", Qt::CaseInsensitive))
         throw std::runtime_error("Fun::parse: brak etykiety w pierwszej lini kodu sekcji \""+
                                  _lines.at(1).currentText.toStdString()+"\" w pliku \""+
                                  _lines.at(0).File().toStdString()+"\".");
 
-    _name = "#"+_lines.at(1).currentText.split(": ", QString::SkipEmptyParts).at(0); //<TODO> hash potrzebny?
+    _name = "#"+_lines.at(1).currentText.split(": ", QString::SkipEmptyParts).at(0);
     _name.remove(" ");
-    //<TODO>
 }
 
 QString Fun::toString() const
