@@ -80,6 +80,7 @@ void Logger::Log(QString txt, QString adr)
         throw std::runtime_error( QString("Nie można pisac do pliku "+adr).toStdString() );
 
     QTextStream str(&file);
+    str.setCodec("UTF-8");
     str << txt;
 
     file.close();
