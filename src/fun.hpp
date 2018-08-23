@@ -44,7 +44,7 @@ private:
     QString _errorDesc;
     QMap<QString, Reg> _retRegs;
     int _returns=-666;
-    QString _convention="???"; //<TODO> odczyt tego
+    QString _convention="???";
     QString _convState = "ERROR";
     Stack _maxStack;
 };

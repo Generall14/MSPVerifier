@@ -12,7 +12,6 @@ TEMPLATE = app
 SOURCES += main.cpp \
     src/Logger.cpp \
     src/FileList.cpp \
-    src/MSPFile.cpp \
     src/Line.cpp \
     src/LineContainer.cpp \
     src/File.cpp \
@@ -46,7 +45,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     src/Logger.hpp \
     src/FileList.hpp \
-    src/MSPFile.hpp \
     src/Line.hpp \
     src/osrc/pugiconfig.hpp \
     src/osrc/pugixml.hpp \

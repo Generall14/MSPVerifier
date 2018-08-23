@@ -32,7 +32,6 @@ void FunContainer::simulate(const Convs *convs)
     }
 
     Logger::Log("... zrobione");
-    //<TODO> zapis do pliku? tutaj czy w File po zmianie statusu z waiting?
 }
 
 Fun FunContainer::getByName(QString name) const throw(std::runtime_error)

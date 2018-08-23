@@ -9,8 +9,7 @@ Stack::Stack(QString base):
 
 Stack::Stack(const Stack& other):
     _stack(other._stack),
-    _base(other._base),
-    lastCallS(other.lastCallS)
+    _base(other._base)
 {
     if(other._called==nullptr)
         _called = nullptr;
@@ -31,7 +30,6 @@ Stack& Stack::operator=(const Stack& other)
 
     _stack=other._stack;
     _base=other._base;
-    lastCallS=other.lastCallS;
 
     return *this;
 }
@@ -53,16 +51,6 @@ void Stack::call(const Fun& other)
     if(_called!=nullptr)
         throw std::runtime_error("Stack::call: cos tu sie posralo");
     _called = new Fun(other);
-}
-
-void Stack::ret()
-{
-    while(lastCallS--)
-        _stack.pop();
-    // <TODO> zdejmij ze stosu zgodnie z poziomem powrotu funkcji
-    delete _called;
-    _called = nullptr;
-    // <TODO> wtfit?
 }
 
 void Stack::pushB(QString desc)

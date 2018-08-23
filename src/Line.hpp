@@ -6,7 +6,6 @@
 
 class Core;
 
-//<TODO>
 class Line
 {
 public:

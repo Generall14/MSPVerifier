@@ -18,7 +18,6 @@ public:
 
     bool isEmpty() const;
     void call(const Fun& other);
-    void ret();
     void pushB(QString desc);
     void pushRandomStuff(QString size="w");
     QString popB();
@@ -35,7 +34,6 @@ private:
     QStack<QString> _stack;
     QString _base = "";
     Fun* _called = nullptr;
-    int lastCallS = 0;//<TODO> wtfit
 
     QString getLocalString() const;
 };

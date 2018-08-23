@@ -108,8 +108,6 @@ bool Core::loadInstruction(const Line& line)
     if(jumpsIf.contains(line.getInstruction(), Qt::CaseInsensitive))
         return false;
 
-    // <TODO> instrukcje specjalne - grzebanie w sp
-
     // Instrukcje powrotu z procedury.
     if(rets.contains(line.getInstruction(), Qt::CaseInsensitive))
     {
