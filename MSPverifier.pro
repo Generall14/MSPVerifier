@@ -29,7 +29,7 @@ SOURCES += main.cpp \
     src/conv.cpp \
     src/convs.cpp
 
-LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
+#LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
 
 # The following define makes your compiler emit warnings if you use
