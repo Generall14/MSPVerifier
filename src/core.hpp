@@ -41,6 +41,8 @@ private:
     static const QStringList transparentArgs;
     static const QStringList pushes;
     static const QStringList pops;
+    static const QStringList adds;
+    static const QStringList subs;
 };
 
 #endif

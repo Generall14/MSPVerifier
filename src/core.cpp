@@ -1,6 +1,7 @@
 #include "core.hpp"
 #include "Logger.hpp"
 #include "Line.hpp"
+#include <qdebug.h>
 
 const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
                                   "and", "andx", "mov", "movx"};
@@ -12,6 +13,8 @@ const QStringList Core::rets = {"ret", "reta"};
 const QStringList Core::calls = {"call", "calla"};
 const QStringList Core::pushes = {"push", "pushx"};
 const QStringList Core::pops = {"pop", "popx"};
+const QStringList Core::adds = {"add", "addx"};
+const QStringList Core::subs = {"sub", "subx"};
 
 Core::Core(QString name):
     _name(name),
@@ -156,6 +159,55 @@ bool Core::loadInstruction(const Line& line)
         if(_regs.contains(line.getArguments().at(1).toLower()))
         {
             return _regs[line.getArguments().at(1).toLower()].merge(Reg("?", line.getInstructionSize()));
+        }
+        // Sprawdź czy to modyfikowanie SP przez dodawanie lub odejmowanie <TODO> to się aż prosi o zrefaktoryzowanie
+        if(adds.contains(line.getInstruction(), Qt::CaseInsensitive))
+        {
+            if(line.getArguments().at(1).toLower()=="sp")
+            {
+                if(!line.getArguments().at(0).startsWith("#"))
+                {
+                    Logger::LogError("Nie wiem co z tym zrobić: "+line.toString());
+                    return false;
+                }
+                int val;
+                bool ok;
+                if(line.getArguments().at(0).mid(1).startsWith("0x"))
+                    val = line.getArguments().at(0).mid(1).toInt(&ok, 16);
+                else
+                    val = line.getArguments().at(0).mid(1).toInt(&ok, 10);
+                if(!ok)
+                {
+                    Logger::LogError("Nie wiem co z tym zrobić: "+line.toString());
+                    return false;
+                }
+                while(val--)
+                    _stack.popB();
+            }
+        }
+        else if(subs.contains(line.getInstruction(), Qt::CaseInsensitive))
+        {
+            if(line.getArguments().at(1).toLower()=="sp")
+            {
+                if(!line.getArguments().at(0).startsWith("#"))
+                {
+                    Logger::LogError("Nie wiem co z tym zrobić: "+line.toString());
+                    return false;
+                }
+                int val;
+                bool ok;
+                if(line.getArguments().at(0).mid(1).startsWith("0x"))
+                    val = line.getArguments().at(0).mid(1).toInt(&ok, 16);
+                else
+                    val = line.getArguments().at(0).mid(1).toInt(&ok, 10);
+                if(!ok)
+                {
+                    Logger::LogError("Nie wiem co z tym zrobić: "+line.toString());
+                    return false;
+                }
+                while(val--)
+                    _stack.pushB("??");
+            }
         }
         return false;
     }
