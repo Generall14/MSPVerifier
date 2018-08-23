@@ -1,6 +1,7 @@
 #ifndef CONVS_HPP
 #define CONVS_HPP
 
+#include "osrc/pugixml.hpp"
 #include "conv.hpp"
 
 class Fun;
@@ -17,6 +18,8 @@ public:
     void store() const;
 
 private:
+    void iterateInConvs(pugi::xml_node& node);
+
     QList<Conv> _convs;
 };
 

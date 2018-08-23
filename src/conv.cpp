@@ -96,3 +96,18 @@ QString Conv::toString() const
     }
     return temp;
 }
+
+void Conv::set(QString reg, QString type, QString size)
+{
+    if(!_types.contains(reg))
+        throw std::runtime_error("Conv::set: brak rejestru \""+reg.toStdString()+"\"");
+    typeS temp;
+    if(type=="free")
+        temp._type=touch;
+    else if(type=="forbidden")
+        temp._type=dontTouch;
+    else if(type=="restored")
+        temp._type=touchAndRestore;
+    temp._size = size;
+    _types[reg]=temp;
+}

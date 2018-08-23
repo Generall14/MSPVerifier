@@ -4,26 +4,33 @@
 
           rseg          CODE(1)
           public        testFun
-;##FUN 
+;##FUN(std)
 testFun1:
 			nop
 			push.w	r14
 			
 			mov.w	#0x11, r14
+			movx.a	fdsfs, r6
 			call	#testFun3
 			pop.w	r14
           ret
           
-          ;##fun
+          ;##fun(std)
 testFun2:
 			nop
 			call	#testFun1
 			nop
 			ret
 			
-          ;##fun
+          ;##fun(process)
 testFun3:
-			nop
+			push.w	R5
+			push.w	R6
+			mov.w	#44, R4
+			mov.w	fdsfs, r5
+			mov.w	fdsfs, r6
+			pop.w	r6
+			pop.w	r5
 			ret
           
           end

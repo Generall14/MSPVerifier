@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<mainnode>
+	<conv lab="std">
+		<reg name="r4" type="forbidden" size=""/>
+		<reg name="r5" type="forbidden" size=""/>
+		<reg name="r6" type="forbidden" size=""/>
+		<reg name="r7" type="forbidden" size=""/>
+		<reg name="r8" type="restored" size="w"/>
+		<reg name="r9" type="restored" size="w"/>
+		<reg name="r10" type="restored" size="w"/>
+		<reg name="r11" type="restored" size="w"/>
+		<reg name="r12" type="free" size=""/>
+		<reg name="r13" type="free" size=""/>
+		<reg name="r14" type="free" size=""/>
+		<reg name="r15" type="free" size=""/>
+	</conv>
+	<conv lab="process">
+		<reg name="r4" type="forbidden" size=""/>
+		<reg name="r5" type="forbidden" size=""/>
+		<reg name="r6" type="forbidden" size=""/>
+		<reg name="r7" type="forbidden" size=""/>
+		<reg name="r8" type="free" size=""/>
+		<reg name="r9" type="free" size=""/>
+		<reg name="r10" type="free" size=""/>
+		<reg name="r11" type="free" size=""/>
+		<reg name="r12" type="free" size=""/>
+		<reg name="r13" type="free" size=""/>
+		<reg name="r14" type="free" size=""/>
+		<reg name="r15" type="free" size=""/>
+	</conv>
+</mainnode>

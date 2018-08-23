@@ -22,6 +22,7 @@ int main(int, char *[])
         sl.store();
         FunContainer fc = sl.digForFunctions();
         Convs convs;
+        convs.loadFromXmlFile("convs.xml");
         convs.store();
         fc.simulate(&convs);
     }
