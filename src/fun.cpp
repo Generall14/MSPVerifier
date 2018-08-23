@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "core.hpp"
 #include "Line.hpp"
+#include "convs.hpp"
 
 Fun::Fun(QList<Line> lines)
 {
@@ -47,6 +48,7 @@ QString Fun::toString() const
         temp += "error: "+_errorDesc;
     temp += "\n";
 
+    temp += "Typ konwencji wywołań: "+_convention+", status: "+_convState+"\n";
     temp += "Maksymalny stos: " + this->getMaxStack().toString()+"\n";
     temp += "Powrót na poziomie: "+QString::number(_returns)+"\n";
     temp += "Zwracany stan rejestrów:\n";
@@ -67,7 +69,7 @@ QString Fun::name() const
     return _name;
 }
 
-void Fun::simulate(const FunContainer *fc)
+void Fun::simulate(const FunContainer *fc, const Convs *convs)
 {
     int line;
     // Lista zawiera punkty wyjścia (po wykrycie instrukcji ret kopia rdzenia zostanie dodana do tej listy)
@@ -289,7 +291,6 @@ void Fun::simulate(const FunContainer *fc)
                 ret.merge(retStates.at(i));
             _retRegs = ret._regs;
             _returns = ret.returns();
-            // <TODO> sprawdzanie czy zgadza się z konwencja
         }
         catch(std::runtime_error err)
         {
@@ -301,8 +302,8 @@ void Fun::simulate(const FunContainer *fc)
             Logger::WriteFile("code/"+_name+".csv", toString());
             return;
         }
-        // <TODO> sprawdź czy stan zwracanego stosu jest zgodny z deklaracjami
-        // <TODO> zwracać faktyczny stan wyjścia czy deklarowany?
+        if(!convs->checkFun(*this))
+            _convState = "ok";
     }
 
     _state = done;
@@ -330,4 +331,9 @@ int Fun::getReturnedLevel() const
 QMap<QString, Reg> Fun::getReturnedRegs() const
 {
     return _retRegs;
+}
+
+QString Fun::getConventionType() const
+{
+    return _convention;
 }

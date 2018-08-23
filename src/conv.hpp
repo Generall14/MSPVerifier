@@ -13,7 +13,7 @@ public:
     QString toString() const;
 
 private:
-    Conv();
+    Conv(QString name);
 
     enum type
     {

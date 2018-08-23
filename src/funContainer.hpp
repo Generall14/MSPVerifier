@@ -5,13 +5,15 @@
 #include <stdexcept>
 #include <QList>
 
+class Convs;
+
 class FunContainer
 {
 public:
     FunContainer(){}
 
     void append(Fun fun);
-    void simulate();
+    void simulate(const Convs* convs);
     Fun getByName(QString name) const throw(std::runtime_error);
 
     QList<Fun>& get();

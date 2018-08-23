@@ -9,6 +9,7 @@
 class FunContainer;
 class Stack;
 class Line;
+class Convs;
 
 class Fun : public LineContainer
 {
@@ -16,7 +17,7 @@ public:
     Fun(){}
     Fun(QList<Line> lines);
 
-    void simulate(const FunContainer* fc);
+    void simulate(const FunContainer* fc, const Convs* convs);
 
     enum simState
     {
@@ -31,9 +32,7 @@ public:
     Stack getMaxStack() const;
     int getReturnedLevel() const;
     QMap<QString, Reg> getReturnedRegs() const;
-
-    //<TODO> metoda zwracająca stan rdzenia
-    //<TODO> metoda zwracające maksymalne wywołania?
+    QString getConventionType() const;
 
 private:
     void parse();
@@ -43,6 +42,8 @@ private:
     QString _errorDesc;
     QMap<QString, Reg> _retRegs;
     int _returns=-666;
+    QString _convention="???"; //<TODO> odczyt tego
+    QString _convState = "ERROR";
 };
 
 #endif

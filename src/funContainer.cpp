@@ -12,7 +12,7 @@ QList<Fun>& FunContainer::get()
 }
 
 // To się zawiesi przy jakielkolwiek rekurencji.
-void FunContainer::simulate()
+void FunContainer::simulate(const Convs *convs)
 {
     Logger::Log("Symulowanie funkcji...");
 
@@ -26,7 +26,7 @@ void FunContainer::simulate()
             if(fun.state()==Fun::waiting)
             {
                 someWaiting = true;
-                fun.simulate(this);
+                fun.simulate(this, convs);
             }
         }
     }

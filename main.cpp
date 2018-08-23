@@ -6,6 +6,7 @@
 #include "src/FileList.hpp"
 #include "src/segmentList.hpp"
 #include "src/funContainer.hpp"
+#include "src/convs.hpp"
 
 using namespace std;
 
@@ -20,7 +21,9 @@ int main(int, char *[])
         SegmentList sl = fl.getSegments();
         sl.store();
         FunContainer fc = sl.digForFunctions();
-        fc.simulate();
+        Convs convs;
+        convs.store();
+        fc.simulate(&convs);
     }
     catch(std::runtime_error err)
     {

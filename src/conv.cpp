@@ -3,7 +3,8 @@
 #include "fun.hpp"
 #include <stdexcept>
 
-Conv::Conv()
+Conv::Conv(QString name):
+    _name(name)
 {
     for(int i=4;i<16;i++)
         _types.insert("r"+QString::number(i), typeS());
