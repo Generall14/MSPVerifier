@@ -218,7 +218,6 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                 // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
                 else if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
                 {
-
                     if(_lines.at(line).getArguments().isEmpty())
                         throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
                     // Wyszukiwanie etyiety:

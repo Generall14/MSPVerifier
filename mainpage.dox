@@ -1,84 +1,114 @@
 /**
 \mainpage The mainpage documentation
 
-Zestaw ...
-
 Autor: <b>Wojciech Kogut</b>
 
 \par Data utworzenia projektu
 2018.04.22
 
-# Spis {#Start}
-\par KWAlgs
-Zestytmów.\n
-<b>Autor</b>:   Wojciech Kogut
-\n
-<b>Data utworzenia projektu</b>:  2016.11.16
-\n
-<b>Wersja</b>:   v0.01
-\n
-<b>Data</b>:   2017.02.22
-\n
-[Szczegóły...](@ref REFSKWAlgs)\endpar
 
-\par KWTracer
-Makrhdhfhhfmu.\n
-<b>Autor</b>:   Wojciech Kogut
-\n
-<b>Data utworzenia projektu</b>:  2016.06.26
-\n
-<b>Wersja</b>:   v1.04
-\n
-<b>Data</b>:   2016.07.28
-\n
-[Szczegóły...](@ref REFSKWTracer)\endpar
+[Szczegóły...](@ref REFSKWAlgs)
+TODO
 
-# KWAlgs{#REFSKWAlgs}
-Plik źródłowy biblioteki: KWAlgs.hpp\n
 
-Zestaw użytkowych algorytmów. \n \n
+# Co to jest i do czego to służy {#CoTo}
+TODO
 
-Autor: <b>Wojciech Kogut</b> \n
-Data utworzenia projektu: 2016.11.05 \n
-
-\par Wykorzystanie
-...
-\par Uwagi
-...
+# Jak z tego korzystać {#Jak}
+\par Wskazywanie plików źródłowych
+TODO
 \endpar
 
-# KWColors{#REFSKWColors}
-Plik źródłowy biblioteki: KWColors.hpp\n
+\par Konwencje wywołań i plik ich oisu
+TODO
+\endpar
 
-Kolorowanie teksty w std::ostream.
+\par Struktura plików wyjściowych
+TODO
+\endpar
 
-Autor: <b>Wojciech Kogut</b> \n
-Data utworzenia projektu: 2016.06.26 \n
+# Jak to działa {#JakToDziala}
+caseinsensitive TODO
+\par Instrukcje dla analizatora
+TODO
+\endpar
 
-\par Wykorzystanie klasy
-Klas z biblioteki można używać w strumieniach std::ofstream. Bazową kalsą jest KWDye, jego działanie zależy od wywołanego konstruktora, KWDye(std::string s, KWColor c) pokoloruje tylko tekst 
-przekazany w łańcuchu s, konstruktor KWDye(KWColor c) zmienia kolor całego strumienia znajdującego się za obiektem.\n\n
-Kolory ustawiane są za pomocą zmiennej enum KWDye::KWColor.\n\n
-Alternatywą dla KWDye są klasy Red, Green itp. będące pochodnymi KWDye ze sztywno ustalonym kolorem, rówież posiadają po dwa konstruktory (bez parametru KWColor c).\n\n
-Przykładowe wykorzystanie:
+\par Konwersja kodu
+TODO
+rozwijanie makr
+rozwijanie definicji (w bezpośredni sposób, bez argmentów)
+rozwijanie rept
+rozwijane include
+\endpar
+
+\par Sposób wykonywania symulacji
+TODO
+instrukcje warunkowe
+instrukcje jednoargumentowe
+instrukcje dwuarguentowe
+wleczenie błędów funkcji
+\endpar
+
+# Jakie błędy zostaną wykryte {#CoDziala}
+TODO
+
+\par Głębokość stosu
+TODO
+\endpar
+
+\par Przestrzeganie konwencji w procedurach
+TODO
+\endpar
+
+\par Próba powrotu z procedury na niezerowym poziomie stosu lokalnego
+TODO
+\endpar
+
+\par Mieszanie w funkcji instrukcji ret i reta
+TODO
+\endpar
+
+\par Niedopasowanie instrukcji call/calla i ret/reta
+TODO
+\endpar
+
+\par Modyfikacja stosu za pomocą add/sub SP
+TODO
+\endpar
+
+\par Wywołania pośrednie
+TODO
+\endpar
+
+\par Możliwość zakończenia funkcji bez powrotu
+TODO
+\endpar
+
+# Jakie błędy NIE zostaną wykryte {#CoNieDziala}
+\par Grzebanie na stosie za pomocą X(SP)
+TODO
+\endpar
+
+\par swpb
+TODO
+\endpar
+
+
+
+
+
+
+
+
+# XXX{XXX}
+\par XXX
 \code{.cpp}
 cout << "Zwykły tekst" << KWDye("Czerwony tekst", KWDye::kwRed) << "Zwykły tekst\n";
 cout << "Zwykły tekst" << KWDye(KWDye::kwBlue) << "Niebieski tekst\n";
 cout << "Wciąż niebieski tekst" << KWDye(KWDye::kwDefault) << "Ponownie zwykły tekst\n";
 \endcode\n\n
-To samo, z wykorzystaniem klas pochodnych:
-\code{.cpp}
-cout << "Zwykły tekst" << Red("Czerwony tekst") << "Zwykły tekst\n";
-cout << "Zwykły tekst" << Blue() << "Niebieski tekst\n";
-cout << "Wciąż niebieski tekst" << ResetColor() << "Ponownie zwykły tekst\n";
-\endcode
-\endpar
-
-\par Konfiguracja
-Wyłączenie kolorów polega na zdefiniowaniu stałej NOCOLORS przed dołączeniem pliku.\n\n
-Standardowo biblioteka wykorzystuje mechanizmy dostępne na system Linux, aby włączyć tryb na Windows należy zdefiniować stałą WINOS, bez tego wyświetlane będą śmieci.
 \note
-UWAGA! W aktualnej wersji nie ma gotowego trybu dla Windowsów.
+UWAGA! W XXXXXXXXXX.
 \endpar
 
 */
