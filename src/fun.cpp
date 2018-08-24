@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include "funContainer.hpp"
 #include <QMultiMap>
-#include <QDebug>
 #include "core.hpp"
 #include "Line.hpp"
 #include "convs.hpp"

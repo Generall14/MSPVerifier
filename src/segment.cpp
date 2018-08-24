@@ -1,6 +1,5 @@
 #include "segment.hpp"
 #include <stdexcept>
-#include <QDebug>
 #include "Line.hpp"
 
 Segment::Segment(QList<Line> lines, QString type):

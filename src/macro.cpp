@@ -1,7 +1,6 @@
 #include "macro.hpp"
 #include <QString>
 #include <stdexcept>
-#include <QDebug>
 #include "File.hpp"
 #include "Line.hpp"
 

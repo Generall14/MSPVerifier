@@ -1,5 +1,4 @@
 #include "Line.hpp"
-#include <QDebug>
 #include "core.hpp"
 
 Line::Line(QString file, QString text, int line):

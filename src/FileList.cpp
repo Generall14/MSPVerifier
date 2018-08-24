@@ -1,6 +1,5 @@
 #include "FileList.hpp"
 #include <QDir>
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include "Logger.hpp"

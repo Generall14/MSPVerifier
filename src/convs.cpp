@@ -3,7 +3,6 @@
 #include "fun.hpp"
 #include <stdexcept>
 #include "osrc/pugixml.hpp"
-#include <QDebug>
 #include "conv.hpp"
 
 Convs::Convs()

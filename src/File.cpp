@@ -5,7 +5,6 @@
 #include "Logger.hpp"
 #include <QFileInfo>
 #include <QString>
-#include <QDebug>
 #include <QDir>
 #include "dyskryminator.hpp"
 #include "macro.hpp"

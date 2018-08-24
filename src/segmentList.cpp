@@ -1,6 +1,5 @@
 #include "segmentList.hpp"
 #include "Logger.hpp"
-#include <qdebug.h>
 #include "fun.hpp"
 #include "funContainer.hpp"
 
