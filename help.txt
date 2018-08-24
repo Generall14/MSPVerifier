@@ -1,0 +1,12 @@
+Argumenty programu:
+-h		- Wyświetla pomoc i zamyka program.
+-i[file]	- Wskazuje plik *.ewp projektu do sprawdzenia.
+-c[file]	- Wskazuje plik *.xml zawierający opis konwencji.
+
+Raport z analizy zostanie umieszczony w katalogu ./outputs/*, 
+ważniejsze pliki to: errors.txt, warnings.txt (nazwa mówi 
+wszystko) oraz pliki w katalogu ./outputs/code/* zawierające
+raporty z poszczególnych funkcji.
+
+Szczegółowy opis programu można znaleźć w pliku pomocy 
+wygenerowanym przez doxygen dla źródeł.

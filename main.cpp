@@ -7,11 +7,47 @@
 #include "src/segmentList.hpp"
 #include "src/funContainer.hpp"
 #include "src/convs.hpp"
+#include <QFile>
 
 using namespace std;
 
-int main(int, char *[])
+void displayHelp()
 {
+    QFile hfile(":/help.txt");
+    hfile.open(QIODevice::ReadOnly | QIODevice::Text);
+    std::cout << hfile.readAll().toStdString() << std::endl << "__ ";
+    hfile.close();
+    getchar();
+    exit(0);
+}
+
+int main(int c, char ** cargs)
+{
+    Q_INIT_RESOURCE(res);
+    QStringList args;
+    for(int i=1;i<c;++i)
+        args.append(cargs[i]);
+
+    QString ai="", ac="";
+
+    for(QString arg: args)
+    {
+        if(arg=="-h")
+            displayHelp();
+        else if(arg.startsWith("-i")&&!arg.mid(2).isEmpty())
+            ai = arg.mid(2);
+        else if(arg.startsWith("-c")&&!arg.mid(2).isEmpty())
+            ac = arg.mid(2);
+        else
+        {
+            std::cout << "O kij chodzi z argumentem \""+arg.toStdString()+"\"?\n" << std::endl;
+            displayHelp();
+        }
+    }
+
+    std::cout << "\nIn file: " << ai.toStdString() << std::endl;
+    std::cout << "Convs file: " << ac.toStdString() << std::endl;
+
     cout << "MSPverifier" << endl;
 
     try
