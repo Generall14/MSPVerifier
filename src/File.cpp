@@ -17,7 +17,9 @@ File::File(QString adress):
     loadFile();
     Logger::WriteFile("files/"+_name+".txt", this->toSString());
 
+
     doPreprocessor();
+    checkIgnore();
     removeComments();
     expandDefines();
     expandMacros();
@@ -25,6 +27,7 @@ File::File(QString adress):
     removeUslessStuff();
 
     skipWhiteSigns();
+
     Logger::WriteFile("parsedSFiles/"+_name+".txt", this->toSString());
     Logger::WriteFile("parsedFiles/"+_name+".csv", this->toString());
 }
@@ -235,6 +238,18 @@ void File::removeUslessStuff()
                 _lines.removeAt(i);
                 break;
             }
+        }
+    }
+}
+
+void File::checkIgnore()
+{
+    for(int i=0;i<_lines.size();i++)
+    {
+        if((_lines.at(i).currentText.contains(";##ignorefile", Qt::CaseInsensitive)))
+        {
+            _lines = _lines.mid(i, 1);
+            return;
         }
     }
 }

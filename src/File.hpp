@@ -25,6 +25,7 @@ private:
     void expandMacros();
     void expandRept();
     void removeUslessStuff();
+    void checkIgnore();
 };
 
 #endif
