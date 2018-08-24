@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     src/reg.cpp \
     src/stack.cpp \
     src/conv.cpp \
-    src/convs.cpp
+    src/convs.cpp \
+    src/MSPVerifier.cpp
 
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
 LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
@@ -61,7 +62,8 @@ HEADERS += \
     src/reg.hpp \
     src/stack.hpp \
     src/conv.hpp \
-    src/convs.hpp
+    src/convs.hpp \
+    src/MSPVerifier.hpp
 
 RESOURCES += \
     res.qrc

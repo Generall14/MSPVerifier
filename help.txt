@@ -1,4 +1,4 @@
-Argumenty programu:
+Argumenty programu (wskazanie -i i -v jest konieczne):
 -h		- Wyświetla pomoc i zamyka program.
 -i[file]	- Wskazuje plik *.ewp projektu do sprawdzenia.
 -c[file]	- Wskazuje plik *.xml zawierający opis konwencji.

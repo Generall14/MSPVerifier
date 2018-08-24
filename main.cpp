@@ -1,21 +1,14 @@
 #include <iostream>
 #include <QString>
 #include <stdexcept>
-
-#include "src/Logger.hpp"
-#include "src/FileList.hpp"
-#include "src/segmentList.hpp"
-#include "src/funContainer.hpp"
-#include "src/convs.hpp"
 #include <QFile>
-
-using namespace std;
+#include "src/MSPVerifier.hpp"
 
 void displayHelp()
 {
     QFile hfile(":/help.txt");
     hfile.open(QIODevice::ReadOnly | QIODevice::Text);
-    std::cout << hfile.readAll().toStdString() << std::endl << "__ ";
+    std::cout << hfile.readAll().toStdString() << std::endl << "-->";
     hfile.close();
     getchar();
     exit(0);
@@ -45,28 +38,18 @@ int main(int c, char ** cargs)
         }
     }
 
-    std::cout << "\nIn file: " << ai.toStdString() << std::endl;
-    std::cout << "Convs file: " << ac.toStdString() << std::endl;
-
-    cout << "MSPverifier" << endl;
-
-    try
+    if((ai.isEmpty())||(ac.isEmpty()))
     {
-        Logger::ClearFiles();
-        FileList fl("./input/emespe.ewp");
-        SegmentList sl = fl.getSegments();
-        sl.store();
-        FunContainer fc = sl.digForFunctions();
-        Convs convs;
-        convs.loadFromXmlFile("convs.xml");
-        convs.store();
-        fc.simulate(&convs);
-    }
-    catch(std::runtime_error err)
-    {
-        std::cout << "RUNTIME ERROR: " << err.what() << std::endl;
-//        Logger::LogError(QString("RUNTIME ERROR: ") + QString(err.what()));
+        std::cout << "Brak wymaganych argumentów\n";
+        displayHelp();
     }
 
+    std::cout << "\nIn file: \"" << ai.toStdString() << "\"\n";
+    std::cout << "Convs file: \"" << ac.toStdString() << "\"\n\n";
+
+    MSPV::verify(ai, ac); // tu się dzieje cała magia
+
+    std::cout << "\n-->";
+    getchar();
     return 0;
 }
