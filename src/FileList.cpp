@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include "Logger.hpp"
 #include "segmentList.hpp"
+#include <iostream>
 
 /**
  * Konstruktor przyjmujący adres pliku projektu IAR (.ewp/.ewt).
@@ -83,7 +84,10 @@ SegmentList FileList::getSegments()
     SegmentList temp;
 
     for(auto f: _list)
+    {
+        std::cout << f.get().at(0).File().toStdString() << std::endl;
         f.divide(temp);
+    }
 
     return temp;
 }

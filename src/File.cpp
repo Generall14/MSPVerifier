@@ -262,7 +262,7 @@ void File::expandDefines()
  */
 void File::removeUslessStuff()
 {
-    QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end"};
+    QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end", "#elif"};
 
     skipWhiteSigns();
     for(int i=_lines.size()-1;i>=0;i--)

@@ -114,7 +114,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
     // Symulacja jest powtarzana aż mapa todo się opróżni. Początkowo todo posiada jeden punkt wejścia (wejście funkcji), lecz w kolejnych
     // iteracjach symulacji mogą być dodawane kolejne wejścia po instrukcjach skoków.
 
-    int line;
+    int line=0;
     // Lista zawiera punkty wyjścia (po wykrycie instrukcji ret kopia rdzenia zostanie dodana do tej listy)
     QList<Core> retStates;
 

@@ -47,7 +47,6 @@ QString Reg::toString() const
  */
 bool Reg::merge(const Reg& other)
 {
-    _touched = true;
     bool retstate = false;
     if((regs.contains(_a))&&(!regs.contains(other._a)))
         retstate = true;
@@ -58,6 +57,8 @@ bool Reg::merge(const Reg& other)
     if((regs.contains(_b))&&(!regs.contains(other._b)))
         retstate = true;
     _b = other._b;
+    if(retstate)
+        _touched = true;
     return retstate;
 }
 

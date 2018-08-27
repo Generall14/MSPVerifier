@@ -90,7 +90,8 @@ void Macro::applyMacro(File& file)
                         pars.removeAt(k);
                 }
                 if(pars.size()!=_args.size())
-                    throw std::runtime_error("Macro::applyMacro: niezgodna licsta parametrow w makrze "+_name.toStdString());
+                    throw std::runtime_error("Macro::applyMacro: niezgodna lista parametrow w makrze "+_name.toStdString()+" w "+
+                                             file.get().at(i).toString().toStdString());
 
                 for(int k=_lines.size()-1;k>=0;k--)
                 {
