@@ -6,48 +6,99 @@ Autor: <b>Wojciech Kogut</b>
 \par Data utworzenia projektu
 2018.04.22
 
-
-[Szczegóły...](@ref REFSKWAlgs)
-TODO
-
-
 # Co to jest i do czego to służy {#CoTo}
-TODO
+Program słuy do analizy kodu asemblera dla MSP430. Wykrywa błędy struktury programu ([ref]{@ref #CoDziala}). Aby program zadziałał należy wskazać mu plik projektu IAR ([ref]{@ref #Jak}), plik z opisem przyjętych konwencji oraz uzbroić kod programu w odpowiednie instrukcje ([ref]{@ref #JakToDziala}). Wynikiem działania będą pliki w folderze outputs.* opisujące poszczególne aspekty ([ref]{@ref #Jak}).
 
 # Jak z tego korzystać {#Jak}
 \par Wskazywanie plików źródłowych
-TODO
+Program należy uruchomić z argumentami:
+ -i[adres pliku] - wskazuje plik projektu IAR (plik z rozszerzeniem *.ewp),
+ -c[adres pliku] - wskazuje plik xml z opisem konwencji wywołań.
+Obydwa argumenty są niezbędne do działania programu.
 \endpar
 
-\par Konwencje wywołań i plik ich oisu
-TODO
+\par Konwencje wywołań i plik ich opisu
+Konwencja wywołań określa zasady dostępu do rejestrów dla poszczególnych funkcji. Każdy rejestr może mieć przypisany status:
+- free - funkcja może korzystać z tego rejestru bez ograniczeń,
+- restored - funkcja może korzystać z tego rejestru pod warunkiem, że zachowa jego wartość w ustalonym zakresie (bajt - b, słowo - w, rozszerzone słowo - a),
+- forbidden - funkcja nie może ruszeć tego rejestru.\n\n
+Opis konwencji zawarty jest w pliku xml według wzorca:
+\code{.xml}
+<mainnode>
+	<conv lab="std">
+		<reg name="r4" type="forbidden" size=""/>
+		<reg name="r5" type="restored" size="w"/>
+		...
+		<reg name="r15" type="free" size=""/>
+	</conv>
+	<conv lab="...">
+		...
+	</conv>
+	...
+</mainnode>
+\endcode
+Plik może zawierać wiele konwencji które będą identyfikowane przez ich etykiety. Dla każdej konwencji należy podać opis dla wszytkich rejestrów (r4...r15), pole size jest wymagane tylko dla typu "restored".
 \endpar
 
 \par Struktura plików wyjściowych
-TODO
+Po zakończeniu symulacji w folderze outputs/ zostaną umiesczone pliki:
+ - errors.txt - spis błędów krytycznych.
+ - warnings.txt - spis błędów niekoniecznie krytycznych.
+ - log.txt - log działania programu.
+ - _convs.txt - lista wczytanych konwencji.
+ - code/* - zbiór plików zawierających wyniki symulacji poszczególnych funkcji (zaleca się otwieranie arkuszem kalkulacyjnym z symbolem "'" jako separator komórek).
+ - files/_listFiles.txt - lista plików do jakie podlegały symulacji.
+ - parsedFiles/* - pliki z tekstem odpowiadającym przetworzonym wewnętrznie plikom *.s43.
+ - parsedSFiles/* - jak wyżej, opis skrócony.
+ - sections/* - pliki z podziałem na sekcje.
 \endpar
 
 # Jak to działa {#JakToDziala}
-caseinsensitive TODO
 \par Instrukcje dla analizatora
-TODO
-;##ignorefile
+Instrukcję dla analizatora podaje się w lini zaczynającej się (wcześniej mogą być tylko białe znaki) od ;## po czym występują instrukcjie rozdzielone średnikiem:
+\code{.asm}
+;##ins1(arga);ins2(argb)
+\endcode
+Wielkość znaków w instrukcjach nie ma znaczenia. Analizator interpretuje następujące instrukcje:
+ - fun(conv) - instrukcja ta określa, że od tego miejsca do końca sekcji code lub do kolejnej instrukcji ;##fun znajduje się kod funkcji. W kolejnej lini za tą instrukcją musi znaleźć się etykieta która potraktowana będzie jako nazwa funkcji. Argument conv jest obowiązkowy i określa konwencję wywołań dla funkcji.
+ - defconv(conv) - ustawia domyślną konwencję wywołań dla danej funkcji, jeżeli w funkcji znajdzie się instrukcja call z nieznanym odnośnikiem to zostaną przyjęte domyślne parametry wołanej funkcji.
+ - deffundepth(depth) - ustawia domyślną głębokość stosu wołanej funkcji, analogicznie jak instrukcja wyżej.
+ - deffunret(ret) - ustawia domyślny poziom return (czy powrót jest z ret (-2) czt reta (-4)) wołanej funkcji, analogicznie jak wyżej. Przykład:
+ \code{.asm}
+ ;##defconv(std);deffundepth(6);deffunret(-2)
+ call		R12
+ \endcode
+ W takiej sytuacji zostanie przyjęte, że powyższy call wywoła funkcję maksymalnie powiększającą stos o 6 bajtów (nie licząc adresu powrotu wstawianego przez call), zgodną z konwencją opisaną etykietą std oraz powracającą instrukcją ret.
+ - ignorenextline - następna linia kodu zostanie wyłączona z symulacji.
+ - ignorefile - plik zawierający tą instrukcję zostanie wyłączony z analizy.\n\n
 \endpar
 
 \par Konwersja kodu
-TODO
-rozwijanie makr
-rozwijanie definicji (w bezpośredni sposób, bez argmentów)
-rozwijanie rept
-rozwijane include
+Analizie podlegają wszystkie pliki o *.ewp zawarte we wskazanym projekcie. Na każdym pliku wykonywane są następujące kroki:
+1. Rozwijane są wszystkie instrukcje #include "..." (z wyjątkiem wstawiania pliku msp430.h).
+2. Usuwane są komentarze.
+3. Rozwijane są definicje #define (jako proste podstawienie, makra oparte na define i jego argumentach nie zadziałają).
+4. Rozwijane są makra asemblera (macro ... endm).
+5. Rozwijane są instrukcje rept.
+6. Usuwane są wszelkie zbędne śmieci z kodu (public, extern itp.)
+7. Pozostały kod dzielony jest na sekcje (dalej będzą wykorzystywane tylko sekcje code).
+8. Sekcje code dzielone są na funkcje według znacznika ;##fun.
+
+\note
+Wszystkie teksty są porównywane jako CaseInsensitive.
+
+\note 
+Etykiety muszą być zakończone dwukropkiem (label:).
 \endpar
 
 \par Sposób wykonywania symulacji
-TODO
-instrukcje warunkowe
-instrukcje jednoargumentowe
-instrukcje dwuarguentowe
-wleczenie błędów funkcji
+Przy skokach warunkowych nie są wykonywane żadne analizy możliwych przebiegów, przyjmuje się dwie możliwości (skoczy lub nie skoczy) i symuluje obydwie.
+
+Instrukcje jednoargumentowe wpływające na argument powodują (jeżeli odnosi się ona do rejestru), że wskazany rejestr przyjmie stan nieokreślony.
+
+Instrukcje dwuargumentowe wpływające na drugi argument działają analogicznie jak instrukcje jednoargumentowe.
+
+Błąd symulacji funkcji będzie wleczony przez wszystkie funkcje ją wywołujące.
 \endpar
 
 # Jakie błędy zostaną wykryte {#CoDziala}
@@ -87,29 +138,27 @@ TODO
 
 # Jakie błędy NIE zostaną wykryte {#CoNieDziala}
 \par Grzebanie na stosie za pomocą X(SP)
-TODO
+Modyfikacja wartości za pomocą wskaźnika SP nie zostanie uwzględniona w symulacji. Np. w funkci z konwencją mówiącą o konieczności zachowania rejestru r10:
+\code{.asm}
+;##fun(std)
+funx:
+pushx.a     r10
+add.w       #666, 2(r10)
+popx.a      r10
+ret
+\endcode
+nie zostanie zauważony błąd modyfikacji r10 na stosie.
 \endpar
 
-\par swpb
-TODO
-\endpar
+\par Zmiana wskaźnika stosu za pomocą dziwnych instrukcji.
+Instrukcje inne niż add, addx, sub, subx nie zostaną uwzględnione przy zmianie głębokości stosu:
+\code{.asm}
+inc.w       SP
+\endcode
 
+# Troche o strukturze kodu {#OKodzie}
+Kod nie jest idealny, był tworzony bez dokładnego planu działania ani nawet bez określonego zakresu działania. W wielu miejscach odpowiedzialność jest porozwalana pomiędzy klasami.
 
-
-
-
-
-
-
-# XXX{XXX}
-\par XXX
-\code{.cpp}
-cout << "Zwykły tekst" << KWDye("Czerwony tekst", KWDye::kwRed) << "Zwykły tekst\n";
-cout << "Zwykły tekst" << KWDye(KWDye::kwBlue) << "Niebieski tekst\n";
-cout << "Wciąż niebieski tekst" << KWDye(KWDye::kwDefault) << "Ponownie zwykły tekst\n";
-\endcode\n\n
-\note
-UWAGA! W XXXXXXXXXX.
-\endpar
+W każdym razie za punkt wejścia uznaje się funkcję MSPV::verify(QString ewpFile, QString convsFile).
 
 */
