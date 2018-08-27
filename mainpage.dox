@@ -102,38 +102,81 @@ Błąd symulacji funkcji będzie wleczony przez wszystkie funkcje ją wywołują
 \endpar
 
 # Jakie błędy zostaną wykryte {#CoDziala}
-TODO
 
 \par Głębokość stosu
-TODO
+Zasymulowana zostanie głębokość stosu dla każdej funkcji (ilość bajtów względem poziomu bazowego dla fukcji).
 \endpar
 
 \par Przestrzeganie konwencji w procedurach
-TODO
+Zostanie sprawdzona zgodność wykorzystania rejstrów i głębokości stosu z przyjętą konwencją.
 \endpar
 
 \par Próba powrotu z procedury na niezerowym poziomie stosu lokalnego
-TODO
+Kod:
+\code{.asm}
+;##fun(std)
+funx:
+push.w		r4
+ret
+\endcode
+spowoduje wygenerowanie błędu.
 \endpar
 
 \par Mieszanie w funkcji instrukcji ret i reta
-TODO
+Błąd spowoduje wywołanie funkcji jak niżej:
+\code{.asm}
+;##fun(std)
+funA:
+		cmp.w	r4, r5
+		jnz		labX
+		ret
+labx:
+		reta
+\endcode
 \endpar
 
 \par Niedopasowanie instrukcji call/calla i ret/reta
-TODO
+Błąd spowoduje wywołanie funkcji jak niżej:
+\code{.asm}
+;##fun(std)
+funA:
+		reta
+
+;##fun(std)
+funB:
+		call	#reta
+		ret
+\endcode
 \endpar
 
 \par Modyfikacja stosu za pomocą add/sub SP
-TODO
+Uwzględnione zostanie modyfikowanie głębokości stosu za pomocą dodawania / odejmowania:
+\code{.asm}
+		sub.w	#4, SP
+		call	#jakasfunkcja
+		add.w	#4, SP
+\endcode
 \endpar
 
 \par Wywołania pośrednie
-TODO
+Wywołania pośrednie mogą być analizowane pod warunkiem, że przed instrukcją call zostały zdefiniowane domyślne parametry funkcji:
+\code{.asm}
+;##defconv(std);deffundepth(6);deffunret(-2)
+		call		R12
+\endcode
 \endpar
 
 \par Możliwość zakończenia funkcji bez powrotu
-TODO
+Pomiższy kod wygeneruje błąd:
+\code{.asm}
+;##fun(std)
+funX:
+		nop
+		tst.w	costam
+		jnz	funX
+;##fun(std) (lub koniec pliku)
+funY:
+\endcode
 \endpar
 
 # Jakie błędy NIE zostaną wykryte {#CoNieDziala}
