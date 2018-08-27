@@ -1,6 +1,13 @@
 #ifndef FUNCONTAINER_HPP
 #define FUNCONTAINER_HPP
 
+/**
+  * @class FunContainer
+  * @author Wojciech Kogut
+  *
+  * Klasa zawiera listę funkcji (zapisanych jako obiekty Fun), posiada metodę simulate(...) która analizuje wszystkie funkcje na liście.
+  */
+
 #include "fun.hpp"
 #include <stdexcept>
 #include <QList>

@@ -1,6 +1,14 @@
 #ifndef FILELIST_HPP
 #define FILELIST_HPP
 
+/**
+  * @class FileList
+  * @author Wojciech Kogut
+  *
+  * Klasa odczytuje listę plików *.s43 z pliku konfiguracyjnego projektu IAR (.ewp/.ewt), ładuje je wszystkie do obiektów File. Posiada
+  * metodę wyciągającą z odczytanych plików obiekt SegmentList zawierający zbiór segmentów.
+  */
+
 #include <QString>
 #include <QStringList>
 #include "src/osrc/pugixml.hpp"
@@ -9,9 +17,6 @@
 
 class SegmentList;
 
-/**
- * Tworzy listę plików na podstawie podanego pliku *.ewp / *.ewt.
- */
 class FileList
 {
 public:
@@ -24,8 +29,8 @@ private:
     void SearchFiles(QString inputfile);
     void LoadFiles();
 
-    QList<File> _list;
-    QStringList _files;
+    QList<File> _list; /**<Lista odczytanych plików.*/
+    QStringList _files; /**<Lista adresów plików.*/
 };
 
 #endif

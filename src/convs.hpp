@@ -1,6 +1,13 @@
 #ifndef CONVS_HPP
 #define CONVS_HPP
 
+/**
+  * @class Convs
+  * @author Wojciech Kogut
+  *
+  * Klasa zawiera listę konwencji. Posiada metodę wczytująca konwencje z pliku konfiguracyjnego *.xml.
+  */
+
 #include "osrc/pugixml.hpp"
 #include "conv.hpp"
 
@@ -22,7 +29,7 @@ public:
 private:
     void iterateInConvs(pugi::xml_node& node);
 
-    QList<Conv> _convs;
+    QList<Conv> _convs; /**<Lista konwencji.*/
 };
 
 #endif

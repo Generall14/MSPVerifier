@@ -1,6 +1,13 @@
 #ifndef SEGMENT_HPP
 #define SEGMENT_HPP
 
+/**
+  * @class Segment
+  * @author Wojciech Kogut
+  *
+  * Klasa reprezentuje część kodu podzieloną na segmenty (według rseg/aseg).
+  */
+
 #include "LineContainer.hpp"
 #include <QList>
 
@@ -12,10 +19,9 @@ public:
     Segment(QList<Line> lines, QString type);
 
     QString type() const;
-    QString section() const;
 
 private:
-    QString _type;
+    QString _type; /**<Typ segmentu.*/
 };
 
 #endif

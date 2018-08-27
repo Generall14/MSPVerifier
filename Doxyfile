@@ -94,7 +94,7 @@ LOOKUP_CACHE_SIZE      = 0
 EXTRACT_ALL            = YES
 
 #======================= Pokazuje pola prywatne
-EXTRACT_PRIVATE        = NO
+EXTRACT_PRIVATE        = YES
 
 EXTRACT_PACKAGE        = NO
 

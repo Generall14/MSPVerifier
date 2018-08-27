@@ -80,11 +80,17 @@ bool Conv::checkFun(const Fun& fun, const Stack &stack) const
     return ret;
 }
 
+/**
+ * Zwraca nazwę konwecji.
+ */
 QString Conv::name() const
 {
     return _name;
 }
 
+/**
+ * Zwraca opis obiektu.
+ */
 QString Conv::toString() const
 {
     QString temp = "Etykieta: \""+_name+"\", maksymalny poziom stosu: "+QString::number(_maxStack)+" =";
@@ -106,6 +112,9 @@ QString Conv::toString() const
     return temp;
 }
 
+/**
+ * Ustawia wpis w mapie rejsetróW na podstawie danych opisowych z pliku xml.
+ */
 void Conv::set(QString reg, QString type, QString size)
 {
     if(!_types.contains(reg))
@@ -121,6 +130,9 @@ void Conv::set(QString reg, QString type, QString size)
     _types[reg]=temp;
 }
 
+/**
+ * Zwraca spreparowany stan rejestrów na podstawie ograniczeń konwencji.
+ */
 QMap<QString, Reg> Conv::prepareReturnedRegs() const
 {
     QMap<QString, Reg> temp;
@@ -129,6 +141,9 @@ QMap<QString, Reg> Conv::prepareReturnedRegs() const
     return temp;
 }
 
+/**
+ * Zwraca spreparowany stan rejestru na podstawie podanych danych.
+ */
 Reg Conv::prepare(const typeS &typ, QString reg) const
 {
     Reg temp;

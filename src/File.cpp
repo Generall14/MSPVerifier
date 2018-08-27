@@ -10,12 +10,24 @@
 #include "macro.hpp"
 #include "segmentList.hpp"
 
+/**
+ * Konstruktor ładujący dane ze wskazanego pliku. Po odczytaniu przetwarza dane tekstowe w zakresie:
+ * 1. Włączanie plików z dyrektywy #include "file".
+ * 2. Omija dane poprzedone odpowiednimi dyrektywani analizatora.
+ * 3. Usuwa komentarze.
+ * 4. Rozwija definicje #define ...
+ * 5. Rozwija makra asemblera.
+ * 6. Rozwija instrukcje rept.
+ * 7. Usuwa zbędne pierdoły z kodu.
+ * 8. Zamienia wszystkie ciągi białych znaków na pojedyncze spacje, dodaje spacje na początku i końcu lini (ułatwia to dalszą analizę).
+ * Odczytane dane zapisuje w katalogu outputs/parsedFiles i outputs/parsedSFiles.
+ * @param adress - Adres pliku do załadowania.
+ */
 File::File(QString adress):
     _adress(adress)
 {
     loadFile();
     Logger::WriteFile("files/"+_name+".txt", this->toSString());
-
 
     doPreprocessor();
     checkIgnore();
@@ -31,6 +43,9 @@ File::File(QString adress):
     Logger::WriteFile("parsedFiles/"+_name+".csv", this->toString());
 }
 
+/**
+ * Wczytuje dane z pliku _adress.
+ */
 void File::loadFile()
 {
     QFile file(_adress);
@@ -48,6 +63,9 @@ void File::loadFile()
     file.close();
 }
 
+/**
+ * Zamienia wszystkie ciągi białych znaków na pojedyncze spacje, dodaje spację na początku i kończu lini.
+ */
 void File::skipWhiteSigns()
 {
     for(int l=_lines.size()-1;l>=0;l--)
@@ -67,6 +85,9 @@ void File::skipWhiteSigns()
     }
 }
 
+/**
+ * Wpisuje do danych includowane pliki (z pominięciem msp430.h).
+ */
 void File::doPreprocessor()
 {
     skipWhiteSigns();
@@ -97,6 +118,9 @@ void File::doPreprocessor()
     }
 }
 
+/**
+ * Usuwa komentarze.
+ */
 void File::removeComments()
 {
     skipWhiteSigns();
@@ -109,6 +133,9 @@ void File::removeComments()
     }
 }
 
+/**
+ * Rozwija makra asemblera.
+ */
 void File::expandMacros()
 {
     skipWhiteSigns();
@@ -117,6 +144,9 @@ void File::expandMacros()
         mac.applyMacro(*this);
 }
 
+/**
+ * Rozwija instrukcjie rept.
+ */
 void File::expandRept()
 {
     skipWhiteSigns();
@@ -178,6 +208,10 @@ void File::expandRept()
     }while(found);
 }
 
+/**
+ * Rozwija dyrektywy preprocesora #define, zamiana następuje poprzez prostą podmianę tekstów, bez uwznlędnienia argumentów, to może
+ * namieszać w kodzie.
+ */
 void File::expandDefines()
 {
     skipWhiteSigns();
@@ -223,6 +257,9 @@ void File::expandDefines()
     }while(found);
 }
 
+/**
+ * Usuwa z kodu niepotrzeble (z punktu widzenia dalszych symulacji) instrukcje (takie jak public, end itp.).
+ */
 void File::removeUslessStuff()
 {
     QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end"};
@@ -241,6 +278,9 @@ void File::removeUslessStuff()
     }
 }
 
+/**
+ * Sprawdza czy w pliku znajduje się polecenie zignorowania go, jeżeli tak, usuwa wszystkie linie z wyjątkiem polenenia ignorefile.
+ */
 void File::checkIgnore()
 {
     for(int i=0;i<_lines.size();i++)
@@ -253,6 +293,9 @@ void File::checkIgnore()
     }
 }
 
+/**
+ * Dzieli plik na segmenty na podstawie instrukcji rseg/aseg. Otrzymane segmenty dodaje do wskazanego obiektu SegmentList.
+ */
 void File::divide(SegmentList& slist)
 {
     int fi = 0, li  = 0;

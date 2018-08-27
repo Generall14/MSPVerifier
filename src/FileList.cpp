@@ -5,12 +5,19 @@
 #include "Logger.hpp"
 #include "segmentList.hpp"
 
+/**
+ * Konstruktor przyjmujący adres pliku projektu IAR (.ewp/.ewt).
+ * @param inputfile
+ */
 FileList::FileList(QString inputfile)
 {
     SearchFiles(inputfile);
     LoadFiles();
 }
 
+/**
+ * Wyciąga listę plików z pliku projektu zapisanego w formacie xml.
+ */
 void FileList::SearchFiles(QString inputfile)
 {
     // Otwieranie pliku xml:
@@ -57,6 +64,9 @@ void FileList::iterateInNodes(pugi::xml_node& node, QStringList& list)
         iterateInNodes(child, list);
 }
 
+/**
+ * Ładuje pliki zawarte w liście _files.
+ */
 void FileList::LoadFiles()
 {
     for(auto file: _files)
@@ -64,6 +74,9 @@ void FileList::LoadFiles()
     Logger::Log("... i odczytano wszystkie");
 }
 
+/**
+ * Dzieli listę plików na segmenty i zwraca obiekt SegmentList zawierający zbiór tych segmentów.
+ */
 SegmentList FileList::getSegments()
 {
     Logger::Log("Dzielenie kodu na segmenty...");

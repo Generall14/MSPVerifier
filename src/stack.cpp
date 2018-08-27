@@ -1,6 +1,9 @@
 #include "stack.hpp"
 #include "fun.hpp"
 
+/**
+ * Tworzy pusty stos.
+ */
 Stack::Stack(QString base):
     _base(base)
 {
@@ -46,6 +49,9 @@ bool Stack::isEmpty() const
     return false;
 }
 
+/**
+ * Dodaje wskazaną funkcję jako wywoływaną (nie inkrementuje poziomu stosu).
+ */
 void Stack::call(const Fun& other)
 {
     if(_called!=nullptr)
@@ -53,11 +59,17 @@ void Stack::call(const Fun& other)
     _called = new Fun(other);
 }
 
+/**
+ * Wrzuca na stos podaną wartość.
+ */
 void Stack::pushB(QString desc)
 {
     _stack.push(desc);
 }
 
+/**
+ * Podejmuje ze stosu jedną pozycję.
+ */
 QString Stack::popB()
 {
     if(_stack.isEmpty())
@@ -65,6 +77,9 @@ QString Stack::popB()
     return _stack.pop();
 }
 
+/**
+ * Zwraca głębokość stosu (łącznie ze stosem zwracanym z _called jażeli ten jest zdefiniowany).
+ */
 int Stack::depth() const
 {
     int dep = _stack.size();
@@ -73,11 +88,17 @@ int Stack::depth() const
     return dep;
 }
 
+/**
+ * Zwraca skrócony opis obiektu.
+ */
 QString Stack::toSString() const
 {
     return "Stack level: "+QString::number(this->depth());
 }
 
+/**
+ * Zwraca opis obiektu.
+ */
 QString Stack::toString() const
 {
     QString temp = "Total depth: " + QString::number(this->depth());
@@ -85,6 +106,9 @@ QString Stack::toString() const
     return temp;
 }
 
+/**
+ * Zwraca opis ścieżki wywołań.
+ */
 QString Stack::getLocalString() const
 {
     QString temp = _base+"("+QString::number(_stack.size())+")";
@@ -117,6 +141,9 @@ bool Stack::merge(const Stack& other)
     return endstate;
 }
 
+/**
+ * Pushuje na stos śmieci w podanym zakresie (a, w, b).
+ */
 void Stack::pushRandomStuff(QString size)
 {
     if(size=="b")
@@ -139,6 +166,9 @@ void Stack::pushRandomStuff(QString size)
         throw std::runtime_error("Stack::pushRandomStuff: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }
 
+/**
+ * Pobiera ze stosu dane we wskazanym rozmiarze (a, w, b) i wysyła je w piach.
+ */
 void Stack::popRandomStuff(QString size)
 {
     if(size=="b")
@@ -161,6 +191,9 @@ void Stack::popRandomStuff(QString size)
         throw std::runtime_error("Stack::popRandomStuff: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }
 
+/**
+ * Zwraca spreparowany stos na podstawie podanych danych.
+ */
 Stack Stack::prepare(int depth, QString name)
 {
     Stack temp;

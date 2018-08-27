@@ -1,6 +1,13 @@
 #ifndef DYSKRYMINATORSM_HPP
 #define DYSKRYMINATORSM_HPP
 
+/**
+  * @class DyskryminatorSM
+  * @author Wojciech Kogut
+  *
+  * Klasa służy do usuwania komentarzy z kodu asemblera, jest to podpieprzona i zuborzona wersja z projektu KWLiner.
+  */
+
 #include <stdexcept>
 #include <QStringList>
 #include <QPair>

@@ -7,6 +7,9 @@
 #include "Line.hpp"
 #include "convs.hpp"
 
+/**
+ * Konstruktor, przyjmuje linie kodu przetworzone i podzielone, pierwsza linia powinna zawierać instrukcję ;##fun(...).
+ */
 Fun::Fun(QList<Line> lines)
 {
     _lines = lines;
@@ -19,6 +22,9 @@ Fun::Fun(QList<Line> lines)
     parse();
 }
 
+/**
+ * Odczytuje wymagane dane z zawartego tekstu.
+ */
 void Fun::parse()
 {
     if(!_lines.at(0).currentText.startsWith(" ;##fun", Qt::CaseInsensitive))
@@ -44,6 +50,9 @@ void Fun::parse()
     _name.remove(" ");
 }
 
+/**
+ * Zachowuje opis funkcji (raport z symulacji oraz kod).
+ */
 QString Fun::toString() const
 {
     QString temp;
@@ -69,18 +78,42 @@ QString Fun::toString() const
     return temp;
 }
 
+/**
+ * Zwraca status symulacji.
+ */
 Fun::simState Fun::state() const
 {
     return _state;
 }
 
+/**
+ * Zwraca nazwę funkcji.
+ */
 QString Fun::name() const
 {
     return _name;
 }
 
+/**
+ * Wykonuje symulację, nie każde wywołanie funkcji zakończy się sukcesem, może się okazać że inne funkcje wołane instrukcją call nie będą
+ * jeższe zasymulowane, w takim przypadku należy wywołać metodę simulate pozostałych funkcji a następnie wrócić do tej. Jeżeli funkcje
+ * wołane będą posiadały status error, błęd ten będzie wleczony i obiekt this również przyjmie status error.
+ *
+ * Przy wywołaniach call pośrednich lub takich których nie ma we wskazanym FunContainer metoda spróbujr spreparować funkcję na podstawie
+ * podanych wartości domyślnych (przez defconv, deffundepth, deffunret), jeżeli któraś z tych instrukcji nie wystąpi przed wywołaniem
+ * call - funkcja przyjmie status error.
+ * @param fc - Wskaźnik na obiekt z listą funkcji.
+ * @param convs - Wskaźnik na obiekt zawierający opis zdefiniowanych konwencji.
+ */
 void Fun::simulate(const FunContainer *fc, const Convs *convs)
 {
+    // Symulacja krok po kroku linię kodu, poczynając od punktów wejścia zawartych w todo (zawiera numer lini i stan wejściowy rzenia).
+    // Każda instrukcja wpływa odpowiednio na stan symulowanego rdzenia, każda symulacja jest wykonywana aż do napoitkania instrukcji
+    // powrotu, końca funkcji, skoku bezwarunkowego lub jeżeli wykonanie danej instrukcji nie zwiększy entropii rdzenia w danej linii.
+
+    // Symulacja jest powtarzana aż mapa todo się opróżni. Początkowo todo posiada jeden punkt wejścia (wejście funkcji), lecz w kolejnych
+    // iteracjach symulacji mogą być dodawane kolejne wejścia po instrukcjach skoków.
+
     int line;
     // Lista zawiera punkty wyjścia (po wykrycie instrukcji ret kopia rdzenia zostanie dodana do tej listy)
     QList<Core> retStates;
@@ -379,6 +412,8 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
         if(line.core->_stack.depth()>_maxStack.depth())
             _maxStack = line.core->_stack;
     }
+
+    // Sprawdzanie zgodności z przyjętą konwencją.
     if(!convs->checkFun(*this, _maxStack))
         _convState = "ok";
 
@@ -386,26 +421,46 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
     Logger::WriteFile("code/"+_name+".csv", toString());
 }
 
+/**
+ * Zwraca maksymalny poziom stosu jaki zajmuje funkcja (nie licząc adresu powrotu odłożonego przez call);
+ */
 Stack Fun::getMaxStack() const
 {
     return _maxStack;
 }
 
+/**
+ * Zwraca poziom powrotu z funkcji (-2 dla ret, -4 dla reta)
+ */
 int Fun::getReturnedLevel() const
 {
     return _returns;
 }
 
+/**
+ * Zwraca stan zwracanych rejestrów (wszystkie możliwe zmiany jekie mogą wynikac z wywołania tej funcji).
+ */
 QMap<QString, Reg> Fun::getReturnedRegs() const
 {
     return _retRegs;
 }
 
+/**
+ * Zwraca nazwę przyjętej konwencji wywołań.
+ */
 QString Fun::getConventionType() const
 {
     return _convention;
 }
 
+/**
+ * Tworzy spreparowany obiekt funkcji na podstawie podanych parametrów.
+ * @param name - Nazwa funkcji.
+ * @param conv - Typ konwencji.
+ * @param depth - Maksymalna głębokość zajmowanego stosu.
+ * @param ret - Poziom powrotu z funckji.
+ * @param convs - Obiekt listy konwencji.
+ */
 Fun Fun::prepareFake(QString name, QString conv, uint depth, int ret, const Convs* convs)
 {
     Fun temp;

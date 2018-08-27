@@ -1,6 +1,13 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
+/**
+  * @class Stack
+  * @author Wojciech Kogut
+  *
+  * Klasa reprezentuje stos pojedynczej funkcji. Posiada wskaźnik do wywoływanej funkcji którego odczyt daje pełen obraz stosu.
+  */
+
 #include <QString>
 #include <QStack>
 #include <QMultiMap>
@@ -31,9 +38,10 @@ public:
     static Stack prepare(int depth, QString name);
 
 private:
-    QStack<QString> _stack;
-    QString _base = "";
-    Fun* _called = nullptr;
+    QStack<QString> _stack; /**<Reprezentuje dane lokalnego stosu.*/
+    QString _base = ""; /**<Nazwa funkcji bazowej względem liczony jest stos.*/
+    Fun* _called = nullptr; /**<Wskaźnik na funkcję wywołaną w danym momencie, rekurencyjne wywołanie this->_called->getMaxStack()._called...
+                                daje pełną historię wywołań.*/
 
     QString getLocalString() const;
 };

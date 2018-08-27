@@ -3,6 +3,9 @@
 #include "fun.hpp"
 #include "funContainer.hpp"
 
+/**
+ * Dodaje segment do bazy danych.
+ */
 void SegmentList::append(Segment seg)
 {
     _seg[seg.type()].append(seg);
@@ -11,11 +14,17 @@ void SegmentList::append(Segment seg)
         Logger::LogWarning("Nie rozpoznano sekcji w pliku \""+seg.get().at(0).File()+"\". Patrz sections/unknown.txt.");
 }
 
+/**
+ * Zwraca segmenty poszczeregowae według typu.
+ */
 QMap<QString, QList<Segment> > &SegmentList::get()
 {
     return _seg;
 }
 
+/**
+ * Zapisuje bazę danych do plików w folderze outputs/sections*.
+ */
 void SegmentList::store()
 {
     for(QString key: _seg.keys())
@@ -31,6 +40,9 @@ void SegmentList::store()
     }
 }
 
+/**
+ * Odczytuje z segmentów code funkcje (według znacznika ;##fun) i zwraca ich listę jako FunContainer.
+ */
 FunContainer SegmentList::digForFunctions() const
 {
     FunContainer fc;

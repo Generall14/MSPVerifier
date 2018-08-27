@@ -4,6 +4,9 @@
 #include "File.hpp"
 #include "Line.hpp"
 
+/**
+ * Metoda odczytuje definicje makr ze wskazanego pliku File i zwraca ich listę. Usuwa ze wskazanego pliku tekst definicji makra.
+ */
 QList<Macro> Macro::loadMacros(File& file)
 {
     QList<Macro> temp;
@@ -63,6 +66,9 @@ QList<Macro> Macro::loadMacros(File& file)
     return temp;
 }
 
+/**
+ * Rozwija makro we wskazanym obiekcie File.
+ */
 void Macro::applyMacro(File& file)
 {
     bool found = false;

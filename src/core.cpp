@@ -63,6 +63,9 @@ bool Core::merge(const Core& other)
     return rets;
 }
 
+/**
+ * Ładuje do siebie wskazane rejestry (jeżeli we wskazanej mapie rejestry były modyfikowane - załąduje je do swoich).
+ */
 void Core::loadReturnedRegs(const QMap<QString, Reg>& regs)
 {
     for(auto key: _regs.keys())
@@ -81,11 +84,17 @@ void Core::loadReturnedRegs(const QMap<QString, Reg>& regs)
     }
 }
 
+/**
+ * Dodaje wskazaną funkcję jako wywoływaną (nie inkrementuje poziomu stosu).
+ */
 void Core::call(const Fun& fun)
 {
     _stack.call(fun);
 }
 
+/**
+ * Zwraca opis obiektu.
+ */
 QString Core::toString() const
 {
     QString temp = _stack.toSString()+"'";
@@ -96,7 +105,7 @@ QString Core::toString() const
 
 /**
  * Symuluje wskazaną instrukcję, jeżeli nastąpiło zwiększenie entropii (w którymś z rejestrów) zwrócona zostanie wartość true. Jeżeli
- * stosy okażą się niezgodne - zgłoszoy zostanie wyjątek.5
+ * stosy okażą się niezgodne - zgłoszoy zostanie wyjątek.
  */
 bool Core::loadInstruction(const Line& line)
 {
@@ -262,6 +271,9 @@ bool Core::loadInstruction(const Line& line)
     return false;
 }
 
+/**
+ * Zwraca poziom powrotu z funkcji (-2 dla ret, -4 dla rata).
+ */
 int Core::returns() const
 {
     return _returns;

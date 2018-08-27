@@ -6,11 +6,17 @@ LineContainer::LineContainer(QList<Line> lines):
 
 }
 
+/**
+ * Zwraca referencje do danych.
+ */
 QList<Line>& LineContainer::get()
 {
     return _lines;
 }
 
+/**
+ * Zwraca abiorczy opis wszystkich przechowywanych danych.
+ */
 QString LineContainer::toString() const
 {
     QString temp;
@@ -19,6 +25,9 @@ QString LineContainer::toString() const
     return temp;
 }
 
+/**
+ * Zwraca abiorczy opis wszystkich przechowywanych danych w formie skróconej.
+ */
 QString LineContainer::toSString() const
 {
     QString temp;

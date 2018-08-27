@@ -1,6 +1,13 @@
 #ifndef MACRO_HPP
 #define MACRO_HPP
 
+/**
+  * @class Macro
+  * @author Wojciech Kogut
+  *
+  * Klasa reprezentuje makro asemblera, posiada metodę statyczną ładującą makra z obiektu File oraz metodę rozwijającą makra w File.
+  */
+
 #include <QList>
 #include <QMap>
 
@@ -16,9 +23,9 @@ public:
 private:
     Macro(){}
 
-    QStringList _args;
-    QStringList _lines;
-    QString _name;
+    QStringList _args; /**<Lista argumentów.*/
+    QStringList _lines; /**<Tekst makra.*/
+    QString _name; /**<Nazwa makra.*/
 };
 
 #endif

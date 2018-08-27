@@ -1,6 +1,12 @@
 #include "Line.hpp"
 #include "core.hpp"
 
+/**
+ * Konstruktor przyjmujący pierwotne wartości danych.
+ * @param file - Nazwa pliku z którego pochodzą dane.
+ * @param text - Tekst.
+ * @param line - Numer lini w pliku.
+ */
 Line::Line(QString file, QString text, int line):
     currentText(text),
     _line(line),
@@ -10,6 +16,10 @@ Line::Line(QString file, QString text, int line):
 
 }
 
+/**
+ * Konstruktor kopiujący który dodatkowo nadpisuje wartość currentText.
+ * @param newLine - Ten tekst będzie wpisany do currentText.
+ */
 Line::Line(const Line& old, QString newLine):
     _line(old.LineNumber()),
     _oText(old.OryginalText()),
@@ -18,6 +28,9 @@ Line::Line(const Line& old, QString newLine):
     currentText = newLine;
 }
 
+/**
+ * Konstruktor kopiujący.
+ */
 Line::Line(const Line& other):
     currentText(other.currentText),
     _line(other.LineNumber()),
@@ -54,21 +67,33 @@ Line::~Line()
     delete core;
 }
 
+/**
+ * Zwraca nazwę pliku z którego pochodzi dany tekst.
+ */
 QString Line::File() const
 {
     return _file;
 }
 
+/**
+ * Zwraca pierwotny tekst (taki jaki został podany w konstruktorze, czyli w założeniu taki jaki znajduje się w pliku źródłowym).
+ */
 QString Line::OryginalText() const
 {
     return _oText;
 }
 
+/**
+ * Zwraca numer lini w pliku źródłowym z której pochodzi dana linia.
+ */
 int Line::LineNumber() const
 {
     return _line;
 }
 
+/**
+ * Zwraca pełen opis obiektu.
+ */
 QString Line::toString() const
 {
     QString temp = "File:'\""+_file+"\"";
@@ -84,12 +109,19 @@ QString Line::toString() const
     return temp;
 }
 
+/**
+ * Zwraca skrócony opis obiektu.
+ */
 QString Line::toSString() const
 {
     QString temp = QString::number(_line)+": \""+currentText+"\"";
     return temp;
 }
 
+/**
+ * Zwraca wyciągniętą instrukcje asemblera z danej lini, błędne odczytanie lub brak instrukcji spowoduje zwrócenie pustego ciągu. Metoda ta
+ * gwarantuje poprawny wynik tylko jeżeli linia przeszła wszystkie operacje przetwarzania w obiekcie Fun.
+ */
 QString Line::getInstruction() const
 {
     if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
@@ -104,6 +136,10 @@ QString Line::getInstruction() const
         return sl.at(0).split(".").at(0);
 }
 
+/**
+ * Metoda zwraca rozmiar instrukcji (a/w/b), jeżeli w kodzie nie jest określona zwrócony zostanie rozmiar w. Metoda ta gwarantuje poprawny
+ * wynik tylko jeżeli linia przeszła wszystkie operacje przetwarzania w obiekcie Fun.
+ */
 QString Line::getInstructionSize() const
 {
     if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
@@ -124,6 +160,10 @@ QString Line::getInstructionSize() const
     }
 }
 
+/**
+ * Zwraca etykiete instrukcji, jeżeli w kodzie etykieta nie występuje zwrócie pusty ciąg. Metoda ta gwarantuje poprawny wynik tylko
+ * jeżeli linia przeszła wszystkie operacje przetwarzania w obiekcie Fun.
+ */
 QString Line::getLabel() const
 {
     if(currentText.startsWith(" ;##", Qt::CaseInsensitive))
@@ -137,6 +177,10 @@ QString Line::getLabel() const
     return temp;
 }
 
+/**
+ * Zwraca listę argumentów instrukcji, jeżeli nie odnajdzie argumentów zwrócona zostanie pusta lista. Metoda ta gwarantuje poprawny
+ * wynik tylko jeżeli linia przeszła wszystkie operacje przetwarzania w obiekcie Fun.
+ */
 QStringList Line::getArguments() const
 {
     if(currentText.startsWith(" ;##", Qt::CaseInsensitive))

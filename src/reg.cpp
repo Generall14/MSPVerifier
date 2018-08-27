@@ -4,6 +4,9 @@
 
 const QStringList Reg::regs = {"r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
 
+/**
+ * Konstruktor, ustawia wartości na podstawie val i zakresu podanego w size.
+ */
 Reg::Reg(QString val, QString size)
 {
     size = size.toLower();
@@ -27,6 +30,9 @@ Reg::Reg(QString val, QString size)
         throw std::runtime_error("Reg::Reg: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }
 
+/**
+ * Zwraca opis rejestru.
+ */
 QString Reg::toString() const
 {
     QString ret = "[a:"+_a+",w:"+_w+",b:"+_b+"]";
@@ -36,8 +42,8 @@ QString Reg::toString() const
 }
 
 /**
- * Merguje do siebie wskazany obiekt, jeąli nastąpiło zwiększenie entropii (któryś z zakresów zmienił się z rejestru na niezdefiniowane dane)
- * zwrócona zostanie wartość true.
+ * Merguje do siebie wskazany obiekt, jeżeli nastąpiło zwiększenie entropii (któryś z zakresów zmienił się z rejestru na niezdefiniowane dane)
+ * zwrócona zostanie wartość true. Ustawia wskaźnik _touched na true.
  */
 bool Reg::merge(const Reg& other)
 {
@@ -55,11 +61,19 @@ bool Reg::merge(const Reg& other)
     return retstate;
 }
 
+/**
+ * Zwraca wskaźnik _touched.
+ */
 bool Reg::wasTouched() const
 {
     return _touched;
 }
 
+/**
+ * Pushuje rejestr na podany stos w określonym zakresie.
+ * @param stack - referencja na obiekt stosu na którym odłożony zostanie rejestr.
+ * @param size - rozmiar odkładanego rejestru (a, w, b).
+ */
 void Reg::push(Stack& stack, QString size)
 {
     if(size=="b")
@@ -82,6 +96,11 @@ void Reg::push(Stack& stack, QString size)
         throw std::runtime_error("Reg::push: nieprawidlowy specyfikator rozmiaru: \""+size.toStdString()+"\".");
 }
 
+/**
+ * Podnosi dane ze stosu do rejestru.
+ * @param stack - referencja na obiekt stosu z ktrego pobrać dane.
+ * @param size - rozmiar podnoszonej wartości (a, w, b).
+ */
 void Reg::pop(Stack& stack, QString size)
 {
     _touched = true;

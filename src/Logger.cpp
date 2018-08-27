@@ -11,6 +11,9 @@ const QString Logger::errorfile = "errors.txt";
 const QString Logger::warningfile = "warnings.txt";
 const QString Logger::statusfile = "log.txt";
 
+/**
+ * Czyści pliki z errorami, warningami i logami.
+ */
 void Logger::ClearFiles()
 {
     QDir qdir(QFileInfo(dir).dir());
@@ -30,6 +33,9 @@ void Logger::ClearFiles()
     f3.close();
 }
 
+/**
+ * Zapisuje dane text w pliku o nazwie dir+file w trybie nadpisywania.
+ */
 void Logger::WriteFile(QString file, QString text)
 {
     QFile f1(dir+file);
@@ -38,6 +44,9 @@ void Logger::WriteFile(QString file, QString text)
     Log(text, dir+file);
 }
 
+/**
+ * Zapisuje dane text w pliku o nazwie dir+file w trybie dopisywania.
+ */
 void Logger::AppendFile(QString file, QString text)
 {
     QFile f1(dir+file);
@@ -46,6 +55,9 @@ void Logger::AppendFile(QString file, QString text)
     Log(text+"\n\n\n\n\n", dir+file);
 }
 
+/**
+ * Zapisuje dane text w pliku o nazwie dir+errorfile w trybie dopisywania.
+ */
 void Logger::LogError(QString txt)
 {
     QString text = "ERROR: \n" + txt + "\n\n";
@@ -54,6 +66,9 @@ void Logger::LogError(QString txt)
     std::cout << text.toStdString();
 }
 
+/**
+ * Zapisuje dane text w pliku o nazwie dir+warningfile w trybie dopisywania.
+ */
 void Logger::LogWarning(QString txt)
 {
     QString text = "WARNING: \n" + txt + "\n\n";
@@ -62,6 +77,9 @@ void Logger::LogWarning(QString txt)
     std::cout << text.toStdString();
 }
 
+/**
+ * Zapisuje dane text w pliku o nazwie dir+statusfile w trybie dopisywania.
+ */
 void Logger::Log(QString txt)
 {
     QString text = txt + "\n\n";

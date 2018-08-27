@@ -10,6 +10,9 @@ Convs::Convs()
 
 }
 
+/**
+ * Ładuje dane ze wskazanego pliku.
+ */
 void Convs::loadFromXmlFile(QString adress)
 {
     // Otwieranie pliku xml:
@@ -42,6 +45,9 @@ bool Convs::checkFun(const Fun& fun, const Stack& stack) const
     throw std::runtime_error("Convs::checkFun: nie odnaleziono konwencji \""+fun.getConventionType().toStdString()+"\"");
 }
 
+/**
+ * Zwraca opis obiektu.
+ */
 QString Convs::toString() const
 {
     QString temp;
@@ -50,11 +56,17 @@ QString Convs::toString() const
     return temp;
 }
 
+/**
+ * Zapisuje liste zawartych konwencji w pliku outputs/_convs.txt.
+ */
 void Convs::store() const
 {
     Logger::WriteFile("_convs.txt", toString());
 }
 
+/**
+ * Metoda pomocnicza do czytania pliku xml.
+ */
 void Convs::iterateInConvs(pugi::xml_node& node)
 {
     try
@@ -80,6 +92,9 @@ void Convs::iterateInConvs(pugi::xml_node& node)
     }
 }
 
+/**
+ * Zwraca spreparowane rejestry zwracane przez funkcję działającą na podstawie konwencji o wskazanej nazwie.
+ */
 QMap<QString, Reg> Convs::prepareReturnedRegs(QString convname) const
 {
     for(auto conv: _convs)

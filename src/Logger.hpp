@@ -1,6 +1,13 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
+/**
+  * @class Logger
+  * @author Wojciech Kogut
+  *
+  * Klasa służy do zachowywania danych w plikach.
+  */
+
 #include <QString>
 
 class Logger
@@ -16,10 +23,10 @@ public:
 
 private:
     Logger(){}
-    static const QString dir;
-    static const QString errorfile;
-    static const QString warningfile;
-    static const QString statusfile;
+    static const QString dir; /**<Katalog bazowy plików wyjściowych.*/
+    static const QString errorfile; /**<Nazwa pliku z errorami.*/
+    static const QString warningfile; /**<Nazwa plik z warningami.*/
+    static const QString statusfile; /**<Nazwa pliku z logami.*/
 
     static void Log(QString txt, QString adr);
 };
