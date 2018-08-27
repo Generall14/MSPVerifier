@@ -13,7 +13,7 @@ public:
     Convs();
     void loadFromXmlFile(QString adress);
 
-    bool checkFun(const Fun& fun) const;
+    bool checkFun(const Fun& fun, const Stack &stack) const;
     QMap<QString, Reg> prepareReturnedRegs(QString convname) const;
 
     QString toString() const;

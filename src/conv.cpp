@@ -13,9 +13,18 @@ Conv::Conv(QString name):
 /**
  * Sprawdza zgodność zwracanych przez funkcje rejestrów z konwencją. Zwraca false jeżeli wszystko się zgadza.
  */
-bool Conv::checkFun(const Fun& fun) const
+bool Conv::checkFun(const Fun& fun, const Stack &stack) const
 {
     bool ret = false;
+    if(_maxStack>=0)
+    {
+        if(stack.depth()>_maxStack)
+        {
+            Logger::LogError("Conv::checkFun: funkcja zajmuje zbyt głęboki stos ("+QString::number(stack.depth())+"), maksymalny "
+                        "dopuszczalny to "+QString::number(_maxStack)+".");
+            ret = true;
+        }
+    }
     for(QString key: _types.keys())
     {
         if(!fun.getReturnedRegs().contains(key))
@@ -78,7 +87,7 @@ QString Conv::name() const
 
 QString Conv::toString() const
 {
-    QString temp = "Etykieta: \""+_name+"\" =";
+    QString temp = "Etykieta: \""+_name+"\", maksymalny poziom stosu: "+QString::number(_maxStack)+" =";
     for(QString key: _types.keys())
     {
         temp += " "+key+":";

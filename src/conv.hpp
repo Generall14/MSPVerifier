@@ -5,12 +5,13 @@
 
 class Fun;
 class Reg;
+class Stack;
 
 class Conv
 {
     friend class Convs;
 public:
-    bool checkFun(const Fun& fun) const;
+    bool checkFun(const Fun& fun, const Stack& stack) const;
     QString name() const;
     QString toString() const;
     QMap<QString, Reg> prepareReturnedRegs() const;
@@ -35,6 +36,7 @@ private:
 
     QString _name = "?????";
     QMap<QString, typeS> _types;
+    int _maxStack;
 };
 
 #endif

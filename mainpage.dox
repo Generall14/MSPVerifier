@@ -25,7 +25,7 @@ Konwencja wywołań określa zasady dostępu do rejestrów dla poszczególnych f
 Opis konwencji zawarty jest w pliku xml według wzorca:
 \code{.xml}
 <mainnode>
-	<conv lab="std">
+	<conv lab="std" maxstack="6">
 		<reg name="r4" type="forbidden" size=""/>
 		<reg name="r5" type="restored" size="w"/>
 		...
@@ -37,7 +37,7 @@ Opis konwencji zawarty jest w pliku xml według wzorca:
 	...
 </mainnode>
 \endcode
-Plik może zawierać wiele konwencji które będą identyfikowane przez ich etykiety. Dla każdej konwencji należy podać opis dla wszytkich rejestrów (r4...r15), pole size jest wymagane tylko dla typu "restored".
+Plik może zawierać wiele konwencji które będą identyfikowane przez ich etykiety. Dla każdej konwencji należy podać opis dla wszytkich rejestrów (r4...r15), pole size jest wymagane tylko dla typu "restored". Pole maxstack określa maksymalną liczbę bajtów o jaką funkcja może pogłębić stos (nie licząc adresu powrotu odkładanego przez instrukcję call), pozycja ta jest opcjonalna i może zostać pominięta (NIE pusta - pusta pozycja zostanie przyjęta jako wartość zerowa).
 \endpar
 
 \par Struktura plików wyjściowych

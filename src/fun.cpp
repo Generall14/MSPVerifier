@@ -369,8 +369,6 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
             Logger::WriteFile("code/"+_name+".csv", toString());
             return;
         }
-        if(!convs->checkFun(*this))
-            _convState = "ok";
     }
 
     // Obliczanie maksymalnego poziomu stosu:
@@ -381,6 +379,8 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
         if(line.core->_stack.depth()>_maxStack.depth())
             _maxStack = line.core->_stack;
     }
+    if(!convs->checkFun(*this, _maxStack))
+        _convState = "ok";
 
     _state = done;
     Logger::WriteFile("code/"+_name+".csv", toString());

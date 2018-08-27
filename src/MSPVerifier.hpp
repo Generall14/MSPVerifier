@@ -14,3 +14,5 @@ namespace MSPV
     void verify(QString ewpFile, QString convsFile);
 
 }
+
+#endif

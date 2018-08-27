@@ -14,7 +14,7 @@
 		<reg name="r14" type="free" size=""/>
 		<reg name="r15" type="free" size=""/>
 	</conv>
-	<conv lab="process">
+	<conv lab="process" maxstack="5">
 		<reg name="r4" type="forbidden" size=""/>
 		<reg name="r5" type="forbidden" size=""/>
 		<reg name="r6" type="forbidden" size=""/>
