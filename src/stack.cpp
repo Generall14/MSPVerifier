@@ -131,7 +131,7 @@ bool Stack::merge(const Stack& other)
     bool endstate = false;
     for(int i=0;i<_stack.size();++i)
     {
-        if(_stack.at(i)!=other._stack.at(1))
+        if(_stack.at(i)!=other._stack.at(i)) // <TODO>  other(1)????
         {
             _stack[i] = "??";
             endstate = true;

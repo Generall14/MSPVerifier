@@ -23,6 +23,7 @@ int main(int c, char ** cargs)
         args.append(cargs[i]);
 
     QString ai="", ac="";
+    bool quiet=false;
 
 //    system("chcp 65000");
 //    system("chcp");
@@ -39,6 +40,8 @@ int main(int c, char ** cargs)
             ai = arg.mid(2);
         else if(arg.startsWith("-c")&&!arg.mid(2).isEmpty())
             ac = arg.mid(2);
+        else if(arg.startsWith("-q"))
+            quiet = true;
         else
         {
             std::cout << "O kij chodzi z argumentem \""+arg.toStdString()+"\"?\n" << std::endl;
@@ -55,7 +58,7 @@ int main(int c, char ** cargs)
     std::cout << "\nIn file: \"" << ai.toStdString() << "\"\n";
     std::cout << "Convs file: \"" << ac.toStdString() << "\"\n\n";
 
-    MSPV::verify(ai, ac); // tu się dzieje cała magia
+    MSPV::verify(ai, ac, quiet); // tu się dzieje cała magia
 
     std::cout << "\n-->";
     getchar();

@@ -1,12 +1,11 @@
 #include "core.hpp"
 #include "Logger.hpp"
 #include "Line.hpp"
-#include <iostream>
 
 const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
                                   "and", "andx", "mov", "movx"};
-const QStringList Core::singleMArgs = {"swpb"};
-const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop", "eint", "dint"};
+const QStringList Core::singleMArgs = {"swpb", "inc", "incx", "dec", "decx"};
+const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop", "eint", "dint", "setz", "clrz"};
 const QStringList Core::jumps = {"jmp"};
 const QStringList Core::jumpsIf = {"jnz", "jz", "jc", "jnc"};
 const QStringList Core::rets = {"ret", "reta"};
@@ -162,7 +161,6 @@ bool Core::loadInstruction(const Line& line)
         if(arg.startsWith("@")&&(arg.endsWith("+")))
         {
             QString r = arg.toLower().remove("@").remove("+");
-            std::cout << r.toStdString() << std::endl;
             if(_regs.contains(r))
             {
                 _regs[r].merge(Reg("?", "a"));

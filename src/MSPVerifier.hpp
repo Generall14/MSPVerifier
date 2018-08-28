@@ -11,7 +11,7 @@ namespace MSPV
      * @param ewpFile - adres pliku projektu IAR *.ewp.
      * @param convsFile - adres pliku opisu konwencji wywołań.
      */
-    void verify(QString ewpFile, QString convsFile);
+    void verify(QString ewpFile, QString convsFile, bool quiet=false);
 
 }
 

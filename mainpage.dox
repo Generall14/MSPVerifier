@@ -14,6 +14,7 @@ Program słuy do analizy kodu asemblera dla MSP430. Wykrywa błędy struktury pr
 Program należy uruchomić z argumentami:
  -i[adres pliku] - wskazuje plik projektu IAR (plik z rozszerzeniem *.ewp),
  -c[adres pliku] - wskazuje plik xml z opisem konwencji wywołań.
+ -q				 - nie wyświetla warningów o kodzie nie przydzielonym do funkcji.
 Obydwa argumenty są niezbędne do działania programu.
 \endpar
 

@@ -23,7 +23,7 @@ class SegmentList
 public:
     void append(Segment seg);
     QMap<QString, QList<Segment> >& get();
-    FunContainer digForFunctions() const;
+    FunContainer digForFunctions(bool quiet) const;
 
     void store();
 

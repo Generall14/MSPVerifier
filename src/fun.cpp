@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "Line.hpp"
 #include "convs.hpp"
+#include <iostream>
 
 /**
  * Konstruktor, przyjmuje linie kodu przetworzone i podzielone, pierwsza linia powinna zawierać instrukcję ;##fun(...).
@@ -107,6 +108,8 @@ QString Fun::name() const
  */
 void Fun::simulate(const FunContainer *fc, const Convs *convs)
 {
+//    std::cout << _name.toStdString() << std::endl;
+
     // Symulacja krok po kroku linię kodu, poczynając od punktów wejścia zawartych w todo (zawiera numer lini i stan wejściowy rzenia).
     // Każda instrukcja wpływa odpowiednio na stan symulowanego rdzenia, każda symulacja jest wykonywana aż do napoitkania instrukcji
     // powrotu, końca funkcji, skoku bezwarunkowego lub jeżeli wykonanie danej instrukcji nie zwiększy entropii rdzenia w danej linii.
@@ -228,7 +231,9 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
 
                     if(_lines.at(line).getArguments().isEmpty())
                         throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
-                    // Wyszukiwanie etyiety:
+                    if(_lines.at(line).getArguments().at(0)=="$")
+                        break;
+                    // Wyszukiwanie etykiety:
                     int found = -1; // <TODO> do refaktoryzacji
                     for(int i=0;i<_lines.size();i++)
                     {
@@ -250,6 +255,23 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                 // W efekcie przyjmuje się rozgałęzienie symulacji na skocz lub nie skocz, bez sprawdzania warunków skoku.
                 else if(Core::jumpsIf.contains(_lines.at(line).getInstruction()))
                 {
+                    prev->loadInstruction(_lines.at(line));
+                    if(_lines.at(line).core==nullptr)
+                    {
+                        _lines[line].core=prev;
+                        prev = new Core(*prev);
+                    }
+                    else
+                    {
+                        bool ret = _lines[line].core->merge(*prev);
+                        delete prev;
+                        prev = nullptr;
+                        if(ret)
+                            prev = new Core(*_lines.at(line).core);
+                        else
+                            break;
+                    }
+
                     if(_lines.at(line).getArguments().isEmpty())
                         throw std::runtime_error("Fun::simulate: brak etykiety skoku w "+_lines.at(line).toString().toStdString());
                     // Wyszukiwanie etyiety:

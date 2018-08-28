@@ -2,6 +2,7 @@ Argumenty programu (wskazanie -i i -v jest konieczne):
 -h		- Wyświetla pomoc i zamyka program.
 -i[file]	- Wskazuje plik *.ewp projektu do sprawdzenia.
 -c[file]	- Wskazuje plik *.xml zawierający opis konwencji.
+-q			- Nie wyświetla warningów o kodzie nie przydzielonym do funcji.
 
 Raport z analizy zostanie umieszczony w katalogu ./outputs/*, 
 ważniejsze pliki to: errors.txt, warnings.txt (nazwa mówi 

@@ -43,7 +43,7 @@ void SegmentList::store()
 /**
  * Odczytuje z segmentów code funkcje (według znacznika ;##fun) i zwraca ich listę jako FunContainer.
  */
-FunContainer SegmentList::digForFunctions() const
+FunContainer SegmentList::digForFunctions(bool quiet) const
 {
     FunContainer fc;
 
@@ -61,12 +61,14 @@ FunContainer SegmentList::digForFunctions() const
             {
                 if((fi==-1)&&(i>0))
                 {
-//                    Logger::LogWarning("Nieoznaczony kod funkcji w pliku \""+code.get().at(0).File()+
-//                                       "\". Patrz code/unknown.txt."); <TODO>
+                    if(!quiet)
+                        Logger::LogWarning("Nieoznaczony kod funkcji w pliku \""+code.get().at(0).File()+
+                                       "\". Patrz code/unknown.txt.");
                     QString ss;
                     for(int k=0;k<i;k++)
                         ss.append(code.get().at(k).toString()+"\n");
-//                    Logger::AppendFile("code/unknown.txt", ss); <TODO>
+                    if(!quiet)
+                        Logger::AppendFile("code/unknown.txt", ss);
                 }
                 else if(fi>=0)
                     fc.append(Fun(code.get().mid(fi, i-fi)));
@@ -76,12 +78,14 @@ FunContainer SegmentList::digForFunctions() const
 
         if(fi==-1)
         {
-//            Logger::LogWarning("Nieoznaczony kod funkcji w pliku \""+code.get().at(0).File()+
-//                               "\". Patrz code/unknown.txt."); <TODO>
+            if(!quiet)
+                Logger::LogWarning("Nieoznaczony kod funkcji w pliku \""+code.get().at(0).File()+
+                               "\". Patrz code/unknown.txt.");
             QString ss;
             for(int k=0;k<code.get().size();k++)
                 ss.append(code.get().at(k).toString()+"\n");
-//            Logger::AppendFile("code/unknown.txt", ss); <TODO>
+            if(!quiet)
+                Logger::AppendFile("code/unknown.txt", ss);
         }
         else if((fi+1)!=code.get().size())
             fc.append(Fun(code.get().mid(fi)));
