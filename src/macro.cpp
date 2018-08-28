@@ -69,21 +69,22 @@ QList<Macro> Macro::loadMacros(File& file)
 /**
  * Rozwija makro we wskazanym obiekcie File.
  */
-void Macro::applyMacro(File& file)
+bool Macro::applyMacro(File& file)
 {
-    bool found = false;
+    bool found = false, retstate = false;
 
     do
     {
+        if(found)
+            retstate = true;
         found = false;
-
         for(int i=0;i<file.get().size();i++)
         {
-            if(i>0)
-            {
-                if(file.get().at(i-1).currentText.contains(";##ignorenextline"))
-                    continue;
-            }
+//            if(i>0)
+//            {
+//                if(file.get().at(i-1).currentText.contains(";##ignorenextline"))
+//                    continue;
+//            }
             if(file.get().at(i).currentText.indexOf(" "+_name+" ", Qt::CaseInsensitive)>=0)
             {
                 QString temp = file.get().at(i).currentText;
@@ -114,4 +115,5 @@ void Macro::applyMacro(File& file)
         }
 
     }while(found);
+    return retstate;
 }

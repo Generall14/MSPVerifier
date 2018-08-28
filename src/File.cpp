@@ -140,8 +140,13 @@ void File::expandMacros()
 {
     skipWhiteSigns();
     QList<Macro> macs = Macro::loadMacros(*this);
-    for(auto mac: macs)
-        mac.applyMacro(*this);
+    int i=0;
+    do
+    {
+        i = 0;
+        for(auto mac: macs)
+            i += mac.applyMacro(*this);
+    } while(i);
 }
 
 /**
@@ -262,7 +267,7 @@ void File::expandDefines()
  */
 void File::removeUslessStuff()
 {
-    QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end", "#elif"};
+    QStringList toRemove{"public", "extern", "equ", "#if", "#else", "#endif", "end", "#elif", "#ifdef", "#ifndef"};
 
     skipWhiteSigns();
     for(int i=_lines.size()-1;i>=0;i--)

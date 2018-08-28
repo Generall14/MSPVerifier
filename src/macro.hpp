@@ -18,7 +18,7 @@ class Macro
 {
 public:
     static QList<Macro> loadMacros(File& file);
-    void applyMacro(File& file);
+    bool applyMacro(File& file);
 
 private:
     Macro(){}

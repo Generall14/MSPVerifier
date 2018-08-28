@@ -1,5 +1,6 @@
 #include "Line.hpp"
 #include "core.hpp"
+#include <qdebug.h>
 
 /**
  * Konstruktor przyjmujący pierwotne wartości danych.
@@ -188,14 +189,12 @@ QStringList Line::getArguments() const
     QString temp = currentText;
     if(temp.contains(":"))
         temp = temp.split(":").at(1);
-    QStringList sl = temp.split(" ", QString::SkipEmptyParts);
-    if(sl.size()<2)
+    while(temp.startsWith(" "))
+        temp.remove(0, 1);
+    int found = temp.indexOf(" ");
+    if((found<0)||(found==temp.size()-1))
         return QStringList();
-    else
-    {
-        sl = sl.mid(1);
-        for(QString& a: sl)
-            a.remove(",");
-        return sl;
-    }
+    temp = temp.mid(found);
+    temp = temp.remove(" ");
+    return temp.split(",");
 }

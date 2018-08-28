@@ -1,6 +1,7 @@
 #include "core.hpp"
 #include "Logger.hpp"
 #include "Line.hpp"
+#include <qdebug.h>
 
 const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
                                   "and", "andx", "mov", "movx"};
