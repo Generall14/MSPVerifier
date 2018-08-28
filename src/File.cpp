@@ -90,32 +90,39 @@ void File::skipWhiteSigns()
  */
 void File::doPreprocessor()
 {
-    skipWhiteSigns();
-    for(int l=_lines.size()-1;l>=0;l--)
+    bool searching = false;
+    do
     {
-        if(_lines.at(l).currentText.startsWith(" #include \"", Qt::CaseInsensitive))
+        searching = false;
+        skipWhiteSigns();
+        for(int l=_lines.size()-1;l>=0;l--)
         {
-            int fi = _lines.at(l).currentText.indexOf("\"");
-            int li = _lines.at(l).currentText.lastIndexOf("\"");
-            QString name = _lines.at(l).currentText.mid(fi+1,li-fi-1);
-            if(name!="msp430.h")
+            if(_lines.at(l).currentText.startsWith(" #include \"", Qt::CaseInsensitive))
             {
-                QString iadr = QFileInfo(_adress).dir().path()+"/"+name;
+                searching = true;
+                int fi = _lines.at(l).currentText.indexOf("\"");
+                int li = _lines.at(l).currentText.lastIndexOf("\"");
+                QString name = _lines.at(l).currentText.mid(fi+1,li-fi-1);
+                if(name!="msp430.h")
+                {
+                    QString iadr = QFileInfo(_adress).dir().path()+"/"+name;
 
-                QFile file(iadr);
-                if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-                    throw std::runtime_error("File::doPreprocessor: nie mozna otworzyc pliku \""+iadr.toStdString()+"\"");
+                    QFile file(iadr);
+                    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                        throw std::runtime_error("File::doPreprocessor: nie mozna otworzyc pliku \""+iadr.toStdString()+"\"");
 
-                QTextStream ts(&file);
-                QString lt;
-                int cnt = l+1;
-                while(ts.readLineInto(&lt))
-                    _lines.insert(cnt++, Line(_lines.at(l), lt));
-                file.close();
+                    QTextStream ts(&file);
+                    QString lt;
+                    int cnt = l+1;
+                    while(ts.readLineInto(&lt))
+                        _lines.insert(cnt++, Line(_lines.at(l), lt));
+                    file.close();
+                }
+                _lines.removeAt(l);
+                break;
             }
-            _lines.removeAt(l);
         }
-    }
+    } while(searching);
 }
 
 /**
