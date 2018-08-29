@@ -5,11 +5,11 @@
 
 const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
                                   "and", "andx", "mov", "movx"};
-const QStringList Core::singleMArgs = {"swpb", "inc", "incx", "dec", "decx"};
+const QStringList Core::singleMArgs = {"swpb", "inc", "incx", "dec", "decx", "rla", "rra", "adc", "rrc", "rlc", "rlam"};
 const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop", "eint", "dint", "setz", "clrz"};
 const QStringList Core::jumps = {"jmp"};
 const QStringList Core::jumpsIf = {"jnz", "jz", "jc", "jnc"};
-const QStringList Core::rets = {"ret", "reta"};
+const QStringList Core::rets = {"ret", "reta", "reti"};
 const QStringList Core::calls = {"call", "calla"};
 const QStringList Core::pushes = {"push", "pushx"};
 const QStringList Core::pops = {"pop", "popx"};
@@ -127,7 +127,7 @@ bool Core::loadInstruction(const Line& line)
             throw std::runtime_error("Core::loadInstruction: próba powrotu z procedury na niezerozym poziomie"
                                      " lokalnego stosu");
 
-        if(line.getInstruction()=="ret")
+        if((line.getInstruction()=="ret")||(line.getInstruction()=="reti"))
             _returns = -2;
         else if(line.getInstruction()=="reta")
             _returns = -4;

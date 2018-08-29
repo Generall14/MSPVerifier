@@ -23,6 +23,7 @@ QList<Fun>& FunContainer::get()
  */
 void FunContainer::simulate(const Convs *convs)
 {
+    Logger::Log("Odnaleziono "+QString::number(_funs.size())+" funkcji");
     Logger::Log("Symulowanie funkcji...");
 
     bool someWaiting = true;

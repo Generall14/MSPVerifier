@@ -80,11 +80,11 @@ bool Macro::applyMacro(File& file)
         found = false;
         for(int i=0;i<file.get().size();i++)
         {
-//            if(i>0)
-//            {
-//                if(file.get().at(i-1).currentText.contains(";##ignorenextline"))
-//                    continue;
-//            }
+            if(i>0)
+            {
+                if(file.get().at(i-1).currentText.contains(";##ignorenextline"))
+                    continue;
+            }
             if(file.get().at(i).currentText.indexOf(" "+_name+" ", Qt::CaseInsensitive)>=0)
             {
                 QString temp = file.get().at(i).currentText;

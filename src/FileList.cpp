@@ -84,10 +84,7 @@ SegmentList FileList::getSegments()
     SegmentList temp;
 
     for(auto f: _list)
-    {
-        std::cout << f.get().at(0).File().toStdString() << std::endl;
         f.divide(temp);
-    }
 
     return temp;
 }
