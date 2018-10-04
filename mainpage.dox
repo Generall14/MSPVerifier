@@ -62,6 +62,7 @@ Instrukcję dla analizatora podaje się w lini zaczynającej się (wcześniej mo
 \endcode
 Wielkość znaków w instrukcjach nie ma znaczenia. Analizator interpretuje następujące instrukcje:
  - fun(conv) - instrukcja ta określa, że od tego miejsca do końca sekcji code lub do kolejnej instrukcji ;##fun znajduje się kod funkcji. W kolejnej lini za tą instrukcją musi znaleźć się etykieta która potraktowana będzie jako nazwa funkcji. Argument conv jest obowiązkowy i określa konwencję wywołań dla funkcji.
+ - repfun(arg) - kolejna wywołana funkcja zostanie zamieniona na funkcję wskazaną jako argument, działa tylko dla pojedynczego wywołania.
  - defconv(conv) - ustawia domyślną konwencję wywołań dla danej funkcji, jeżeli w funkcji znajdzie się instrukcja call z nieznanym odnośnikiem to zostaną przyjęte domyślne parametry wołanej funkcji.
  - deffundepth(depth) - ustawia domyślną głębokość stosu wołanej funkcji, analogicznie jak instrukcja wyżej.
  - deffunret(ret) - ustawia domyślny poziom return (czy powrót jest z ret (-2) czt reta (-4)) wołanej funkcji, analogicznie jak wyżej. Przykład:

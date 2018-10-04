@@ -100,7 +100,8 @@ QString Fun::name() const
  * jeższe zasymulowane, w takim przypadku należy wywołać metodę simulate pozostałych funkcji a następnie wrócić do tej. Jeżeli funkcje
  * wołane będą posiadały status error, błęd ten będzie wleczony i obiekt this również przyjmie status error.
  *
- * Przy wywołaniach call pośrednich lub takich których nie ma we wskazanym FunContainer metoda spróbujr spreparować funkcję na podstawie
+ * Przy wywołaniach call pośrednich lub takich których nie ma we wskazanym FunContainer metoda spróbuje podmienić funkcję (przez repfun)
+ * lub spreparować funkcję na podstawie
  * podanych wartości domyślnych (przez defconv, deffundepth, deffunret), jeżeli któraś z tych instrukcji nie wystąpi przed wywołaniem
  * call - funkcja przyjmie status error.
  * @param fc - Wskaźnik na obiekt z listą funkcji.
@@ -138,6 +139,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
             todo.erase(it);
 
             QString defaultConvention = "";
+            QString replaceFun = "";
             uint defaultFunDepth = 666;
             int defaultFunRet = 0;
             bool ignoreInstruction = false;
@@ -184,6 +186,10 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                             defaultFunRet = arg.toInt();
                         else if(!ins.compare("ignorenextline", Qt::CaseInsensitive))
                             ignoreInstruction = true;
+                        else if(!ins.compare("repfun", Qt::CaseInsensitive))
+                            replaceFun = "#"+arg;
+                        else
+                            Logger::LogWarning("Nieznany argument w "+_lines.at(line).toString());
                     }
                     continue;
                 }
@@ -308,7 +314,13 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
                     Fun called;
                     try
                     {
-                        called = fc->getByName(_lines.at(line).getArguments().at(0));
+                        if((!replaceFun.isEmpty()))
+                        {
+                            called = fc->getByName(replaceFun);
+                            replaceFun.clear();
+                        }
+                        else
+                            called = fc->getByName(_lines.at(line).getArguments().at(0));
                     }
                     catch(...)
                     {

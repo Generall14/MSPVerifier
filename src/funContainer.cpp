@@ -49,6 +49,8 @@ void FunContainer::simulate(const Convs *convs)
  */
 Fun FunContainer::getByName(QString name) const throw(std::runtime_error)
 {
+    if(name.isEmpty())
+        throw std::runtime_error("FunContainer::getByName: brak nazwy funkcji");
     for(Fun fun: _funs)
     {
         if(fun.name()==name)

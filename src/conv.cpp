@@ -20,8 +20,8 @@ bool Conv::checkFun(const Fun& fun, const Stack &stack) const
     {
         if(stack.depth()>_maxStack)
         {
-            Logger::LogError("Conv::checkFun: funkcja zajmuje zbyt głęboki stos ("+QString::number(stack.depth())+"), maksymalny "
-                        "dopuszczalny to "+QString::number(_maxStack)+".");
+            Logger::LogError("Conv::checkFun: funkcja \""+fun.name()+"\" zajmuje zbyt głęboki stos ("+QString::number(stack.depth())+
+                             "), maksymalny dopuszczalny to "+QString::number(_maxStack)+".");
             ret = true;
         }
     }
