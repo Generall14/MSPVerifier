@@ -6,7 +6,7 @@
 const QStringList Core::biMArgs = {"add", "addx", "sub", "subx", "bic", "bicx", "bis", "bisx", "xor", "xorx",
                                   "and", "andx", "mov", "movx", "addc", "subc"};
 const QStringList Core::singleMArgs = {"swpb", "inc", "incx", "dec", "decx", "rla", "rra", "adc", "rrc", "rlc", "rlam", "inv", "adc",
-                                      "sxt", "adcx"};
+                                      "sxt", "adcx", "rlam", "rram", "rrcm", "rlcm"};
 const QStringList Core::transparentArgs = {"cmp", "cmpx", "tst", "tstx", "bit", "bitx", "nop", "eint", "dint", "setz", "clrz", "clrc",
                                            "setc"};
 const QStringList Core::jumps = {"jmp"};
