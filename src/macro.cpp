@@ -3,6 +3,10 @@
 #include <stdexcept>
 #include "File.hpp"
 #include "Line.hpp"
+#include <qDebug>
+#include <iostream>
+
+volatile int Macro::localCounter=0;
 
 /**
  * Metoda odczytuje definicje makr ze wskazanego pliku File i zwraca ich listę. Usuwa ze wskazanego pliku tekst definicji makra.
@@ -58,6 +62,7 @@ QList<Macro> Macro::loadMacros(File& file)
                 file.get().removeAt(si);
 
             found = true;
+            m.loadLocals();
             temp.append(m);
         }
 
@@ -78,6 +83,7 @@ bool Macro::applyMacro(File& file)
         if(found)
             retstate = true;
         found = false;
+        Macro::localCounter++;
         for(int i=0;i<file.get().size();i++)
         {
             if(i>0)
@@ -101,7 +107,13 @@ bool Macro::applyMacro(File& file)
 
                 for(int k=_lines.size()-1;k>=0;k--)
                 {
+                    QString newlocal;
                     QString tline = _lines.at(k);
+                    for(QString loc: _locals)
+                    {
+                        newlocal = loc+"_"+QString::number(Macro::localCounter);
+                        tline.replace(loc, newlocal, Qt::CaseInsensitive);
+                    }
                     for(int x=0;x<pars.size();x++)
                         tline.replace(_args.at(x), pars.at(x), Qt::CaseSensitive);
                     file.get().insert(i+1, Line(file.get().at(i), tline));
@@ -116,4 +128,17 @@ bool Macro::applyMacro(File& file)
 
     }while(found);
     return retstate;
+}
+
+void Macro::loadLocals()
+{
+    for(int i=_lines.size()-1;i>=0;i--)
+    {
+        if(_lines.at(i).contains(" local ", Qt::CaseInsensitive))
+        {
+            QString temp = _lines.at(i).split(" local ", QString::SkipEmptyParts).at(0);
+            _locals.append(temp.remove(" "));
+            _lines.removeAt(i);
+        }
+    }
 }

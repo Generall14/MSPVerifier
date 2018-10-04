@@ -22,10 +22,13 @@ public:
 
 private:
     Macro(){}
+    void loadLocals();
 
     QStringList _args; /**<Lista argumentów.*/
     QStringList _lines; /**<Tekst makra.*/
     QString _name; /**<Nazwa makra.*/
+    QStringList _locals;
+    static volatile int localCounter;
 };
 
 #endif
