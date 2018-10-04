@@ -400,7 +400,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
         _errorDesc = "Błąd krytyczny w funkcji \""+_name+"\", linia "+_lines.at(line).toSString()+": "+err.what();
         Logger::LogError(_errorDesc);
         _state = error;
-        Logger::WriteFile("code/"+_name+".csv", toString());
+        Logger::WriteFile("code/"+_name.mid(1)+".csv", toString());
         return;
     }
 
@@ -413,7 +413,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
         _errorDesc = "Brak punktu wyjścia w funkcji \""+_name+"\"";
         _state = error;
         Logger::LogError(_errorDesc);
-        Logger::WriteFile("code/"+_name+".csv", toString());
+        Logger::WriteFile("code/"+_name.mid(1)+".csv", toString());
         return;
     }
     else
@@ -433,7 +433,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
             for(auto ret: retStates)
                 _errorDesc.append(ret.toString());
             Logger::LogError(_errorDesc);
-            Logger::WriteFile("code/"+_name+".csv", toString());
+            Logger::WriteFile("code/"+_name.mid(1)+".csv", toString());
             return;
         }
     }
@@ -452,7 +452,7 @@ void Fun::simulate(const FunContainer *fc, const Convs *convs)
         _convState = "ok";
 
     _state = done;
-    Logger::WriteFile("code/"+_name+".csv", toString());
+    Logger::WriteFile("code/"+_name.mid(1)+".csv", toString());
 }
 
 /**
