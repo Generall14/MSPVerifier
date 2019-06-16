@@ -29,8 +29,7 @@ SOURCES += main.cpp \
     src/convs.cpp \
     src/MSPVerifier.cpp
 
-LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixmlw
-LIBS += -L"$$_PRO_FILE_PWD_/src/lib/" -lpugixml
+LIBS += -lpugixml
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -47,8 +46,6 @@ HEADERS += \
     src/Logger.hpp \
     src/FileList.hpp \
     src/Line.hpp \
-    src/osrc/pugiconfig.hpp \
-    src/osrc/pugixml.hpp \
     src/LineContainer.hpp \
     src/File.hpp \
     src/dyskryminator.hpp \

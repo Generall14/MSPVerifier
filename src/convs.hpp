@@ -8,7 +8,7 @@
   * Klasa zawiera listę konwencji. Posiada metodę wczytująca konwencje z pliku konfiguracyjnego *.xml.
   */
 
-#include "osrc/pugixml.hpp"
+#include <pugixml.hpp>
 #include "conv.hpp"
 
 class Fun;

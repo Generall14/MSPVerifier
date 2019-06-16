@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "File.hpp"
 #include "Line.hpp"
-#include <qDebug>
+#include <QDebug>
 #include <iostream>
 
 volatile int Macro::localCounter=0;

@@ -2,7 +2,7 @@
 #include "Logger.hpp"
 #include "fun.hpp"
 #include <stdexcept>
-#include "osrc/pugixml.hpp"
+#include <pugixml.hpp>
 #include "conv.hpp"
 
 Convs::Convs()

@@ -11,7 +11,7 @@
 
 #include <QString>
 #include <QStringList>
-#include "src/osrc/pugixml.hpp"
+#include <pugixml.hpp>
 #include "File.hpp"
 #include <QList>
 
