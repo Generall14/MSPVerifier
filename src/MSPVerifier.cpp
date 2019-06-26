@@ -26,7 +26,6 @@ void MSPV::verify(QString ewpFile, QString convsFile, bool quiet)
     catch(std::runtime_error err)
     {
         std::cout << "RUNTIME ERROR: " << err.what() << std::endl;
-//        Logger::LogError(QString("RUNTIME ERROR: ") + QString(err.what()));
     }
 }
 

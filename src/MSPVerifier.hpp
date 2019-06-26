@@ -12,7 +12,6 @@ namespace MSPV
      * @param convsFile - adres pliku opisu konwencji wywołań.
      */
     void verify(QString ewpFile, QString convsFile, bool quiet=false);
-
 }
 
 #endif
