@@ -1,0 +1,7 @@
+	QList<Line> list = {
+				{ "file", " ;##fun(std) ", 1 },
+				{ "file", " funkcja: ", 2 },
+				{ "file", " mov.w #666, R12 ", 3 },
+				{ "file", " ret ", 4 },
+				};
+	Fun f(list);

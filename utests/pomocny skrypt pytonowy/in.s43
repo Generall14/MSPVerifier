@@ -1,0 +1,4 @@
+;##fun(std)
+funkcja:
+	mov.w	#666, R12
+	ret
